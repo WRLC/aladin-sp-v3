@@ -637,7 +637,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'Doctrine\\Migrations\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/migrations/lib/Doctrine/Migrations',
+            0 => __DIR__ . '/..' . '/doctrine/migrations/src',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -669,8 +669,8 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'Doctrine\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/event-manager/src',
-            1 => __DIR__ . '/..' . '/doctrine/common/src',
+            0 => __DIR__ . '/..' . '/doctrine/common/src',
+            1 => __DIR__ . '/..' . '/doctrine/event-manager/src',
         ),
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (

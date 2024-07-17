@@ -9,19 +9,15 @@ use Doctrine\Migrations\Metadata\AvailableMigrationsList;
 use Doctrine\Migrations\Metadata\ExecutedMigrationsList;
 use Doctrine\Migrations\Tools\Console\Exception\InvalidOptionUsage;
 use Doctrine\SqlFormatter\SqlFormatter;
-use OutOfBoundsException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function addslashes;
-use function assert;
 use function class_exists;
 use function count;
 use function filter_var;
-use function is_string;
-use function key;
 use function sprintf;
 
 use const FILTER_VALIDATE_BOOLEAN;
@@ -110,10 +106,6 @@ EOT)
         $allowEmptyDiff  = $input->getOption('allow-empty-diff');
         $checkDbPlatform = filter_var($input->getOption('check-database-platform'), FILTER_VALIDATE_BOOLEAN);
         $fromEmptySchema = $input->getOption('from-empty-schema');
-        $namespace       = $input->getOption('namespace');
-        if ($namespace === '') {
-            $namespace = null;
-        }
 
         if ($formatted) {
             if (! class_exists(SqlFormatter::class)) {
@@ -123,22 +115,13 @@ EOT)
             }
         }
 
-        $configuration = $this->getDependencyFactory()->getConfiguration();
-
-        $dirs = $configuration->getMigrationDirectories();
-        if ($namespace === null) {
-            $namespace = key($dirs);
-        } elseif (! isset($dirs[$namespace])) {
-            throw new OutOfBoundsException(sprintf('Path not defined for the namespace %s', $namespace));
-        }
-
-        assert(is_string($namespace));
+        $namespace = $this->getNamespace($input, $output);
 
         $statusCalculator              = $this->getDependencyFactory()->getMigrationStatusCalculator();
         $executedUnavailableMigrations = $statusCalculator->getExecutedUnavailableMigrations();
         $newMigrations                 = $statusCalculator->getNewMigrations();
 
-        if (! $this->checkNewMigrationsOrExecutedUnavailable($newMigrations, $executedUnavailableMigrations, $input, $output)) {
+        if (! $this->checkNewMigrationsOrExecutedUnavailable($newMigrations, $executedUnavailableMigrations, $input)) {
             $this->io->error('Migration cancelled!');
 
             return 3;
@@ -189,7 +172,6 @@ EOT)
         AvailableMigrationsList $newMigrations,
         ExecutedMigrationsList $executedUnavailableMigrations,
         InputInterface $input,
-        OutputInterface $output,
     ): bool {
         if (count($newMigrations) === 0 && count($executedUnavailableMigrations) === 0) {
             return true;

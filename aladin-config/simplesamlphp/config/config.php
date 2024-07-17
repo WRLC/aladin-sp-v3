@@ -1151,7 +1151,6 @@ $config = [
         ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_4']],
         ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_5']],
         ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_6']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_7']],
     ],
 
     /*
