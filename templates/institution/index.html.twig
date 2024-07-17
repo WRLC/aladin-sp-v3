@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item">Institutions</li>
+        </ol>
+    </nav>
+    <div class="row align-items-center">
+        <h1 class="col col-10">Institutions</h1>
+        <span class="col col-2 text-end">
+            <a href="{{ path('create_institution') }}" class="btn btn-primary">Add Institution</a>
+        </span>
+    </div>
+    {% if institutions|length > 0 %}
+        <table class="table table-striped sortable">
+            <thead>
+                <tr class="table-dark">
+                    <th scope="col" class="col-1"></th>
+                    <th scope="col" class="col-1">Index</th>
+                    <th scope="col" class="col-4">Name</th>
+                    <th scope="col" class="col-1">Alma Code</th>
+                    <th scope="col" class="col-5">IdP</th>
+                </tr>
+            </thead>
+            <tbody id="institutionList">
+                {% for institution in institutions %}
+                    <tr draggable="true" rel="{{ institution.Id }}">
+                        <td class="text-center"><i class="fa fa-arrows"></i></td>
+                        <th scope="row" class="table-light">
+                            <a href="{{ path('show_institution', {'index': institution.Index}) }}">{{ institution.Index }}</a>
+                        </th>
+                        <td>{{ institution.Name }}</td>
+                        <td>{{ institution.AlmaLocationCode }}</td>
+                        <td>{{ institution.EntityId }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="mb3">No institutions found.</div>
+    {% endif %}
+{% endblock %}
+{% block javascripts2 %}
+<script>
+    const adminNs =
+        {
+            initDraggableEntityRows: function () {
+                let dragSrcEl = null; // the object being drug
+                let startPosition = null; // the index of the row element (0 through whatever)
+                let endPosition = null; // the index of the row element being dropped on (0 through whatever)
+                let parent; // the parent element of the dragged item
+                let entityId; // the id (key) of the entity
+                function handleDragStart(e) {
+                    dragSrcEl = this;
+                    entityId = $(this).attr('rel');
+                    dragSrcEl.style.opacity = '0.4';
+                    parent = dragSrcEl.parentNode;
+                    startPosition = Array.prototype.indexOf.call(parent.children, dragSrcEl);
+                    console.log("start: " + startPosition);
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/html', this.innerHTML);
+                    console.log(entityId);
+                }
+
+                function handleDragOver(e) {
+                    //console.log('drag over: '+ e.target);
+                    if (e.preventDefault) {
+                        e.preventDefault(); // Necessary. Allows us to drop.
+                    }
+                    e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+                    return false;
+                }
+
+                function handleDragEnter(e) {
+                    //console.log('drag enter: '+ e.target);
+                    this.classList.add('over');
+                }
+
+                function handleDragLeave(e) {
+                    //console.log('drag leave: '+ e.target);
+                    this.classList.remove('over');  // this / e.target is previous target element.
+                }
+
+                function handleDrop(e) {
+                    //console.log('drop: '+ e.target);
+                    //console.log(e.currentTarget);
+                    //console.log(dragSrcEl);
+
+                    if (e.stopPropagation) {
+                        e.stopPropagation(); // stops the browser from redirecting.
+                    }
+
+                    // Don't do anything if dropping the same column we're dragging.
+                    if (dragSrcEl !== this) {
+                        endPosition = Array.prototype.indexOf.call(parent.children, this);
+                        console.log("end: " + endPosition);
+                        // Set the source column's HTML to the HTML of the column we dropped on.
+                        dragSrcEl.innerHTML = this.innerHTML;
+                        this.innerHTML = e.dataTransfer.getData('text/html');
+
+                        // do the ajax call to update the database
+                        $.ajax({
+                            url: '/institution/sort/' + entityId + '/' + endPosition,
+                        })
+                            .done(function (res) {
+                                $("table.sortable tbody").replaceWith($(res).find("table.sortable tbody"));
+
+                            })
+                            .fail(function (err) {
+                                alert("An error occurred while sorting. Please refresh the page and try again.")
+                            })
+                            .always(function () {
+                                adminNs.initDraggableEntityRows();
+                            });
+                    }
+
+                    return false;
+                }
+
+                function handleDragEnd(e) {
+                    //console.log('drag end: '+ e.target);
+                    this.style.opacity = '1';  // this / e.target is the source node.
+                    [].forEach.call(rows, function (row) {
+                        row.classList.remove('over');
+                    });
+                }
+
+                let rows = document.querySelectorAll('table.sortable > tbody tr');
+                [].forEach.call(rows, function (row) {
+                    row.addEventListener('dragstart', handleDragStart, false);
+                    row.addEventListener('dragenter', handleDragEnter, false);
+                    row.addEventListener('dragover', handleDragOver, false);
+                    row.addEventListener('dragleave', handleDragLeave, false);
+                    row.addEventListener('drop', handleDrop, false);
+                    row.addEventListener('dragend', handleDragEnd, false);
+                });
+            },
+
+            /**
+             * Primary Admin initialization method.
+             * @returns {boolean}
+             */
+            init: function () {
+                this.initDraggableEntityRows();
+
+                return true;
+            }
+        };
+
+    $(function() {
+        adminNs.init();
+    });
+
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if form.vars.value.id is null %}
+        {% set value = 'Add' %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Add Service</li>
+            </ol>
+        </nav>
+    {% else %}
+        {% set value = 'Edit' %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_service', {'slug': form.vars.value.slug}) }}">{{ form.vars.value.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Service</li>
+            </ol>
+        </nav>
+    {% endif %}
+    <h1>{{ value }} Service</h1>
+    {{ form_start(form) }}
+        {% if form_errors(form) %}
+            <div class="alert alert-danger">
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+        <div class="mb-3{% if form.slug.vars.required %} required{% endif %}">
+            {{ form_label(form.slug, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.slug, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.slug) }}
+        </div>
+        <div class="mb-3{% if form.name.vars.required %} required{% endif %}">
+            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <div class="mb-3{% if form.url.vars.required %} required{% endif %}">
+            {{ form_label(form.url, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.url, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.url) }}
+        </div>
+        <div class="mb-3{% if form.callback_path.vars.required %} required{% endif %}">
+            {{ form_label(form.callback_path, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.callback_path, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.callback_path) }}
+        </div>
+        <div class="mb-3{% if form.legacy_login_path.vars.required %} required{% endif %}">
+            {{ form_label(form.legacy_login_path, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.legacy_login_path, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.legacy_login_path) }}
+        </div>
+        <div class="mb-3{% if form.use_wrInstitution.vars.required %} required{% endif %}">
+            {{ form_label(form.use_wrInstitution, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.use_wrInstitution, {'attr': {'class': 'form-check'}}) }}
+            {{ form_errors(form.use_wrInstitution) }}
+        </div>
+        <div class="actions">
+            {% if form.vars.value.id is null %}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Service'}) }}
+            {% else %}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Update Service'}) }}
+            {% endif %}
+            {% if form.vars.value.id is not null %}
+                <a href="{{ path('show_service', {'slug': form.vars.value.slug}) }}" class="btn btn-secondary">Cancel</a>
+            {% endif %}
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

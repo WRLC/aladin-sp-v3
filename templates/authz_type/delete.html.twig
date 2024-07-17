@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('list_authztypes') }}">Authorization Types</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete Authorization Type</li>
+        </ol>
+    </nav>
+    <h1>Delete Authorization Type</h1>
+    {{ form_start(form) }}
+        <div class="mb-3">
+            Are you sure you want to delete the authorization type "{{ authztype.Type }}"?
+        </div>
+        <div class="mb-3">
+            {{ form_widget(form.delete, {'attr': {'class': 'btn btn-danger'}, 'label':  'Delete Authorization Type'}) }}
+            <a href="{{ path('list_authztypes') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ service.Name }}</li>
+        </ol>
+    </nav>
+    <div class="row align-items-center">
+        <h1 class="col col-10">Service Details</h1>
+        <span class="col col-2 text-end">
+            <a href="{{ path('edit_service', {'slug': service.slug}) }}" class="btn btn-warning">Edit</a>
+            <a href="{{ path('delete_service', {'slug': service.slug}) }}" class="btn btn-danger">Delete</a>
+        </span>
+    </div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Slug</th>
+                <td class="col-10">{{ service.Slug }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Name</th>
+                <td class="col-10">{{ service.Name }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">URL</th>
+                <td class="col-10">{{ service.Url }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Callback Path</th>
+                <td class="col-10">{{ service.CallbackPath }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Legacy Login Path</th>
+                <td class="col-10">{{ service.LegacyLoginPath }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Use WRLC Flask IdP</th>
+                <td class="col-10">
+                    {% if service.UseWRInstitution %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

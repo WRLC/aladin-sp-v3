@@ -1,0 +1,47 @@
+
+###> symfony/framework-bundle ###
+.env
+/.env.test
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/asset-mapper ###
+/public/assets/
+/assets/vendor/
+###< symfony/asset-mapper ###
+
+###> simplesamlphp certificate ###
+aladin-config/simplesamlphp/cert/*.crt
+aladin-config/simplesamlphp/cert/*.key
+aladin-config/simplesamlphp/cert/*.pem
+###< simplesamlphp certificate ###
+
+###> simplesamlphp config ###
+aladin-config/simplesamlphp/config/authsources.php
+###< simplesamlphp config ###
+
+###> simplesamlphp metadata ###
+aladin-config/simplesamlphp/metadata/*.xml
+aladin-config/simplesamlphp/metadata/*/*.xml
+aladin-config/simplesamlphp/metadata/*.php
+aladin-config/simplesamlphp/metadata/metarefresh-*/*.php
+###< simplesamlphp metadata ###
+
+###> SSH keys (for pushing to/pulling from git origin) ###
+aladin-config/ssh/id_rsa
+aladin-config/ssh/id_rsa.pub
+###< SSH keys (for pushing to/pulling from git origin) ###
+
+###> PhpStorm IDE ###
+.idea/
+###< PhpStorm IDE ###

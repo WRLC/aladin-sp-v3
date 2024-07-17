@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('show_service', {'slug': service.slug}) }}">{{ service.Name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete Service</li>
+        </ol>
+    </nav>
+    <h1>Delete Service</h1>
+    <div class="mb-3">
+        Are you sure you want to delete the service "{{ service.Name }}"?
+    </div>
+    <div class="mb-3">
+        <a href="{{ path('confirm_delete_service', {'slug': service.slug}) }}" class="btn btn-danger">Delete</a>
+        <a href="{{ path('show_service', {'slug': service.slug}) }}" class="btn btn-secondary">Cancel</a>
+    </div>
+{% endblock %}

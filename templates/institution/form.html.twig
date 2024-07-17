@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if form.vars.value.id is null %}
+        {% set value = 'Add' %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Add Institution</li>
+            </ol>
+        </nav>
+    {% else %}
+        {% set value = 'Edit' %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': form.vars.value.index}) }}">{{ form.vars.value.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Institution</li>
+            </ol>
+        </nav>
+    {% endif %}
+    <h1>{{ value }} Institution</h1>
+    {{ form_start(form) }}
+        {% if form_errors(form) %}
+            <div class="alert alert-danger">
+                {{ form_errors(form) }}
+            </div>
+        {% endif %}
+        <div class="mb-3{% if form.index.vars.required %} required{% endif %}">
+            {{ form_label(form.index, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.index, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.index) }}
+        </div>
+        <div class="mb-3{% if form.name.vars.required %} required{% endif %}">
+            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <div class="mb-3{% if form.wayf_label.vars.required %} required{% endif %}">
+            {{ form_label(form.wayf_label, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.wayf_label, {'attr': {'class': 'form-control'}}) }}
+            {{ form_help(form.wayf_label, {'help_attr': {'class': 'form-text'}})}}
+            {{ form_errors(form.wayf_label) }}
+        </div>
+        <div class="mb-3{% if form.entity_id.vars.required %} required{% endif %}">
+            {{ form_label(form.entity_id, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.entity_id, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.entity_id) }}
+        </div>
+         <div class="mb-3{% if form.alma_location_code.vars.required %} required{% endif %}">
+            {{ form_label(form.alma_location_code, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.alma_location_code, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.alma_location_code) }}
+        </div>
+        <div class="mb-3{% if form.mail_attribute.vars.required %} required{% endif %}">
+            {{ form_label(form.mail_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.mail_attribute, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.mail_attribute) }}
+        </div>
+        <div class="mb-3{% if form.name_attribute.vars.required %} required{% endif %}">
+            {{ form_label(form.name_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.name_attribute, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name_attribute) }}
+        </div>
+        <div class="mb-3{% if form.first_name_attribute.vars.required %} required{% endif %}">
+            {{ form_label(form.first_name_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.first_name_attribute, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.first_name_attribute) }}
+        </div>
+        <div class="mb-3{% if form.id_attribute.vars.required %} required{% endif %}">
+            {{ form_label(form.id_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.id_attribute, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.id_attribute) }}
+        </div>
+        <div class="actions">
+            {% if form.vars.value.id is null %}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Institution'}) }}
+            {% else %}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Update Institution'}) }}
+            {% endif %}
+            {% if form.vars.value.id is not null %}
+                <a href="{{ path('show_institution', {'index': form.vars.value.index}) }}" class="btn btn-secondary">Cancel</a>
+            {% endif %}
+        </div>
+    {{ form_end(form) }}
+{% endblock %}

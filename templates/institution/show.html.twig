@@ -1,0 +1,168 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ institution.Name }}</li>
+        </ol>
+    </nav>
+    <div class="row align-items-center">
+        <h1 class="col col-10">Institution Details</h1>
+        <span class="col col-2 text-end">
+            <a href="{{ path('edit_institution', {'index': institution.index}) }}" class="btn btn-warning">Edit</a>
+            <a href="{{ path('delete_institution', {'index': institution.index}) }}" class="btn btn-danger">Delete</a>
+        </span>
+    </div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Index</th>
+                <td class="col-10">{{ institution.Index }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Name</th>
+                <td class="col-10">{{ institution.Name }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">WAYF Label</th>
+                <td class="col-10">
+                    {% if institution.WayfLabel %}
+                        {{ institution.WayfLabel }}
+                    {% else %}
+                        {{ institution.Name }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Alma Code</th>
+                <td class="col-10">{{ institution.AlmaLocationCode }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">IdP</th>
+                <td class="col-10">
+                    <details>
+                        <summary>{{ institution.EntityId }}</summary>
+                        <table class="container table">
+                            <tr>
+                                <th scope="row" class="col-2 table-secondary">Organization</th>
+                                <td class="col-10">
+                                    {% if idpDetails.OrganizationDisplayName.en is defined %}
+                                        {{ idpDetails.OrganizationDisplayName.en }}
+                                    {% elseif idpDetails.OrganizationName.en is defined %}
+                                        {{ idpDetails.OrganizationName.en }}
+                                    {% elseif idpDetails.description.en is defined %}
+                                        {{ idpDetails.description.en }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="col-2 table-secondary">IdP Name</th>
+                                <td class="col-10">
+                                    {% if idpDetails.name.en is defined %}
+                                        {{ idpDetails.name.en }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="col-2 table-secondary">URL</th>
+                                <td class="col-10">
+                                    {% if idpDetails.OrganizationURL.en is defined %}
+                                        {{ idpDetails.OrganizationURL.en }}
+                                    {% elseif idpDetails.url.en is defined %}
+                                        {{ idpDetails.url.en }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="col-2 table-secondary">Scope</th>
+                                <td class="col-10">
+                                    {% if idpDetails.scope is defined %}
+                                        {% for item in idpDetails.scope %}
+                                            {{ item }}<br />
+                                        {% endfor %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </details>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Mail Attribute</th>
+                <td class="col-10">{{ institution.MailAttribute }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">Name Attribute</th>
+                <td class="col-10">{{ institution.NameAttribute }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">First Name Attribute</th>
+                <td class="col-10">{{ institution.FirstNameAttribute }}</td>
+            </tr>
+            <tr>
+                <th scope="row" class="col-2 table-primary">ID Attribute</th>
+                <td class="col-10">{{ institution.IdAttribute }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="mb-3">
+        <h2 class="col col-9">Institutional Services</h2>
+        {% if institution.InstitutionServices|length > 0 %}
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table-dark">
+                        <th class="col-3">Service</th>
+                        <th class="col-2">ID Attribute</th>
+                        <th class="col-2">Auth Type</th>
+                        <th class="col-2">Authorized</th>
+                        <th class="col-3"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in institution.InstitutionServices|sort((a, b) => a.Service.name <=> b.Service.name) %}
+                        <tr>
+                            <td>{{ service.Service.name }}</td>
+                            <td>{{ service.IdAttribute }}</td>
+                            <td>{{ service.AuthzType.description }}</td>
+                            <td>
+                                <ul class="list-group list-group-horizontal">
+                                    {% if service.AuthzType.type == 'free' %}
+                                        <li class="list-group-item">All</li>
+                                    {% else %}
+                                        {% for member in service.AuthzMembers %}
+                                            <li class="list-group-item">{{ member.member }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </td>
+                            <td class="text-end">
+                                <a href="{{ path('edit_institution_service', {'index': institution.index, 'slug': service.Service.slug}) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ path('delete_institution_service', {'index': institution.index, 'slug': service.Service.slug}) }}" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="mb3">No institutional services found for {{ institution.name }}.</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {% if services|length > 0 %}
+            {{ form_start(form) }}
+            <div class="mb-3{% if form.service.vars.required %} required{% endif %}">
+                {{ form_label(form.service, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.service, {'attr': {'class': 'form-select col col-11'}}) }}
+                {{ form_errors(form.service) }}
+            </div>
+            <div class="mb-3">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Service'}) }}
+            </div>
+            {{ form_end(form) }}
+        {% else %}
+            <div><small><em>All available services have been added.</em></small></div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if type == 'add' %}
+        {% set command = 'Add' %}
+    {% elseif type == 'edit' %}
+        {% set command = 'Edit' %}
+    {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            {% if institution %}
+                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ institution.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ command }} Institutional Service</li>
+        </ol>
+    </nav>
+    <h1>{{ command }} Institutional Service</h1>
+    {{ form_start(form) }}
+    {% if form_errors(form) %}
+        <div class="alert alert-danger">
+            {{ form_errors(form) }}
+        </div>
+    {% endif %}
+        <div class="mb-3{% if form.institution.vars.required %} required{% endif %}">
+            {{ form_label(form.institution, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.institution, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
+            <div class="text-secondary">{{ institution.name }}</div>
+            {{ form_errors(form.institution) }}
+        </div>
+        <div class="mb-3{% if form.service.vars.required %} required{% endif %}">
+            {{ form_label(form.service, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.service, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
+            <div class="text-secondary">{{ service.name }}</div>
+            {{ form_errors(form.service) }}
+        </div>
+        <div class="mb-3{% if form.authz_type.vars.required %} required{% endif %}">
+            {{ form_label(form.authz_type, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.authz_type, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.authz_type) }}
+        </div>
+        <div class="mb-3">
+            <div class="mb-1">Authorized Users/Roles/Groups</div>
+            <div  class="text-secondary mb-3"><small><em>These values are ignored when Authorization Type is "free."</em></small></div>
+            <div class="members"
+                 data-index="{{ form.authz_members|length > 0 ? form.authz_members|last.vars.name + 1 : 0 }}"
+                 data-prototype="{{ form_widget(form.authz_members.vars.prototype)|e('html_attr') }}"
+            >
+                {% for member in form.authz_members %}
+                    <div class="row">
+                        {{ form_widget(member, {'attr': {'class': 'mb-3 col col-11'}}) }}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" class="btn btn-success btn-sm add_item_link" data-collection-holder-class="members"><strong> + </strong></button> Add User/Role/Group
+            {{ form_errors(form.authz_members) }}
+        </div>
+        <div class="mb-3{% if form.id_attribute.vars.required %} required{% endif %}">
+            {{ form_label(form.id_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.id_attribute, {'attr': {'class': 'form-select'}}) }}
+            {{ form_errors(form.id_attribute) }}
+        </div>
+        <div class="mb-3">
+            {% if command == 'Add' %}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Institutional Service'}) }}
+            {% elseif command == 'Edit' %}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Edit Institutional Service'}) }}
+            {% endif %}
+        </div>
+    {{ form_end(form) }}
+    <script type="application/javascript">
+        document
+            .querySelectorAll('div.members div.row')
+            .forEach((item) => {
+                addMemberFormDeleteLink(item);
+            });
+
+        document
+            .querySelectorAll('.add_item_link')
+            .forEach(btn => {
+                btn.addEventListener("click", addFormToCollection)
+            });
+
+        function addFormToCollection(e) {
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+            const item = document.createElement('div');
+
+            item.setAttribute('class', 'row')
+
+            item.innerHTML = collectionHolder
+                .dataset
+                .prototype
+                .replace(
+                    /__name__/g,
+                    collectionHolder.dataset.index
+                )
+                .replace(
+                    "input",
+                    "input class=\"form-control\""
+                );
+
+            addMemberFormDeleteLink(item);
+
+            collectionHolder.appendChild(item);
+
+            collectionHolder.dataset.index++;
+        }
+
+        function addMemberFormDeleteLink(item) {
+            const removeFormDiv = document.createElement('div');
+            removeFormDiv.setAttribute('class', 'col col-1');
+
+            const removeFormButton = document.createElement('button');
+            removeFormButton.setAttribute('class', 'btn btn-danger btn-sm remove_item_link');
+            removeFormButton.innerText = '-';
+
+            removeFormDiv.appendChild(removeFormButton);
+
+            item.append(removeFormDiv);
+
+            removeFormButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                item.remove();
+            })
+        }
+
+
+    </script>
+{% endblock %}
