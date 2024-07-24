@@ -171,7 +171,7 @@ class InstitutionController extends AbstractController
 
             $this->addFlash('success', $institution->getName() . ' updated');  // Add a success flash message
 
-            return $this->redirectToRoute('show_institution', ['inst_index' => $index]);  // Redirect to the edit Institution page
+            return $this->redirectToRoute('show_institution', ['index' => $index]);  // Redirect to the edit Institution page
         }
 
 
@@ -264,7 +264,6 @@ class InstitutionController extends AbstractController
      */
     public function getIdps(): array
     {
-        Configuration::setConfigDir($_ENV['SIMPLESAMLPHP_CONFIG_DIR']);  // Set the configuration directory
         $config = Configuration::getConfig();  // Get the configuration
         $metadatadir = $config->getString('metadatadir');  // Get the metadata directory
         $sources = $config->getArray('metadata.sources');  // Get the metadata sources
@@ -274,13 +273,13 @@ class InstitutionController extends AbstractController
                 if (array_key_exists('directory', $source)) {
                     $files[] = $source['directory'];  // Add the value to the files array
                 } else {
-                    $files[] = 'metadata';  // Add the value to the files array
+                    $files[] = $metadatadir;  // Add the value to the files array
                 }
             }
         }
         $metadata = [];  // Initialize the metadata array
         foreach ($files as $file) {  // For each file
-            $metadata[] = include dirname($_ENV['SIMPLESAMLPHP_CONFIG_DIR']) . '/' . $file . '/saml20-idp-remote.php';  // Include the file
+            $metadata[] = include $file . '/saml20-idp-remote.php';  // Include the file
         }
 
         return $metadata;

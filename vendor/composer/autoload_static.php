@@ -19,9 +19,9 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
+        '334983c1b64a31de3c73827b7a6a1e88' => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/src/_autoload_modules.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '2203a247e6fda86070a5e4e07aed533a' => __DIR__ . '/..' . '/symfony/clock/Resources/now.php',
-        '334983c1b64a31de3c73827b7a6a1e88' => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/src/_autoload_modules.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '92c8763cd6170fce6fcfe7e26b4e8c10' => __DIR__ . '/..' . '/symfony/phpunit-bridge/bootstrap.php',
@@ -117,8 +117,11 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'Symfony\\Bridge\\PhpUnit\\' => 23,
             'Symfony\\Bridge\\Monolog\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
+            'SimpleSAML\\XML\\' => 15,
+            'SimpleSAML\\Module\\sanitycheck\\' => 30,
             'SimpleSAML\\Module\\saml\\' => 23,
             'SimpleSAML\\Module\\multiauth\\' => 28,
+            'SimpleSAML\\Module\\metarefresh\\' => 30,
             'SimpleSAML\\Module\\ldap\\' => 23,
             'SimpleSAML\\Module\\expirycheck\\' => 30,
             'SimpleSAML\\Module\\exampleauth\\' => 30,
@@ -506,6 +509,14 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/symfony/doctrine-bridge',
         ),
+        'SimpleSAML\\XML\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplesamlphp/xml-common/src',
+        ),
+        'SimpleSAML\\Module\\sanitycheck\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/sanitycheck/src',
+        ),
         'SimpleSAML\\Module\\saml\\' => 
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/saml/src',
@@ -513,6 +524,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'SimpleSAML\\Module\\multiauth\\' => 
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/multiauth/src',
+        ),
+        'SimpleSAML\\Module\\metarefresh\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/metarefresh/src',
         ),
         'SimpleSAML\\Module\\ldap\\' => 
         array (

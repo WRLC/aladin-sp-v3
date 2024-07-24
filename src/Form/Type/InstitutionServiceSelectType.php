@@ -17,7 +17,6 @@ class InstitutionServiceSelectType extends AbstractType
             $services[$service->getName()] = $service;
         }
         ksort($services);
-        dump($services);
         $builder
             ->add('service', ChoiceType::class, [
                 'label' => 'Add a Service for this institution',

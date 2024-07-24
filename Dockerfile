@@ -1,5 +1,8 @@
 FROM php:8.1-fpm
 
+# Set PHP ini settings
+COPY docker-php.ini /usr/local/etc/php/php.ini
+
 # Install dependencies
 RUN apt update \
     && apt install -y openssl zip unzip curl wget ssh vim zlib1g-dev libcurl3-dev libzip-dev libpng-dev libjpeg-dev libwebp-dev libonig-dev  \

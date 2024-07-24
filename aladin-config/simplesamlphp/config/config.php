@@ -7,7 +7,8 @@
 use SimpleSAML\Utils\HTTP;
 use Symfony\Component\Dotenv\Dotenv;
 
-(new Dotenv())->bootEnv('/app/aladin-config/simplesamlphp/config/.env');
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
 
 $httpUtils = new HTTP();
 
@@ -1145,12 +1146,13 @@ $config = [
      */
     'metadata.sources' => [
         ['type' => 'flatfile'],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_1']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_2']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_3']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_4']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_5']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_SOURCE_6']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_1']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_2']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_3']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_4']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_5']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_6']],
+        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_7']]
     ],
 
     /*

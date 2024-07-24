@@ -28,6 +28,8 @@ aladin-config/simplesamlphp/cert/*.pem
 
 ###> simplesamlphp config ###
 aladin-config/simplesamlphp/config/authsources.php
+aladin-config/simplesamlphp/config/module_cron.php
+aladin-config/simplesamlphp/config/module_metarefresh.php
 ###< simplesamlphp config ###
 
 ###> simplesamlphp metadata ###
@@ -36,6 +38,9 @@ aladin-config/simplesamlphp/metadata/*/*.xml
 aladin-config/simplesamlphp/metadata/*.php
 aladin-config/simplesamlphp/metadata/metarefresh-*/*.php
 ###< simplesamlphp metadata ###
+
+###> simplesamlphp logs ###
+vendor/simplesamlphp/simplesamlphp/log/*.log
 
 ###> SSH keys (for pushing to/pulling from git origin) ###
 aladin-config/ssh/id_rsa
