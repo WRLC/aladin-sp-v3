@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            {% if institution %}
+                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ institution.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ service.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">Authorization Test</li>
+        </ol>
+    </nav>
+    <h1>Authorization Test</h1>
+    {{form_start(form) }}
+        <div class="mb-3{% if form.institution.vars.required %} required{% endif %}">
+            {{ form_label(form.institution, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.institution, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
+            <div class="text-secondary">{{ institution.name }}</div>
+            {{ form_errors(form.institution) }}
+        </div>
+        <div class="mb-3{% if form.service.vars.required %} required{% endif %}">
+            {{ form_label(form.service, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.service, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
+            <div class="text-secondary">{{ service.name }}</div>
+            {{ form_errors(form.service) }}
+        </div>
+        <div class="mb-3{% if form.user.vars.required %} required{% endif %}">
+            {{ form_label(form.user, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.user, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.user) }}
+        </div>
+    {{ form_end(form) }}
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary" onclick="getAuthz()">Test AuthZ</button>
+    </div>
+{% endblock %}
+{% block javascripts2 %}
+    <script>
+        function getAuthz() {
+            let institution = document.getElementById('authz_test_institution').value;
+            let service = document.getElementById('authz_test_service').value;
+            let user = document.getElementById('authz_test_user').value;
+            if (user === '') {
+                alert('Please enter a User ID.');
+                return;
+            }
+            document.location.href = '/authZ?institution=' + institution + '&service=' + service + '&user=' + user;
+        }
+    </script>
+{% endblock %}

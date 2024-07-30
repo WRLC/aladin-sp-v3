@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Authentication Test</li>
+        </ol>
+    </nav>
+    <h1>Authentication Test</h1>
+    <h2>Identity Provider:</h2>
+    <dl>
+        <dt class="mt-3"><pre class="mb-0">IdP Name</pre></dt>
+        <dd class="mx-4"><pre class="mb-0">{{ idp.name.en }}</pre></dd>
+        <dt class="mt-3"><pre class="mb-0">Entity ID</pre></dt>
+        <dd class="mx-4"><pre class="mb-0">{{ idp.entityid }}</pre></dd>
+    </dl>
+    <h2>User Attributes:</h2>
+    <dl>
+        {% for key, value in attributes %}
+            <dt class="mt-3"><pre class="mb-0">{{ result. }}</pre></dt>
+            <dd class="mx-4">
+                    {% for item in value %}
+                        <div><pre class="mb-0">{{ item }}</pre></div>
+                    {% endfor %}
+            </dd>
+        {% endfor %}
+    </dl>
+{% endblock %}

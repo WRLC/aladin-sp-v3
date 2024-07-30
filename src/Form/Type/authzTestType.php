@@ -3,12 +3,14 @@
 namespace App\Form\Type;
 
 use App\Entity\Institution;
+use App\Entity\Service;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AuthnTestType extends AbstractType
+class authzTestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -17,17 +19,31 @@ class AuthnTestType extends AbstractType
                 'label' => 'Institution',
                 'required' => true,
                 'class' => Institution::class,
-                'choices' => $options['institutions'],
                 'choice_label' => 'name',
                 'choice_value' => 'index',
+                'data' => $options['institution'],
+            ])
+            ->add('service', EntityType::class, [
+                'label' => 'Service',
+                'required' => true,
+                'class' => Service::class,
+                'choice_label' => 'name',
+                'choice_value' => 'slug',
+                'data' => $options['service'],
+            ])
+            ->add('user', TextType::class, [
+                'label' => 'User ID',
+                'required' => true,
             ])
         ;
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'institutions' => [],
+            'institution' => [],
+            'service' => [],
         ]);
     }
 

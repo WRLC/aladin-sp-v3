@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            {% if institution %}
+                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ institution.name }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ service.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">Authorization Test</li>
+        </ol>
+    </nav>
+    <h1>Authorization Test</h1>
+    <!-- Display the results of the authorization test -->
+    <h2>Access {% if result.authorized == 1 %}Granted{% else %}Denied{% endif %}</h2>
+    <dl>
+        <!-- Institution -->
+        <dt class="mt-3"><pre class="mb-0">Institution</pre></dt>
+        <dd class="mx-4"><pre class="mb-0">{{ institution.name }}</pre></dd>
+        <!-- Service -->
+        <dt class="mt-3"><pre class="mb-0">Service</pre></dt>
+        <dd class="mx-4"><pre class="mb-0">{{ service.name }}</pre></dd>
+        <!-- User -->
+        <dt class="mt-3"><pre class="mb-0">User</pre></dt>
+        <dd class="mx-4"><pre class="mb-0">{{ user }}</pre></dd>
+        <!-- Authorization Type -->
+        <dt class="mt-3"><pre class="mb-0">Authorization Type</pre></dt>
+        <dd class="mx-4"><pre class="mb-0">{{ result.authzType }}</pre></dd>
+
+        <!-- Only display the rest if authzType is group or role -->
+        {% if (result.authzType == 'group' or result.authzType == 'role') %}
+            <!-- Authorized Groups/Roles -->
+            <dt class="mt-3"><pre class="mb-0">Authorized {{ result.authzType|capitalize }}s</pre></dt>
+            <dd class="mx-4">
+                <!-- If no groups/roles are authorized, display 'None' -->
+                {% if result.authzMembers|length == 0 %}
+                    <pre class="mb-0">None</pre>
+                <!-- Otherwise, display the groups/roles -->
+                {% else %}
+                    {% for item in result.authzMembers %}
+                        <div><pre class="mb-0">{{ item }}</pre></div>
+                    {% endfor %}
+                {% endif %}
+            </dd>
+            <!-- User Matched Groups/Roles -->
+            <dt class="mt-3"><pre class="mb-0">User Matched {{ result.authzType|capitalize }}(s)</pre></dt>
+            <dd class="mx-4">
+                <!-- If no groups/roles are matched, display 'None' -->
+                {% if result.authorized == 0 %}
+                    <pre class="mb-0">None</pre>
+                {% else %}
+                    <!-- Otherwise, display the groups/roles -->
+                    <!-- If the authzType is group, display the group (there can be only one) -->
+                    {% if result.authzType == 'group' %}
+                        <pre class="mb-0">{{ result.match }}</pre>
+                    {% endif %}
+                    <!-- If the authzType is role, display the roles (there can me more than one) -->
+                    {% if result.authzType == 'role' %}
+                        {% for role in result.match %}
+                            <div><pre class="mb-0">{{ role }}</pre></div>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+            </dd>
+        {% endif %}
+        {% if (result.match|length > 0 and result.authorized == 0) %}
+            <dt class="mt-3"><pre class="mb-0">Error</pre></dt>
+            <dd class="mx-4"><pre class="mb-0">{{ result.match.0 }}</pre></dd>
+        {% endif %}
+    </dl>
+{% endblock %}

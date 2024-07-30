@@ -94,6 +94,7 @@ class InstitutionController extends AbstractController
      * @return Response
      *
      * @throws \SimpleSAML\Error\Exception
+     * @throws Exception
      */
     #[Route('/institution/{index}', name: 'show_institution')]
     public function showInstitution(EntityManagerInterface $entityManager, Request $request, string $index): Response
@@ -245,7 +246,7 @@ class InstitutionController extends AbstractController
     /**
      * @throws Exception
      */
-    private function getIdpDetails($entityid): array
+    public function getIdpDetails($entityid): array
     {
         $metadata = $this->getIdps();  // Get IdPs from the IdP controller
         $details = [];  // Initialize the details array
