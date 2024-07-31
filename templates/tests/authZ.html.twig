@@ -29,9 +29,9 @@
         <dd class="mx-4"><pre class="mb-0">{{ result.authzType }}</pre></dd>
 
         <!-- Only display the rest if authzType is group or role -->
-        {% if (result.authzType == 'group' or result.authzType == 'role') %}
+        {% if (result.authzType == 'user_group' or result.authzType == 'user_role') %}
             <!-- Authorized Groups/Roles -->
-            <dt class="mt-3"><pre class="mb-0">Authorized {{ result.authzType|capitalize }}s</pre></dt>
+            <dt class="mt-3"><pre class="mb-0">Authorized {{ result.authzType }}(s)</pre></dt>
             <dd class="mx-4">
                 <!-- If no groups/roles are authorized, display 'None' -->
                 {% if result.authzMembers|length == 0 %}
@@ -39,12 +39,12 @@
                 <!-- Otherwise, display the groups/roles -->
                 {% else %}
                     {% for item in result.authzMembers %}
-                        <div><pre class="mb-0">{{ item }}</pre></div>
+                        <div><pre class="mb-0">{{ item.member }}</pre></div>
                     {% endfor %}
                 {% endif %}
             </dd>
             <!-- User Matched Groups/Roles -->
-            <dt class="mt-3"><pre class="mb-0">User Matched {{ result.authzType|capitalize }}(s)</pre></dt>
+            <dt class="mt-3"><pre class="mb-0">Matched {{ result.authzType }}(s)</pre></dt>
             <dd class="mx-4">
                 <!-- If no groups/roles are matched, display 'None' -->
                 {% if result.authorized == 0 %}
@@ -52,11 +52,11 @@
                 {% else %}
                     <!-- Otherwise, display the groups/roles -->
                     <!-- If the authzType is group, display the group (there can be only one) -->
-                    {% if result.authzType == 'group' %}
+                    {% if result.authzType == 'user_group' %}
                         <pre class="mb-0">{{ result.match }}</pre>
                     {% endif %}
                     <!-- If the authzType is role, display the roles (there can me more than one) -->
-                    {% if result.authzType == 'role' %}
+                    {% if result.authzType == 'user_role' %}
                         {% for role in result.match %}
                             <div><pre class="mb-0">{{ role }}</pre></div>
                         {% endfor %}

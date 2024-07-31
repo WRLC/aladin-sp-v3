@@ -18,111 +18,152 @@ class AuthzController extends AbstractController
      */
     public function authz(InstitutionService $institutionService, string $user): array
     {
-        $almaCode = $institutionService->getInstitution()->getAlmaLocationCode();  // Get the institution's Alma location code
-        $authzType = $institutionService->getAuthzType()->getType();  // Get the institutional Service's authorization type
-        $authzMembers = [];
-        $match = [];
-        $errors = false;
-        foreach ($institutionService->getAuthzMembers() as $member) {
-            $authzMembers[] = $member->getMember();  // Get the institutional Service's authorization members
-        }  // Get the institutional Service's authorization members
+        // Get the institutional Service's authorization type
+        $authzType = $institutionService->getAuthzType();
 
-        // FREE
-        if ($authzType == 'free') {  // If the authorization type is 'user'
-            $attributes = $this->get_alma_attributes($user, $almaCode);  // Get the user's Alma attributes
-            if (key_exists('error', $attributes)) {  // If there's an error in the Alma attributes...
-                $authorized = false;  // ...set the authorized flag to false
-                $match[] = $attributes['error'];  // ...set the user's values to the error message
-                $errors = true;
+        // NONE $authzType (Just make sure they're authenticated, which they already are)
+        if ($authzType == 'none') {  // If the authorization field type is 'none'...
+            return [  // ...grant access
+                'authorized' => true,  // Access Granted
+                'authzType' => $authzType,  // Authorization type
+                'authzMembers' => [],  // Empty authorized members
+                'match' => [],  // Empty matched values
+                'errors' => false,  // No errors
+            ];
+        }
+
+        // Get authz members
+        $authzMembers = $institutionService->getAuthzMembers();  // Get the authorized members
+        $authzList = [];  // Initialize the authorized list (need array of member values for matching)
+        foreach ($authzMembers as $authzMember) {  // For each authorized member object...
+            $authzList[] = $authzMember->getMember();  // ...add the member value to the authorized list
+        }
+        if ($authzType != 'any_alma') {
+            if (count($authzMembers) == 0) {  // If the institutional service has no authorized members...
+                return [  // ...deny access
+                    'authorized' => false,  // Access Denied
+                    'authzType' => $authzType,  // Authorization type
+                    'authzMembers' => ['None',],  // Empty authorized members
+                    'match' => [],  // Empty matched values
+                    'errors' => false,  // No errors
+                ];
             }
-            else {  // If there's no error in the Alma attributes (i.e., the user exists)...
-                $authorized = true;  // ...set the authorized flag to true
+
+        }
+
+        // IDP USER ID $authzType (only users with matching User ID)
+        if ($authzType == 'user_id') {
+            if (in_array($user, $authzList)) {  // If the user is in the authorized members list...
+                return [ // ...grant access
+                    'authorized' => true,  // Access Granted
+                    'authzType' => $authzType,  // Authorization type
+                    'authzMembers' => [],  // Empty authorized members (for security)
+                    'match' => [],  // Empty matching user (already displayed in results)
+                    'errors' => false,  // No errors
+                ];
+            }
+            else {  // If the user is not in the authorized members list...
+                return [  // ...deny access
+                    'authorized' => false,  // Access Denied
+                    'authzType' => $authzType,  // Authorization type
+                    'authzMembers' => [],  // Empty authorized members (for security)
+                    'match' => [],  // Empty matching users
+                    'errors' => false,  // No errors
+                ];
             }
         }
 
-        // GROUP
-        elseif ($authzType == 'group') {  // If the authorization type is 'group'
+        // Get the alma user attributes, because everything else depends on them
+        $almaCode = $institutionService->getInstitution()->getAlmaLocationCode();  // Alma IZ code
+        $attributes = $this->get_alma_attributes($user, $almaCode);  // Alma user attributes
 
-            if (count($authzMembers) == 0) {  // If the institutional service has no authorized groups
-                $authorized = false;  // ...set the authorized flag to false
-            }
-            else {  // If the institutional service has authorized groups
-                $attributes = $this->get_alma_attributes($user, $almaCode);  // Get the user's Alma attributes
-                if (key_exists('error', $attributes)) {  // If there's an error in the Alma attributes...
-                    $authorized = false;  // ...set the authorized flag to false
-                    $match[] = $attributes['error'];  // ...set the user's values to the error message
-                    $errors = true;
-                } else {
-                    $group = $attributes['user_group']['value'];  // Get the user's group
-                    $authorized = in_array($group, $authzMembers);  // Set the authorized flag to true if the user's group is in the authorized groups
-                    $match[] = $group;  // Set the user's values
+        // If there's an error in the Alma attributes...
+        if (key_exists('error', $attributes)) {
+            return [  // Return an error
+                'authorized' => false,  // Access Denied
+                'authzType' => [],  // Empty authorization type
+                'authzMembers' => [],  // Empty authorized members
+                'match' => ['Alma user not found:', $attributes['error']],  // Error message
+                'errors' => true,  // Errors
+            ];
+        }
+
+        // ANY ALMA $authz_type (just make sure there's a matching Alma user)
+        if ($authzType == 'any_alma') {  // If the authorization field type is 'none'...
+            return [  // ...grant access
+                'authorized' => true,  // Access Granted
+                'authzType' => $authzType,  // Authorization type
+                'authzMembers' => [],  // Empty authorized members
+                'match' => [],  // Empty matched values
+                'errors' => false,  // No errors
+            ];
+        }
+
+        // ALMA ROLE $authz_type (only users with matching user_role)
+        if ($authzType == 'user_role') {  // If the authorization field type is 'user_role'...
+            $userRoles = $attributes['user_role'];  // Get the user roles
+            $matchingRoles = [];  // Initialize a matching roles list
+
+            // Iterate through the user roles to check for a match
+            foreach ($userRoles as $userRole) {  // For each user role...
+                if ($userRole['status']['value'] == 'ACTIVE') {  // Only look at active roles
+                    if (in_array($userRole['role_type']['value'], $authzList)) {  // If the user role is in the authorized members list...
+                        $matchingRoles[] = $userRole['role_type']['value'];  // ...add the role to the matching roles list
+                    }
                 }
             }
+
+            // Now check the matching role list count
+            if (count($matchingRoles) == 0) {  // If there are no matching roles...
+                return [  // ...deny access
+                    'authorized' => false,  // Access Denied
+                    'authzType' => $authzType,  // Authorization type
+                    'authzMembers' => $authzMembers,  // Authorized members
+                    'match' => [],  // Empty matched values
+                    'errors' => false,  // No errors
+                ];
+            }
+
+            // If we're still here (phew!), we had at least one matching role...
+            return [  // ...so grant access
+                'authorized' => true,  // Access Granted
+                'authzType' => $authzType,  // Authorization type
+                'authzMembers' => $authzMembers,  // Authorized members
+                'match' => $matchingRoles,  // Matching roles
+                'errors' => false,  // No errors
+            ];
         }
 
-        // ROLE
-        elseif ($authzType == 'role') {  // If the authorization type is 'role'...
-            if (count($authzMembers) == 0) {  // If the institutional service has no authorized groups
-                $authorized = false;  // Set the authorized flag to false
-            }
-            else {  // If the institutional service has authorized groups
-                $attributes = $this->get_alma_attributes($user, $almaCode);  // ...get the user's Alma attributes
-                if (key_exists('error', $attributes)) {  // If there's an error in the Alma attributes...
-                    $authorized = false;  // ...set the authorized flag to false
-                    $match[] = $attributes['error'];  // ...set the user's values to the error message
-                    $errors = true;
-                } else {
-                    $roles = $attributes['user_role'];  // ...get the user's roles
-                    $activeRoles = [];  // ...initialize an empty list of active roles
-                    foreach ($roles as $role) {  // For each user role...
-                        if ($role['status']['value'] == 'ACTIVE') {  // ...if the role is active...
-                            $activeRoles[] = $role['role_type']['value'];  // ...add the role to the list of active roles
-                        }
-                    }
-                    if (count($activeRoles) == 0) {  // If the user has no active roles...
-                        $authorized = false;  // ...set the authorized flag to false
-                    } else {  // If the user has active roles
-                        $match = array_intersect($activeRoles, $authzMembers);  // Set the user's matched values
-                        $authorized = count($match) > 0;  // Set the authorized flag to true if there are any matches
-                    }
+        // ALMA GROUP $authz_type (only users with matching user_group)
+        if ($authzType == 'user_group') {
+            foreach ($attributes['user_group'] as $userGroup) {
+                if (in_array($userGroup['value'], $authzList)) {
+                    return [
+                        'authorized' => true,  // Access Granted
+                        'authzType' => $authzType,  // Authorization type
+                        'authzMembers' => $authzMembers,  // Authorized groups
+                        'match' => [$userGroup['value'],],  // Matching group
+                        'errors' => false,  // No errors
+                    ];
                 }
             }
+            // If we're still here, the user group isn't authorized
+            return [
+                'authorized' => false,  // Access Denied
+                'authzType' => $authzType,  // Authorization type
+                'authzMembers' => $authzMembers,  // Authorized members
+                'match' => [],  // No matching groups
+                'errors' => false,  // No errors
+            ];
         }
 
-        // USER
-        elseif ($authzType == 'user') {  // If the authorization type is 'user'...
-            if (count($authzMembers) == 0) {  // If the institutional service has no authorized groups
-                $authorized = false;  // ...set the authorized flag to false
-            }
-            else {
-                $attributes = $this->get_alma_attributes($user, $almaCode);  // ...get the user's Alma attributes
-                if (key_exists('error', $attributes)) {  // If there's an error in the Alma attributes...
-                    $authorized = false;  // ...set the authorized flag to false
-                    $match[] = $attributes['error'];  // ...set the user's values to the error message
-                    $errors = true;
-                } else  {  // If there's no error in the Alma attributes (i.e., the user exists)...
-                    if (!in_array($user, $authzMembers)) {  // ...if the user ID is not in the authorized users list...
-                        $authorized = false;  // ...set the authorized flag to false
-                    } else {  // ...if the user ID is in the authorized users...
-                        $authorized = true;  // ...set the authorized flag to true
-                    }
-                }
-            }
-        }
-
-        // DEFAULT
-        else {  // If the authorization type is anything else, it's not a recognized authz type, so...
-            $authorized = false;  // ...set the authorized flag to false
-            $errors = true;
-            $match[] = 'Unknown authorization type: ' . $authzType;  // ...set the user's values to the error message
-        }
-
+        // And if we got this far, something ain't right...
         return [
-            'authorized' => $authorized,  // Return the authorized flag
-            'authzType' => $authzType,  // Return the authorization type
-            'authzMembers' => $authzMembers,  // Return the authorized members
-            'match' => $match,  // Return the matched values
-            'errors' => $errors,  // Return the errors flag
+            'authorized' => false,  // Access Denied
+            'authzType' => $authzType,  // Authorization type
+            'authzMembers' => $authzMembers,  // Authorized members
+            'match' => ['Unknown authorization type: ' . $authzType,],  // Error message
+            'errors' => true,  // Errors
         ];
     }
 

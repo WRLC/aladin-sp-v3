@@ -65,7 +65,7 @@
             {% if command == 'Add' %}
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Institutional Service'}) }}
             {% elseif command == 'Edit' %}
-                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Edit Institutional Service'}) }}
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Update Institutional Service'}) }}
             {% endif %}
         </div>
     {{ form_end(form) }}

@@ -134,7 +134,7 @@ class TestsController extends AbstractController
         // AUTHORIZATION
         $authzController = new AuthzController();  // Create a new AuthzController
         $result = $authzController->authz($institutionService, $user);  // Authorize the user
-        dump($result);  // Dump the result
+
         if ($result['errors']) {  // If there's an error in the result
             if (str_starts_with($result['match'][0], 'HTTP/1.1 404 Not Found returned for')){
                 return $this->error($error_intro, ['User "' . $user . '" not found for ' . $institution->getName()]);

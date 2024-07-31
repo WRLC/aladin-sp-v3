@@ -31,7 +31,17 @@ class InstitutionServiceType extends AbstractType
         $builder
             ->add('institution', EntityType::class, ['label' => 'Institution', 'required' => true, 'class' => Institution::class, 'choice_label' => 'name', 'data' => $institution])
             ->add('service', EntityType::class, ['label' => 'Service', 'required' => true, 'class' => Service::class, 'choice_label' => 'name', 'data' => $service])
-            ->add('authz_type', EntityType::class, ['label' => 'Authorization Type', 'required' => true, 'class' => AuthzType::class, 'choice_label' => 'type'])
+            ->add('authz_type', ChoiceType::class, [
+                'label' => 'Authorization Type',
+                'choices' => [
+                    'None (any user authenticated by IdP)' => 'none',
+                    'IdP User ID (only users with matching User ID)' => 'user_id',
+                    'Alma Role (only users with matching user_role)' => 'user_role',
+                    'Alma Group (only users with matching user_group)' => 'user_group',
+                    'Any Alma User (any user in Alma IZ)' => 'any_alma',
+                ],
+                'required' => true
+            ])
             ->add('authz_members', CollectionType::class, [
                 'label' => false,
                 'entry_type' => AuthzMemberType::class,

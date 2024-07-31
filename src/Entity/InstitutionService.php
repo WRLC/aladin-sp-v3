@@ -28,9 +28,8 @@ class InstitutionService
     #[ORM\JoinColumn(nullable: false)]
     private ?Service $Service = null;
 
-    #[ORM\ManyToOne(targetEntity: AuthzType::class, inversedBy: 'authzTypeInstitutionServices')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?AuthzType $AuthzType = null;
+    #[ORM\Column(length: 255)]
+    private ?string $AuthzType = null;
 
     #[ORM\Column(length: 255)]
     private ?string $id_attribute = null;
@@ -75,12 +74,12 @@ class InstitutionService
         return $this;
     }
 
-    public function getAuthzType(): ?AuthzType
+    public function getAuthzType(): ?string
     {
         return $this->AuthzType;
     }
 
-    public function setAuthzType(?AuthzType $AuthzType): static
+    public function setAuthzType(?string $AuthzType): static
     {
         $this->AuthzType = $AuthzType;
 

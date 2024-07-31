@@ -115,9 +115,9 @@
                 <thead>
                     <tr class="table-dark">
                         <th class="col-3">Service</th>
-                        <th class="col-2">ID Attribute</th>
-                        <th class="col-2">Auth Type</th>
-                        <th class="col-2">Authorized</th>
+                        <th class="col-1">IdP User </th>
+                        <th class="col-1">Auth type</th>
+                        <th class="col-4">Authorized</th>
                         <th class="col-3"></th>
                     </tr>
                 </thead>
@@ -126,16 +126,12 @@
                         <tr>
                             <td>{{ service.Service.name }}</td>
                             <td>{{ service.IdAttribute }}</td>
-                            <td>{{ service.AuthzType.description }}</td>
+                            <td>{{ service.authzType }}</td>
                             <td>
                                 <ul class="list-group list-group-horizontal">
-                                    {% if service.AuthzType.type == 'free' %}
-                                        <li class="list-group-item">All</li>
-                                    {% else %}
-                                        {% for member in service.AuthzMembers %}
-                                            <li class="list-group-item">{{ member.member }}</li>
-                                        {% endfor %}
-                                    {% endif %}
+                                    {% for member in service.AuthzMembers %}
+                                        <li class="list-group-item">{{ member.member }}</li>
+                                    {% endfor %}
                                 </ul>
                             </td>
                             <td class="text-end">
