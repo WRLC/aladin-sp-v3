@@ -43,51 +43,10 @@
             <tr>
                 <th scope="row" class="col-2 table-primary">IdP</th>
                 <td class="col-10">
-                    <details>
-                        <summary>
-                            {% if idpDetails.name.en is defined %}
-                                {{ idpDetails.name.en }}
-                            {% endif %}
-                        </summary>
-                        <table class="container table">
-                            <tr>
-                                <th scope="row" class="col-2 table-secondary">Entity ID</th>
-                                <td class="col-10">{{ institution.EntityId }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="col-2 table-secondary">Organization</th>
-                                <td class="col-10">
-                                    {% if idpDetails.OrganizationDisplayName.en is defined %}
-                                        {{ idpDetails.OrganizationDisplayName.en }}
-                                    {% elseif idpDetails.OrganizationName.en is defined %}
-                                        {{ idpDetails.OrganizationName.en }}
-                                    {% elseif idpDetails.description.en is defined %}
-                                        {{ idpDetails.description.en }}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="col-2 table-secondary">URL</th>
-                                <td class="col-10">
-                                    {% if idpDetails.OrganizationURL.en is defined %}
-                                        {{ idpDetails.OrganizationURL.en }}
-                                    {% elseif idpDetails.url.en is defined %}
-                                        {{ idpDetails.url.en }}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="col-2 table-secondary">Scope</th>
-                                <td class="col-10">
-                                    {% if idpDetails.scope is defined %}
-                                        {% for item in idpDetails.scope %}
-                                            {{ item }}<br />
-                                        {% endfor %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </table>
-                    </details>
+                    {% if idpDetails.name.en is defined %}
+                        {{ idpDetails.name.en }} -
+                    {% endif %}
+                    {{ institution.EntityId }}
                 </td>
             </tr>
             <tr>

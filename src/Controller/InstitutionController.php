@@ -9,7 +9,7 @@ use App\Form\Type\InstitutionServiceSelectType;
 use App\Form\Type\InstitutionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use SimpleSAML\Configuration;
+use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Utils\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -106,6 +106,7 @@ class InstitutionController extends AbstractController
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception
         }
+
 
         $idpDetails = $this->getIdpDetails($institution->getEntityId());  // Get IdP details
 
@@ -253,6 +254,7 @@ class InstitutionController extends AbstractController
         foreach ($metadata as $idp) {  // For each IdP
             if (is_array($idp) && $idp['entityid'] === $entityid) {  // If the IdP is an array and the entity ID matches
                 $details = $idp;  // Set the details to the IdP
+                dump($details);  // Dump the details
                 break;
             }
         }
@@ -265,25 +267,10 @@ class InstitutionController extends AbstractController
      */
     public function getIdps(): array
     {
-        $config = Configuration::getConfig();  // Get the configuration
-        $metadatadir = $config->getString('metadatadir');  // Get the metadata directory
-        $sources = $config->getArray('metadata.sources');  // Get the metadata sources
-        $files = [];
-        foreach ($sources as $source) {  // For each source
-            if ($source['type'] == 'flatfile') {
-                if (array_key_exists('directory', $source)) {
-                    $files[] = $source['directory'];  // Add the value to the files array
-                } else {
-                    $files[] = $metadatadir;  // Add the value to the files array
-                }
-            }
-        }
-        $metadata = [];  // Initialize the metadata array
-        foreach ($files as $file) {  // For each file
-            $metadata[] = include $file . '/saml20-idp-remote.php';  // Include the file
-        }
+        $federationControllor = MetaDataStorageHandler::getMetadataHandler();  // Get the IdP metadata handler
 
-        return $metadata;
+        // Get the IdPs from the metadata handler
+        return $federationControllor->getList('saml20-idp-remote', true);
     }
 
     public function sort_institutions_position(array $institutions): array

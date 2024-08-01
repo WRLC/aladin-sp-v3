@@ -1145,14 +1145,7 @@ $config = [
      * ],
      */
     'metadata.sources' => [
-        ['type' => 'flatfile'],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_1']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_2']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_3']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_4']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_5']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_6']],
-        ['type' => 'flatfile', 'directory' => $_ENV['SSP_METADATA_DIR'] . '/' . $_ENV['SSP_METADATA_SOURCE_7']]
+        ['type' => 'pdo'],
     ],
 
     /*
