@@ -2,7 +2,6 @@
 
 namespace App\Form\Type;
 
-use App\Entity\AuthzType;
 use App\Entity\Institution;
 use App\Entity\InstitutionService;
 use App\Entity\Service;
@@ -43,7 +42,11 @@ class InstitutionServiceType extends AbstractType
                 'required' => true
             ])
             ->add('authz_members', CollectionType::class, [
-                'label' => false,
+                'label' => 'Authorized Users/Roles/Groups',
+                'label_attr' => ['class' => 'mb-1 form-label'],
+                'help' => '<small><em>These values are ignored if Authorization Type is "None" or "Any Alma User."</em></small>',
+                'help_attr' => ['class' => 'mb-3 text-secondary'],
+                'help_html' => true,
                 'entry_type' => AuthzMemberType::class,
                 'allow_add' => true,
                 'allow_delete' => true,

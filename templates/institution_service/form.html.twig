@@ -41,8 +41,8 @@
             {{ form_errors(form.authz_type) }}
         </div>
         <div class="mb-3">
-            <div class="mb-1">Authorized Users/Roles/Groups</div>
-            <div  class="text-secondary mb-3"><small><em>These values are ignored when Authorization Type is "free."</em></small></div>
+            {{ form_label(form.authz_members) }}
+            {{ form_help(form.authz_members) }}
             <div class="members"
                  data-index="{{ form.authz_members|length > 0 ? form.authz_members|last.vars.name + 1 : 0 }}"
                  data-prototype="{{ form_widget(form.authz_members.vars.prototype)|e('html_attr') }}"
