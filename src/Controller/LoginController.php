@@ -9,8 +9,9 @@ use App\Entity\Service;
 use App\Form\Type\WayfType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Memcached;
+use SimpleSAML\Utils\Random;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,13 +25,13 @@ class LoginController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param Request $request
      *
-     * @return Response|RedirectResponse
+     * @return Response|null
      *
      * @throws TransportExceptionInterface
      * @throws Exception
      */
     #[Route('/login', name: 'login')]
-    public function login(EntityManagerInterface $entityManager, Request $request): Response | RedirectResponse
+    public function login(EntityManagerInterface $entityManager, Request $request): Response | null
     {
         $error_intro = 'Login Error:';
         $errorController = new AladinErrorController();
@@ -141,11 +142,25 @@ class LoginController extends AbstractController
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
-        $data = $this->set_data_string($institutionService, $user_attributes);
+        # generate random session id for memcached key
+        $randomUtils = new Random();
+        $sessionID = $randomUtils->generateID();
 
-        return $this->render('login/index.html.twig', [
-            'data' => $data
-        ]);
+        $cookie_name = '_wr_' . $service->getSlug();  // Create the cookie name
+
+        // Set the cookie
+        if (setcookie($cookie_name, $sessionID, ['expires' => time()+(86400*14), 'path' =>'/', 'domain' => '.wrlc.org'])) {
+
+            // Set the session data
+            $m = new Memcached();  // Create a new Memcached object
+            $m->addServer('localhost', 11211);  // Add the server
+            $data = $this->set_data_string($institutionService, $user_attributes);  // Create the data string
+            $m->set($sessionID, $data, time()+86400*14);  // Set the session data
+
+            // Redirect to the service
+            return $this->redirect($service->getUrl() . $service->getCallbackPath());
+        }
+        return null;
     }
 
     /**
