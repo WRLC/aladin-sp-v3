@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Select institution{% endblock %}
+
+{% block body %}
+    <div class="container-fluid text-center" style="max-width: 450px">
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+        <div class="alert alert-secondary">
+            You will be redirected to your campus login page after you select your institutional affiliation.
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts2 %}
+    <script>
+        document.getElementById('wayf_institution').addEventListener('change', function() {
+            let institution = this.value;
+            console.log(institution);
+            if (institution !== '') {
+                if (institution === 'na') {
+                    document.location.href = '{{ service.url }}' + '{{ service.legacyLoginPath }}';
+                } else {
+                    document.location.href = '/login?institution=' + institution + '&service={{ service.slug }}';
+                }
+            }
+        });
+    </script>
+{% endblock %}
