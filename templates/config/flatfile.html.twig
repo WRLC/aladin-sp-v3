@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Flat File{% endblock %}
+
+{% block body %}
+    <h1>Flat File</h1>
+    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+    {{ form_end(form) }}
+{% endblock %}

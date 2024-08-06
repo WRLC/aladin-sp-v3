@@ -30,3 +30,7 @@ table.sortable {
         border: 1px dashed var(--bs-body-color);
     }
 }
+
+pre {
+    white-space: wrap;
+}

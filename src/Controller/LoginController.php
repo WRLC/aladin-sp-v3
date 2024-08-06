@@ -12,6 +12,7 @@ use Exception;
 use Memcached;
 use SimpleSAML\Utils\Random;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -25,14 +26,15 @@ class LoginController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param Request $request
      *
-     * @return Response|null
+     * @return Response
      *
      * @throws TransportExceptionInterface
      * @throws Exception
      */
     #[Route('/login', name: 'login')]
-    public function login(EntityManagerInterface $entityManager, Request $request): Response | null
+    public function login(EntityManagerInterface $entityManager, Request $request): Response
     {
+        // Error handling
         $error_intro = 'Login Error:';
         $errorController = new AladinErrorController();
         $error = new AladinError('authorization', $error_intro);
@@ -61,7 +63,8 @@ class LoginController extends AbstractController
         // If no institution is provided, show the WAYF
         if (!$index) {
             // Get all institutional services for the service
-            $institutionServices = $entityManager->getRepository(InstitutionService::class)->findBy(['Service' => $service->getId()]);
+            $institutionServices = $entityManager->getRepository(InstitutionService::class)
+                ->findBy(['Service' => $service->getId()]);
 
             // If no institutional services found, show an error
             if (count($institutionServices) == 0) {
@@ -69,18 +72,7 @@ class LoginController extends AbstractController
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
 
-            // Get the institutions
-            $institutions = [];  // Initialize the institutions array
-            foreach ($institutionServices as $inst_service) {  // For each institutional service...
-                $institutions[] = $inst_service->getInstitution();  // ...add the institution to the institutions array
-            }
-
-            // Sort institutions
-            $institutionController = new InstitutionController();
-            $sorted_institutions = $institutionController->sort_institutions_position($institutions);
-
-            // Create the WAYF form w/ institutions
-            $form = $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions]);
+            $form = $this->generate_wayf($institutionServices);  // Generate the WAYF form
             $form->handleRequest($request);  // Handle the form request
 
             // Render the WAYF form
@@ -100,7 +92,8 @@ class LoginController extends AbstractController
         }
 
         // Get the institutional service
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $institution, 'Service' => $service]);
+        $institutionService = $entityManager->getRepository(InstitutionService::class)
+            ->findOneBy(['Institution' => $institution, 'Service' => $service]);
 
         // If the institutional service is not found, return an error page
         if (!$institutionService) {
@@ -120,11 +113,15 @@ class LoginController extends AbstractController
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
-        $user_id = $this->get_institution_user_id($institutionService, $user_attributes);  // Get the user ID attribute
+        // Get the user ID attribute
+        $user_id = $this->get_institution_user_id($institutionService, $user_attributes);
 
         // If the ID attribute is not found, show an error
         if ($user_id instanceof Exception) {
-            $error->setIntro('Invalid User ID attribute <pre>'. $institutionService->getIdAttribute() . '</pre> for '. $institution->getName());
+            $error->setIntro(
+                'Invalid User ID attribute <pre>'. $institutionService->getIdAttribute() . '</pre> for ' .
+                $institution->getName()
+            );
             $error->setErrors([$user_id->getMessage()]);
             $error->setLog(true);
             return $this->render('error.html.twig', $errorController->renderError($error));
@@ -136,7 +133,9 @@ class LoginController extends AbstractController
 
         // If the user is not authorized, show an error
         if (!$result['authorized']) {
-            $error->setIntro($institution->getName() . ' user '. $user_id .' not authorized for '. $service->getName());
+            $error->setIntro(
+                $institution->getName() . ' user '. $user_id .' not authorized for '. $service->getName()
+            );
             $error->setErrors($result['match']);
             $error->setLog(true);
             return $this->render('error.html.twig', $errorController->renderError($error));
@@ -155,12 +154,51 @@ class LoginController extends AbstractController
             $m = new Memcached();  // Create a new Memcached object
             $m->addServer('localhost', 11211);  // Add the server
             $data = $this->set_data_string($institutionService, $user_attributes);  // Create the data string
+
+            // If the data string is an error, show an error page
+            if ($data instanceof Exception) {
+                $error->setIntro('Failed to set user session');
+                $error->setErrors([$data->getMessage()]);
+                $error->setLog(true);
+                return $this->render('error.html.twig', $errorController->renderError($error));
+            }
+
             $m->set($sessionID, $data, time()+86400*14);  // Set the session data
 
             // Redirect to the service
             return $this->redirect($service->getUrl() . $service->getCallbackPath());
         }
-        return null;
+
+        // If the cookie is not set, show an error page
+        else {
+            $error->setIntro('Failed to set cookie');
+            $error->setErrors(['Cookie name: '. $cookie_name]);
+            $error->setLog(true);
+            return $this->render('error.html.twig', $errorController->renderError($error));
+        }
+    }
+
+    /**
+     * Generate the WAYF form
+     *
+     * @param array $institutionServices
+     *
+     * @return FormInterface
+     */
+    private function generate_wayf(array $institutionServices): FormInterface
+    {
+        // Get the institutions
+        $institutions = [];  // Initialize the institutions array
+        foreach ($institutionServices as $inst_service) {  // For each institutional service...
+            $institutions[] = $inst_service->getInstitution();  // ...add the institution to the institutions array
+        }
+
+        // Sort institutions
+        $institutionController = new InstitutionController();
+        $sorted_institutions = $institutionController->sort_institutions_position($institutions);
+
+        // Create the WAYF form w/ institutions
+        return $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions]);
     }
 
     /**
@@ -173,11 +211,9 @@ class LoginController extends AbstractController
      */
     private function get_institution_user_id(InstitutionService $institutionService, array $user_attributes): string | Exception
     {
-        $institution = $institutionService->getInstitution();  // Get the institution
-        $id_attribute = $institution->getIdAttribute();  // Get the ID attribute
-
         try {
-            $user_id = $user_attributes[$id_attribute][0];  // Get the user ID attribute
+            // Get the user ID attribute
+            $user_id = $user_attributes[$institutionService->getInstitution()->getIdAttribute()][0];
         }
         catch (Exception $e) {
             return $e;  // Errors
@@ -191,27 +227,32 @@ class LoginController extends AbstractController
      * @param InstitutionService $institutionService
      * @param array $user_attributes
      *
-     * @return string
+     * @return string|Exception
      */
-    private function set_data_string(InstitutionService $institutionService, array $user_attributes): string
+    private function set_data_string(InstitutionService $institutionService, array $user_attributes): string | Exception
     {
-        $institution = $institutionService->getInstitution();  // Get the institution
         $instSvcIdAttr = $institutionService->getIdAttribute();  // Get the institution service ID attribute
-        $method = 'get' . str_replace(' ', '', ucwords(str_replace('_', ' ', $instSvcIdAttr)));  // Get the method to call
-        $uid = $user_attributes[$institution->$method()][0];  // Get the user ID used by service
-        $normal_uid = strtolower($uid);  // Normalize the user ID
-        $normal_email = strtolower($user_attributes[$institution->getMailAttribute()][0]);  // Normalize the email
-        $last_name = $user_attributes[$institution->getNameAttribute()][0] ?? '';  // Get the last name
-        $first_name = $user_attributes[$institution->getFirstNameAttribute()][0] ?? '';  // Get the first name
 
+        // Get the method to call
+        $method = 'get' . str_replace(' ', '', ucwords(str_replace(
+            '_', ' ', $instSvcIdAttr
+            )));
 
-        $data = '';  # initialize data string
+        $uid = $user_attributes[$institutionService->getInstitution()->$method()][0] ?? '';
 
-        $data .= 'UserName=' . $normal_uid . "\r\n";
-        $data .= 'University=' . $institution->getName() . "\r\n";
+        if ($uid == '') {
+            return new Exception('User ID for ' . $institutionService->getService()->getName() . ' not found');
+        }
+
+        // Set optional name attributes
+        $last_name = $user_attributes[$institutionService->getInstitution()->getNameAttribute()][0] ?? '';
+        $first_name = $user_attributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
+
+        $data = 'UserName=' . strtolower($user_attributes[$institutionService->getInstitution()->$method()][0]) . "\r\n";
+        $data .= 'University=' . $institutionService->getInstitution()->getName() . "\r\n";
         $data .= 'RemoteIP=' . $_SERVER['REMOTE_ADDR'] . "\r\n";
         $data .= 'Expiration=' . time()+(86400*14) . "\r\n";
-        $data .= 'Email=' . $normal_email . "\r\n";
+        $data .= 'Email=' . strtolower($user_attributes[$institutionService->getInstitution()->getMailAttribute()][0]) . "\r\n";
         $data .= 'Name=' . $last_name . "\r\n";
         $data .= 'GivenName=' . $first_name . "\r\n";
 

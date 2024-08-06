@@ -1,0 +1,33 @@
+<?php
+
+namespace App\DataFixtures;
+
+use App\Entity\Config;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class AppFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        $config_names = [
+            [
+                'name' => 'patron_authorization_url',
+                'label' => 'Patron Authorization URL',
+            ],
+            [
+                'name' => 'service_provider_name',
+                'label' => 'SimpleSAMLphp Service Provider name (e.g., default-sp)',
+            ]
+        ];
+
+        foreach ($config_names as $config_name) {
+            $config = new Config();
+            $config->setName($config_name['name']);
+            $config->setLabel($config_name['label']);
+            $manager->persist($config);
+        }
+
+        $manager->flush();
+    }
+}

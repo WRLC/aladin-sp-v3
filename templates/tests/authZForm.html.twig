@@ -13,7 +13,7 @@
         </ol>
     </nav>
     <h1>Authorization Test</h1>
-    {{form_start(form) }}
+    {{form_start(form, {'attr': {'data-turbo': 'false'}}) }}
         <div class="mb-3{% if form.institution.vars.required %} required{% endif %}">
             {{ form_label(form.institution, null, {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(form.institution, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
@@ -31,22 +31,8 @@
             {{ form_widget(form.user, {'attr': {'class': 'form-control'}}) }}
             {{ form_errors(form.user) }}
         </div>
+        <div class="mb-3">
+            {{ form_widget(form.submit) }}
+        </div>
     {{ form_end(form) }}
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary" onclick="getAuthz()">Test AuthZ</button>
-    </div>
-{% endblock %}
-{% block javascripts2 %}
-    <script>
-        function getAuthz() {
-            let institution = document.getElementById('authz_test_institution').value;
-            let service = document.getElementById('authz_test_service').value;
-            let user = document.getElementById('authz_test_user').value;
-            if (user === '') {
-                alert('Please enter a User ID.');
-                return;
-            }
-            document.location.href = '/authZ?institution=' + institution + '&service=' + service + '&user=' + user;
-        }
-    </script>
 {% endblock %}

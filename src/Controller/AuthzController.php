@@ -59,7 +59,7 @@ class AuthzController extends AbstractController
 
         // If there's an error in the Alma attributes...
         if (key_exists('error', $attributes)) {
-            $authz->setMatch(['Alma user not found:', $attributes['error']]);  // Set the error message
+            $authz->setMatch(['Alma user not found', $attributes['error']]);  // Set the error message
             $authz->setErrors(true);  // Set the error flag
             return $this->returnAuthz($authz);  // Return an error
         }

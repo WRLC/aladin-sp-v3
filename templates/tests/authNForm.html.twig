@@ -8,21 +8,14 @@
         </ol>
     </nav>
     <h1>Authentication Test</h1>
-    {{form_start(form) }}
+    {{form_start(form, {'attr': {'data-turbo': 'false'}}) }}
         <div class="mb-3">
             {{ form_label(form.institution) }}
             {{ form_widget(form.institution) }}
+            {{ form_errors(form.institution) }}
+        </div>
+        <div class="mb-3">
+            {{ form_widget(form.submit) }}
         </div>
     {{ form_end(form) }}
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary" onclick="getInstitution()">Submit</button>
-    </div>
-{% endblock %}
-{% block javascripts2 %}
-    <script>
-        function getInstitution() {
-            let institution = document.getElementById('authn_test_institution').value;
-            document.location.href = '/authN?institution=' + institution;
-        }
-    </script>
 {% endblock %}
