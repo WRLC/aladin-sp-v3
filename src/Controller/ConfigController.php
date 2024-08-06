@@ -18,6 +18,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class ConfigController extends AbstractController
 {
     /**
+     * Show the configuration form.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/config', name: 'config')]
@@ -42,6 +49,12 @@ class ConfigController extends AbstractController
     }
 
     /**
+     * Generate PDO tables.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      * @throws \Exception
      */
@@ -83,6 +96,12 @@ class ConfigController extends AbstractController
     }
 
     /**
+     * Convert flatfile to PDO.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      * @throws \Exception
      */
