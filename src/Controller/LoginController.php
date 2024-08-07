@@ -155,7 +155,9 @@ class LoginController extends AbstractController
 
             // Set the session data
             $m = new Memcached();  // Create a new Memcached object
-            $m->addServer('localhost', 11211);  // Add the server
+            $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();  // Get the Memcached host
+            $mPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();  // Get the Memcached port
+            $m->addServer($mServer, intval($mPort));  // Add the server
             $data = $this->set_data_string($institutionService, $user_attributes);  // Create the data string
 
             // If the data string is an error, show an error page

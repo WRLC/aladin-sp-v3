@@ -16,6 +16,14 @@ class AppFixtures extends Fixture
                 'label' => 'Patron Authorization URL',
             ],
             [
+                'name' => 'memcached_host',
+                'label' => 'Memcached Host',
+            ],
+            [
+                'name' => 'memcached_port',
+                'label' => 'Memcached Port',
+            ],
+            [
                 'name' => 'service_provider_name',
                 'label' => 'SSP Service Provider',
             ],

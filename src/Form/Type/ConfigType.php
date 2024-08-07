@@ -39,6 +39,24 @@ class ConfigType extends AbstractType
                 'help_attr' => ['class' => 'mb-3 text-secondary'],
                 'help_html' => true,
             ])
+            ->add('memcached_host', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => $this->getConfigByName($options['configs'], 'memcached_host')->getLabel(),
+                'label_attr' => ['class' => 'form-label'],
+                'data' => $this->getConfigByName($options['configs'], 'memcached_host')->getValue(),
+                'help' => '<small><em>The hostname, URL, or IP address of the Memcached server.</em></small>',
+                'help_attr' => ['class' => 'mb-3 text-secondary'],
+                'help_html' => true,
+            ])
+            ->add('memcached_port', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => $this->getConfigByName($options['configs'], 'memcached_port')->getLabel(),
+                'label_attr' => ['class' => 'form-label'],
+                'data' => $this->getConfigByName($options['configs'], 'memcached_port')->getValue(),
+                'help' => '<small><em>The server port for the Memcached service.</em></small>',
+                'help_attr' => ['class' => 'mb-3 text-secondary'],
+                'help_html' => true,
+            ])
             ->add('cookie_prefix', TextType::class, [
                 'attr' => ['class' => 'form-control'],
                 'label' => $this->getConfigByName($options['configs'], 'cookie_prefix')->getLabel(),
