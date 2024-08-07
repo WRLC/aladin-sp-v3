@@ -23,6 +23,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class InstitutionController extends AbstractController
 {
     /**
+     * Redirect / to the Institution list page
+     */
+    #[Route('/', name: 'home')]
+    public function index(): Response
+    {
+        return $this->redirectToRoute('list_institutions');  // Redirect to the Institution list page
+    }
+
+    /**
      * Lists all Institution entities
      *
      * @param EntityManagerInterface $entityManager
