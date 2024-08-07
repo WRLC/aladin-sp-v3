@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Config;
-use App\Form\Type\AllConfigType;
+use App\Form\Type\ConfigType;
 use Doctrine\ORM\EntityManagerInterface;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error\Exception;
@@ -35,10 +35,14 @@ class ConfigController extends AbstractController
 
         $configs = $entityManager->getRepository(Config::class)->findAll();  // Get all the configs
 
-        $form = $this->createForm(AllConfigType::class, $configs, ['configs' => $configs]);  // Create the config form
+        $form = $this->createForm(ConfigType::class, $configs, ['configs' => $configs]);  // Create the config form
         $form->handleRequest($request);  // Handle the request
 
         if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
+            foreach ($configs as $config) {
+                $config->setValue($form->get($config->getName())->getData());  // Set the config value
+                $entityManager->persist($config);  // Persist the config
+            }
             $entityManager->flush();  // Flush the entity manager
             $this->addFlash('success', 'Configurations updated successfully!');  // Add a success flash message
         }

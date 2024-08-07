@@ -17,8 +17,12 @@ class AppFixtures extends Fixture
             ],
             [
                 'name' => 'service_provider_name',
-                'label' => 'SimpleSAMLphp Service Provider name (e.g., default-sp)',
-            ]
+                'label' => 'SSP Service Provider',
+            ],
+            [
+                'name' => 'cookie_prefix',
+                'label' => 'Cookie Prefix',
+            ],
         ];
 
         foreach ($config_names as $config_name) {

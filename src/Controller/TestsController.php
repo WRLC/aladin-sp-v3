@@ -78,7 +78,7 @@ class TestsController extends AbstractController
 
         // AUTHENTICATION
         $authnController = new AuthnController();  // Create a new LoginController
-        $attributes = $authnController->authn_user($institution);  // Authenticate the user and get the attributes
+        $attributes = $authnController->authn_user($entityManager, $institution);  // Authenticate the user and get the attributes
         if (is_subclass_of($attributes, Exception::class)) {  // If the attributes are an Exception
             $error->setErrors([$attributes->getMessage()]);  // Set the error
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
@@ -154,7 +154,7 @@ class TestsController extends AbstractController
 
         // AUTHORIZATION
         $authzController = new AuthzController();  // Create a new AuthzController
-        $result = $authzController->authz($institutionService, $user);  // Authorize the user
+        $result = $authzController->authz($entityManager, $institutionService, $user);  // Authorize the user
 
         if ($result['errors']) {  // If there's an error in the result
             if (str_starts_with($result['match'][0], 'HTTP/1.1 404 Not Found returned for')){

@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\ConfigRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 #[ORM\Entity(repositoryClass: ConfigRepository::class)]
+#[UniqueEntity(fields: ['name'], message: 'This config name is already in use.')]
 class Config
 {
     #[ORM\Id]
