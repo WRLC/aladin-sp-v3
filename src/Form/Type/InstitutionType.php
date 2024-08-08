@@ -61,7 +61,7 @@ class InstitutionType extends AbstractType
                 'label_attr' => ['class' => 'form-label'],
                 'choices' => $choices,
                 'placeholder' => '-- Select IdP --',
-                'help' => 'Select the authorized SimpleSAMLPHP IdP for the institution.',
+                'help' => 'Select the trusted SimpleSAMLPHP IdP for the institution.',
                 'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
                 'required' => true,
             ])

@@ -29,35 +29,40 @@
             </div>
         {% endif %}
         <div class="mb-3{% if form.slug.vars.required %} required{% endif %}">
-            {{ form_label(form.slug, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.slug, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.slug) }}
+            {{ form_widget(form.slug) }}
+            {{ form_help(form.slug) }}
             {{ form_errors(form.slug) }}
         </div>
         <div class="mb-3{% if form.name.vars.required %} required{% endif %}">
-            {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name) }}
+            {{ form_help(form.name) }}
             {{ form_errors(form.name) }}
         </div>
         <div class="mb-3{% if form.url.vars.required %} required{% endif %}">
-            {{ form_label(form.url, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.url, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.url) }}
+            {{ form_widget(form.url) }}
+            {{ form_help(form.url) }}
             {{ form_errors(form.url) }}
         </div>
         <div class="mb-3{% if form.callback_path.vars.required %} required{% endif %}">
-            {{ form_label(form.callback_path, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.callback_path, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.callback_path) }}
+            {{ form_widget(form.callback_path) }}
+            {{ form_help(form.callback_path) }}
             {{ form_errors(form.callback_path) }}
         </div>
         <div class="mb-3{% if form.legacy_login_path.vars.required %} required{% endif %}">
-            {{ form_label(form.legacy_login_path, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.legacy_login_path, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.legacy_login_path) }}
+            {{ form_widget(form.legacy_login_path) }}
+            {{ form_help(form.legacy_login_path) }}
             {{ form_errors(form.legacy_login_path) }}
         </div>
         <div class="actions">
             {% if form.vars.value.id is null %}
-                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Service'}) }}
+                {{ form_widget(form.save) }}
             {% else %}
-                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}, 'label': 'Update Service'}) }}
+                {{ form_widget(form.save, {'label': 'Update Service'}) }}
             {% endif %}
             {% if form.vars.value.id is not null %}
                 <a href="{{ path('show_service', {'slug': form.vars.value.slug}) }}" class="btn btn-secondary">Cancel</a>
