@@ -30,9 +30,6 @@ class Service
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $legacy_login_path = null;
 
-    #[ORM\Column]
-    private ?bool $use_wrInstitution = null;
-
     /**
      * @var Collection<int, InstitutionService>
      */
@@ -105,18 +102,6 @@ class Service
     public function setLegacyLoginPath(?string $legacy_login_path): static
     {
         $this->legacy_login_path = $legacy_login_path;
-
-        return $this;
-    }
-
-    public function isUseWrInstitution(): ?bool
-    {
-        return $this->use_wrInstitution;
-    }
-
-    public function setUseWrInstitution(bool $use_wrInstitution): static
-    {
-        $this->use_wrInstitution = $use_wrInstitution;
 
         return $this;
     }

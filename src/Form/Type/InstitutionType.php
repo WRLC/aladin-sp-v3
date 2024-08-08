@@ -60,6 +60,7 @@ class InstitutionType extends AbstractType
                 'label' => 'IdP',
                 'label_attr' => ['class' => 'form-label'],
                 'choices' => $choices,
+                'placeholder' => '-- Select IdP --',
                 'help' => 'Select the authorized SimpleSAMLPHP IdP for the institution.',
                 'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
                 'required' => true,
@@ -143,7 +144,7 @@ class InstitutionType extends AbstractType
             if (is_array($idp)) {  // If the IdP is an array
                 $entity_id = $idp['entityid'];
                 if (array_key_exists('name', $idp)) {
-                    $name = $idp['name']['en'];
+                    $name = $idp['name']['en'] . ' - ' . $idp['entityid'];
                 }
                 else {
                     $name = $idp['entityid'];

@@ -21,7 +21,6 @@ class ServiceType extends AbstractType
             ->add('url', UrlType::class, ['label' => 'URL', 'required' => true])
             ->add('callback_path', TextType::class, ['label' => 'Callback Path', 'required' => false])
             ->add('legacy_login_path', TextType::class, ['label' => 'Legacy Login Path', 'required' => false])
-            ->add('use_wrInstitution', ChoiceType::class, ['label' => 'Use WRLC Flask IdP', 'choices' => ['Yes' => 1, 'No' => 0], 'expanded' => true, 'required' => true])
             ->add('save', SubmitType::class, ['label' => 'Add Service'])
         ;
     }

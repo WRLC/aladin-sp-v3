@@ -24,7 +24,7 @@ class InstitutionServiceSelectType extends AbstractType
                 'choices' => $services,
                 'choice_label' => 'name',
                 'choice_value' => 'slug',
-                'placeholder' => 'Select a service',
+                'placeholder' => '-- Select a service --',
                 'attr' => ['class' => 'form-select'],
             ])
             ->add('save', SubmitType::class, ['label' => 'Add Service', 'attr' => ['class' => 'btn btn-primary']])
