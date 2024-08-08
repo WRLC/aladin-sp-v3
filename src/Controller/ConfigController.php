@@ -69,7 +69,7 @@ class ConfigController extends AbstractController
         $auth->requireAdmin();  // Require authentication
 
         $form = $this->createFormBuilder()
-            ->add('generate', SubmitType::class, ['label' => 'Generate PDO Tables'])
+            ->add('generate', SubmitType::class, ['label' => 'Create SSP PDO Tables', 'attr' => ['class' => 'btn btn-primary']])
             ->getForm();  // Create the config form
         $form->handleRequest($request);  // Handle the request
 
@@ -116,12 +116,16 @@ class ConfigController extends AbstractController
         $auth->requireAdmin();  // Require authentication
 
         $form = $this->createFormBuilder()
-            ->add('convert', SubmitType::class, ['label' => 'Convert Flatfile to PDO'])
+            ->add('convert', SubmitType::class, [
+                'label' => 'Convert Flatfile to PDO',
+                'attr' => ['class' => 'btn btn-primary']
+            ])
             ->getForm();  // Create the config form
         $form->handleRequest($request);  // Handle the request
 
         if ($form->isSubmitted() && $form->isValid()) {
             $sspConfig = Configuration::getConfig();  // Get the SimpleSAML configuration
+            $metadataDir = $sspConfig->getValue('metadatadir');  // Get the SimpleSAML configuration directory
             $sources = $sspConfig->getConfigItem('metadata.sources')->toArray();  // Dump the SimpleSAML configuration
             # Iterate through configured metadata sources and ensure
             # that a PDO source exists.
@@ -131,7 +135,7 @@ class ConfigController extends AbstractController
                     $metadataStorageHandler = new MetaDataStorageHandlerPdo($source);
                     $metadataStorageHandler->initDatabase();
 
-                    $filename = '/app/aladin-config/simplesamlphp/saml20-idp-remote.php';  // Get the metadata file
+                    $filename = $metadataDir . '/saml20-idp-remote.php';  // Get the metadata file
                     $metadata = [];
                     require_once $filename;  // Require the saml20-idp-remote.php file
                     $set = basename($filename, ".php");  // Get the set name
@@ -148,6 +152,25 @@ class ConfigController extends AbstractController
 
         return $this->render('config/flatfile.html.twig', [
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[Route('/config/metadata', name: 'current_metadata')]
+    public function currentMetadata(Request $request): Response
+    {
+        $auth = new Auth();  // Create a new Auth object
+        $auth->requireAdmin();  // Require authentication
+
+        $idpController = new InstitutionController();
+        $metadata = $idpController->getIdps();  // Get the IDPs
+        ksort($metadata);  // Sort the IDPs
+
+        return $this->render('config/current_metadata.html.twig', [
+            'metadata' => $metadata,
         ]);
     }
 }

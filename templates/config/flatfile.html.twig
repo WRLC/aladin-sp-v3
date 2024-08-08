@@ -3,7 +3,18 @@
 {% block title %}Flat File{% endblock %}
 
 {% block body %}
-    <h1>Flat File</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('config') }}">Configuration</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Convert Flatfile to PDO</li>
+        </ol>
+    </nav>
+    <h1>Convert Flatfile to PDO</h1>
+    <p>Aladin-SP is configured to store IdP metadata as a PHP Metadata Object (PDO) in MySQL.</p>
+    <p>Metadata is populated via either <a href="https://simplesamlphp.wrlc.localhost/simplesaml/module.php/admin">SSP's Metarefresh module</a> or by converting entries in a metadata flatfile.</p>
+    <p>To convert metadata from a flatfile, place the metadata in a file named '<span class="font-monospace">saml20-idp-remote.php</span>' and put that file in the <span class="font-monospace">/path/to/aladin-sp/aladin-config/simplesamlphp/metadata</span> folder.</p>
+    <p>Then click the button below to add the metadata in the flatfile to MySQL as PDOs.</p>
     {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
     {{ form_end(form) }}
 {% endblock %}

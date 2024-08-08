@@ -1,7 +1,20 @@
 {% extends 'base.html.twig' %}
 {% block title %}Configuration{% endblock %}
 {% block body %}
-    <h1>Configuration</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Configuration</li>
+        </ol>
+    </nav>
+    <div class="row align-items-center mb-3">
+        <h1 class="col col-5">Configuration</h1>
+        <div class="col col-7 text-end">
+            <a href="{{ path('current_metadata') }}" class="btn btn-primary">Current PDO Metadata</a>
+            <a href="{{ path('generate_pdo_tables') }}" class="btn btn-secondary">Create SSP PDO Tables</a>
+            <a href="{{ path('convert_flatfile') }}" class="btn btn-success">Convert Flatfile to PDO</a>
+        </div>
+    </div>
     {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
         <div class="mb-3{% if form.patron_authorization_url.vars.required == 1 %} required{% endif %}">
             {{ form_label(form.patron_authorization_url) }}

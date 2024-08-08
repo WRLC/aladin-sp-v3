@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Current Metadata | WRLC Aladin-SP{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('config') }}">Configuration</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Current PDO Metadata</li>
+        </ol>
+    </nav>
+    <h1>Current PDO Metadata</h1>
+    <p>Click an IdP Entity to view its metadata in JSON format.</p>
+    <table class="table table-striped table-bordered">
+        {% for idp in metadata %}
+            <tr>
+                <td>
+                    <details>
+                        <summary>
+                            {% if idp.name.en is defined %}
+                                <strong>{{ idp.name.en }}</strong><br />
+                            {% endif %}
+                            <strong>Entity ID: </strong>{{ idp.entityid }}
+                            {% if idp.expire is defined %}
+                                <br /><strong>Expires: </strong>
+                                {% if date() > date(idp.expire) %}
+                                    <span style="color: red">{{ idp.expire|date('Y-m-d H:i:s') }}</span>
+                                {% else %}
+                                    {{ idp.expire|date('Y-m-d H:i:s') }}
+                                {% endif %}
+                            {% endif %}
+                        </summary>
+                        <pre style="white-space: pre">{{ idp|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</pre>
+                    </details>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

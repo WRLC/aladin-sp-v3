@@ -21,7 +21,7 @@
 ###< symfony/asset-mapper ###
 
 ###> simplesamlphp metadata ###
-aladin-config/simplesamlphp/saml20-idp-remote.php
+aladin-config/simplesamlphp/metadata/saml20-idp-remote.php
 
 ###> simplesamlphp certificate ###
 aladin-config/simplesamlphp/cert/*.crt

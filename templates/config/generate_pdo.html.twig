@@ -3,7 +3,19 @@
 {% block title %}Generate PDO{% endblock %}
 
 {% block body %}
-    <h1>Generate PDO</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('config') }}">Configuration</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create SSP PDO Tables</li>
+        </ol>
+    </nav>
+    <h1>Create SSP PDO Tables</h1>
+    <div>
+        <p>Aladin-SP is configured to store IdP metadata as a PHP Metadata Object (PDO) in MySQL.</p>
+        <p>Metadata is populated via either <a href="https://simplesamlphp.wrlc.localhost/simplesaml/module.php/admin">SSP's Metarefresh module</a> or by <a href="{{ path('convert_flatfile') }}">converting entries in a metadata flatfile</a>.</p>
+        <p>If the PDO tables are not present, Aladin-SP will not function properly.</p>
+        <p>Create these tables by clicking the button below.</p></div>
     {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
     {{ form_end(form) }}
 {% endblock %}
