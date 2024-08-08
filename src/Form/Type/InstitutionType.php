@@ -31,16 +31,83 @@ class InstitutionType extends AbstractType
         $choices = $this->getIdpChoices();  // Get IdP choices
 
         $builder  // Build the form
-            ->add('index', TextType::class, ['label' => 'Index', 'required' => true,])
-            ->add('name', TextType::class, ['label' => 'Name', 'required' => true])
-            ->add('wayf_label', TextType::class, ['label' => 'WAYF Label', 'required' => false, 'help' => 'If different than "Name"'])
-            ->add('entity_id', ChoiceType::class, ['label' => 'IdP', 'required' => true, 'choices' => $choices])
-            ->add('alma_location_code', TextType::class, ['label' => 'Alma Location Code', 'required' => true])
-            ->add('mail_attribute', TextType::class, ['label' => 'Mail Attribute', 'required' => true])
-            ->add('name_attribute', TextType::class, ['label' => 'Name Attribute', 'required' => false])
-            ->add('first_name_attribute', TextType::class, ['label' => 'First Name Attribute', 'required' => false])
-            ->add('id_attribute', TextType::class, ['label' => 'ID Attribute', 'required' => false])
-            ->add('save', SubmitType::class, ['label' => 'Add Institution'])
+            ->add('index', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Index',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'Unique identifier for the institution (e.g., WRLC = "wr").',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => true,
+            ])
+            ->add('name', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Name',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'Full name of the institution. (This will display in the WAYF menu unless an alternate label is provided below.)',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => true,
+            ])
+            ->add('wayf_label', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'WAYF Label',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'Alternate institution name to display in the WAYF menu, if different than "Name."',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => false,
+            ])
+            ->add('entity_id', ChoiceType::class, [
+                'attr' => ['class' => 'form-select'],
+                'label' => 'IdP',
+                'label_attr' => ['class' => 'form-label'],
+                'choices' => $choices,
+                'help' => 'Select the authorized SimpleSAMLPHP IdP for the institution.',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => true,
+            ])
+            ->add('alma_location_code', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Alma Location Code',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'The Alma location code for the institution\'s IZ. This will be the portion of the Alma IZ subdomain following "wrlc-" (e.g., "cua" for Catholic University of America\'s "wrlc-cua" subdomain.).',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => true,
+            ])
+            ->add('mail_attribute', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Mail Attribute',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'The attribute in the IdP metadata that contains the user\'s email address (e.g., upn, mail, http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress).',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => true,
+            ])
+            ->add('name_attribute', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'Name Attribute',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'The attribute in the IdP metadata that contains the user\'s full  or last name (e.g., surname, sn, http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname).',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => false,
+            ])
+            ->add('first_name_attribute', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'First Name Attribute',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'The attribute in the IdP metadata that contains the user\'s first name (e.g., givenname, http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname).',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => false,
+            ])
+            ->add('id_attribute', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => 'ID Attribute',
+                'label_attr' => ['class' => 'form-label'],
+                'help' => 'The attribute in the IdP metadata that contains the user\'s unique identifier (e.g., cid, uid, http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name).',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => false,
+            ])
+            ->add('save', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-primary'],
+                'label' => 'Add Institution'
+            ])
         ;
     }
 
