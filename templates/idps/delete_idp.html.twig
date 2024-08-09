@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Delete Identity Provider | WRLC Aladin-SP{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('current_metadata') }}">Authorized Identity Providers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete Identity Providers</li>
+        </ol>
+    </nav>
+    <h1>Delete Identity Provider</h1>
+    <p>Are you sure you want to permanently delete the IdP '{{ entityid }}'? <strong>This action cannot be undone.</strong></p>
+    <div class="alert alert-warning">If the IdP is still in your metarefresh module config or your saml20-idp-remote flatfile, it will be re-added the next time metarefresh runs or you convert the flatfile to PDO.</div>
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+{% endblock %}

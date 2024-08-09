@@ -1,17 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Current Metadata | WRLC Aladin-SP{% endblock %}
+{% block title %}Authorized Identity Providers | WRLC Aladin-SP{% endblock %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('config') }}">Configuration</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Current PDO Metadata</li>
+            <li class="breadcrumb-item active" aria-current="page">Authorized Identity Providers</li>
         </ol>
     </nav>
-    <h1>Current PDO Metadata</h1>
-    <p>Click an IdP Entity to view its metadata in JSON format.</p>
+    <h1>Authorized Identity Providers</h1>
+    <div class="alert alert-secondary" role="alert">
+        <p>To add or update an authorized IdP, either:</p>
+        <ul>
+            <li class="mb-2">Add/update an entry to the <a href="https://simplesamlphp.org/docs/contrib_modules/metarefresh/simplesamlphp-automated_metadata.html" target="_blank">SSP metarefresh module</a> config file at <span class="font-monospace">/path/to/aladin-sp/aladin-config/simplesamlphp/config/module_metarefresh.php</span>; or</li>
+            <li>Add/update its <a href="/simplesaml/module.php/admin/federation/metadata-converter">SSP-formatted metadata</a> in <span class="font-monospace">/path/to/aladin-sp/aladin-config/simplesamlphp/metadata/saml20-idp-remote.php</span>, then <a href="{{ path('convert_flatfile') }}">convert the flatfile to PDO</a></li>
+        </ul>
+    </div>
+    <p>Click an IdP Entity to view its JSON metadata:</p>
     <table class="table table-striped table-bordered">
         {% for idp in metadata %}
             <tr>
@@ -34,6 +40,7 @@
                         <pre style="white-space: pre">{{ idp|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</pre>
                     </details>
                 </td>
+                <td class="text-center"><a href="{{ path('delete_idp', {'entityid': idp.entityid|url_encode}) }}" class="btn btn-sm btn-danger{% if (idp.expire is defined) and (date(idp.expire) < date()) %} disabled" aria-disabled="true{% endif %}">Delete IdP</a></td>
             </tr>
         {% endfor %}
     </table>

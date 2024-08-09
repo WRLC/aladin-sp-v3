@@ -154,23 +154,4 @@ class ConfigController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    /**
-     * @throws Exception
-     * @throws \Exception
-     */
-    #[Route('/config/metadata', name: 'current_metadata')]
-    public function currentMetadata(Request $request): Response
-    {
-        $auth = new Auth();  // Create a new Auth object
-        $auth->requireAdmin();  // Require authentication
-
-        $idpController = new InstitutionController();
-        $metadata = $idpController->getIdps();  // Get the IDPs
-        ksort($metadata);  // Sort the IDPs
-
-        return $this->render('config/current_metadata.html.twig', [
-            'metadata' => $metadata,
-        ]);
-    }
 }
