@@ -24,23 +24,43 @@
         </div>
     {% endif %}
         <div class="mb-3{% if form.institution.vars.required %} required{% endif %}">
-            {{ form_label(form.institution, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.institution, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
+            {{ form_label(form.institution) }}
+            {{ form_widget(form.institution, {'attr': {'style': 'pointer-events: none; display: none;'}}) }}
             <div class="text-secondary">{{ institution.name }}</div>
             {{ form_errors(form.institution) }}
         </div>
         <div class="mb-3{% if form.service.vars.required %} required{% endif %}">
-            {{ form_label(form.service, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.service, {'attr': {'class': 'form-select', 'style': 'pointer-events: none; display: none;'}}) }}
+            {{ form_label(form.service) }}
+            {{ form_widget(form.service, {'attr': {'style': 'pointer-events: none; display: none;'}}) }}
             <div class="text-secondary">{{ service.name }}</div>
             {{ form_errors(form.service) }}
         </div>
         <div class="mb-3{% if form.authz_type.vars.required %} required{% endif %}">
-            {{ form_label(form.authz_type, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.authz_type, {'attr': {'class': 'form-select'}}) }}
+            {{ form_label(form.authz_type) }}
+            {{ form_widget(form.authz_type) }}
+            {{ form_help(form.authz_type) }}
             {{ form_errors(form.authz_type) }}
         </div>
-        <div class="mb-3">
+        {% if type == 'add' %}
+            {% set class = 'd-none' %}
+            {% set member_type = '' %}
+        {% elseif form.authz_type.vars.value == 'none' %}
+            {% set class = 'd-none' %}
+            {% set member_type = '' %}
+        {% elseif form.authz_type.vars.value == 'any_alma' %}
+            {% set class = 'd-none' %}
+            {% set member_type = '' %}
+        {% else %}
+            {% set class = 'mb-3' %}
+            {% if form.authz_type.vars.value == 'user_id' %}
+                {% set member_type = 'User' %}
+            {% elseif form.authz_type.vars.value == 'user_role' %}
+                {% set member_type = 'Role' %}
+            {% elseif form.authz_type.vars.value == 'user_group' %}
+                {% set member_type = 'Group' %}
+            {% endif %}
+        {% endif %}
+        <div class="{{ class }}" id="authz_members_container">
             {{ form_label(form.authz_members) }}
             {{ form_help(form.authz_members) }}
             <div class="members"
@@ -51,14 +71,17 @@
                     <div class="row">
                         {{ form_widget(member, {'attr': {'class': 'mb-3 col col-11'}}) }}
                     </div>
+                {% else %}
+                    {% do form.authz_members.setRendered %}
                 {% endfor %}
             </div>
-            <button type="button" class="btn btn-success btn-sm add_item_link" data-collection-holder-class="members"><strong> + </strong></button> Add User/Role/Group
+            <button type="button" id="add_authz_member_button" class="btn btn-success btn-sm add_item_link" data-collection-holder-class="members"><strong> + Add an authorized {{ member_type }}</strong></button>
             {{ form_errors(form.authz_members) }}
         </div>
         <div class="mb-3{% if form.id_attribute.vars.required %} required{% endif %}">
-            {{ form_label(form.id_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.id_attribute, {'attr': {'class': 'form-select'}}) }}
+            {{ form_label(form.id_attribute) }}
+            {{ form_widget(form.id_attribute) }}
+            {{ form_help(form.id_attribute) }}
             {{ form_errors(form.id_attribute) }}
         </div>
         <div class="mb-3">
@@ -70,6 +93,9 @@
         </div>
     {{ form_end(form) }}
     <script type="application/javascript">
+        document
+            .querySelector('#institution_service_authz_type')
+            .addEventListener('change', showHideAuthzMembers);
         document
             .querySelectorAll('div.members div.row')
             .forEach((item) => {
@@ -114,7 +140,7 @@
 
             const removeFormButton = document.createElement('button');
             removeFormButton.setAttribute('class', 'btn btn-danger btn-sm remove_item_link');
-            removeFormButton.innerText = '-';
+            removeFormButton.innerHTML = '<strong>-</strong>';
 
             removeFormDiv.appendChild(removeFormButton);
 
@@ -124,6 +150,39 @@
                 e.preventDefault();
                 item.remove();
             })
+        }
+
+        function showHideAuthzMembers() {
+            const authzType = document.querySelector('#institution_service_authz_type');
+            const authzMembersContainer = document.querySelector('#authz_members_container');
+            console.log(authzMembersContainer.getElementsByTagName('button'));
+            if (authzType.value === 'none' || authzType.value === 'any_alma' || authzType.value === '') {
+                authzMembersContainer.classList.add('d-none');
+            } else {
+                authzMembersContainer.classList.remove('d-none');
+                let existingHelp = document.getElementById('institution_service_authz_members_help');
+                if (existingHelp) {
+                    existingHelp.remove();
+                }
+                authzMembersContainer.classList.add('mb-3');
+                authzMembersContainer.classList.add('required');
+                if (authzType.value === 'user_id') {
+                    authzMembersContainer.getElementsByTagName('label')[0].innerText = 'Authorized User IDs';
+                    document.getElementById('add_authz_member_button').innerHTML = '<strong> + Add an Authorized User</strong>';
+                    let help = '<div id="institution_service_authz_members_help" class="mb-3 text-secondary form-text help-text">The specific IdP User IDs that are authorized to access this service. (Each value should be added separately.)</div>';
+                    authzMembersContainer.getElementsByTagName('label')[0].insertAdjacentHTML('afterend', help);
+                } else if (authzType.value === 'user_role') {
+                    authzMembersContainer.getElementsByTagName('label')[0].innerText = 'Authorized Roles';
+                    document.getElementById('add_authz_member_button').innerHTML = '<strong> + Add an Authorized Role</strong>';
+                    let help = '<div id="institution_service_authz_members_help" class="mb-3 text-secondary form-text help-text">The specific Alma Roles (by ID number, not label) that are authorized to access this service. (Each value should be added separately.)</div>';
+                    authzMembersContainer.getElementsByTagName('label')[0].insertAdjacentHTML('afterend', help);
+                } else if (authzType.value === 'user_group') {
+                    authzMembersContainer.getElementsByTagName('label')[0].innerText = 'Authorized Groups';
+                    document.getElementById('add_authz_member_button').innerHTML = '<strong> + Add an Authorized Group</strong>';
+                    let help = '<div id="institution_service_authz_members_help" class="mb-3 text-secondary form-text help-text">The specific Alma Groups (by name, not label) that are authorized to access this service. (Each value should be added separately.)</div>';
+                    authzMembersContainer.getElementsByTagName('label')[0].insertAdjacentHTML('afterend', help);
+                }
+            }
         }
 
 

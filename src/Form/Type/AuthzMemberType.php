@@ -13,7 +13,10 @@ class AuthzMemberType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('member', TextType::class, ['label' => false, 'required' => true, 'attr' => ['class' => 'form-control']])
+            ->add('member', TextType::class, [
+                'label' => false,
+                'required' => true,
+                'attr' => ['class' => 'form-control']])
         ;
     }
     public function configureOptions(OptionsResolver $resolver): void
