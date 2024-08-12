@@ -31,6 +31,10 @@ class AppFixtures extends Fixture
                 'name' => 'cookie_prefix',
                 'label' => 'Cookie Prefix',
             ],
+            [
+                'name' => 'cookie_domain',
+                'label' => 'Cookie Domain',
+            ],
         ];
 
         foreach ($config_names as $config_name) {

@@ -66,6 +66,15 @@ class ConfigType extends AbstractType
                 'help_attr' => ['class' => 'mb-3 text-secondary'],
                 'help_html' => true,
             ])
+            ->add('cookie_domain', TextType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label' => $this->getConfigByName($options['configs'], 'cookie_domain')->getLabel(),
+                'label_attr' => ['class' => 'form-label'],
+                'data' => $this->getConfigByName($options['configs'], 'cookie_domain')->getValue(),
+                'help' => '<small><em>The domain to use for service cookies (e.g., ".wrlc.org").</em></small>',
+                'help_attr' => ['class' => 'mb-3 text-secondary'],
+                'help_html' => true,
+            ])
             ->add('submit', SubmitType::class, ['label' => 'Save', 'attr' => ['class' => 'btn btn-primary']])
         ;
     }

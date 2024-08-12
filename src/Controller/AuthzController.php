@@ -19,6 +19,7 @@ class AuthzController extends AbstractController
     /**
      * Authorize the user
      *
+     * @param EntityManagerInterface $entityManager
      * @param InstitutionService $institutionService
      * @param string $user
      *

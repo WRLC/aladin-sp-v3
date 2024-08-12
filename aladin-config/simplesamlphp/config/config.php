@@ -70,7 +70,7 @@ $config = [
      * When specified as a relative path, this is relative to the SimpleSAMLphp
      * root directory.
      */
-    'loggingdir' => 'log/',
+    'loggingdir' => $_ENV['SSP_LOGDIR'],
     'datadir' => 'data/',
     'tempdir' => '/tmp/simplesaml',
 

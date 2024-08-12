@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AladinError;
+use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AladinErrorController extends AbstractController
@@ -37,6 +38,8 @@ class AladinErrorController extends AbstractController
     private function logError(AladinError $error): void
     {
         // Log the error
+        $logger = new Logger('aladin');
+        $logger->error('[' . $error->getType() . '] ' . $error->getIntro() . ':', $error->getErrors());
     }
 
 }

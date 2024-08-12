@@ -17,7 +17,7 @@ class WayfType extends AbstractType
             // Add the institution field
             ->add('institution', EntityType::class, [
                 'attr' => ['class' => 'form-select mb-3'],
-                'label' => ' Select your affiliation to log into the <strong>WRLC Test Site:</strong>',
+                'label' => ' Select your affiliation to log into the <strong>' . $options['service'] . '</strong>',
                 'label_attr' => ['class' => 'form-label'],
                 'label_html' => true,
                 'class' => Institution::class,
@@ -39,6 +39,7 @@ class WayfType extends AbstractType
     {
         $resolver->setDefaults([
             'institutions' => null,  // Allow institutions as $options parameter
+            'service' => null,  // Allow service as $options parameter
         ]);
     }
 }

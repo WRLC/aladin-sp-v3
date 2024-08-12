@@ -1,6 +1,13 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - aladin
+    handlers:
+        aladin:
+            type: rotating_file
+            path: "var/log/aladin.log"
+            level: debug
+            channels: ["aladin"]
 
 when@dev:
     monolog:

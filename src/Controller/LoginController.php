@@ -151,7 +151,11 @@ class LoginController extends AbstractController
         $cookie_name = $cookie_prefix . $service->getSlug();  // Create the cookie name
 
         // Set the cookie
-        if (setcookie($cookie_name, $sessionID, ['expires' => time()+(86400*14), 'path' =>'/', 'domain' => '.wrlc.org'])) {
+        if (setcookie($cookie_name, $sessionID, [
+            'expires' => time()+(86400*14),
+            'path' =>'/',
+            'domain' => $entityManager->getRepository(Config::class)->findOneBy(['name' => 'cookie_domain'])->getValue(),
+        ])) {
 
             // Set the session data
             $m = new Memcached();  // Create a new Memcached object
@@ -203,7 +207,7 @@ class LoginController extends AbstractController
         $sorted_institutions = $institutionController->sort_institutions_position($institutions);
 
         // Create the WAYF form w/ institutions
-        return $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions]);
+        return $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions, 'service' => $institutionServices[0]->getService()->getName()]);
     }
 
     /**

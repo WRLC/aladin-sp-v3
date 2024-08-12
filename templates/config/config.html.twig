@@ -9,37 +9,5 @@
     </nav>
     <h1 class="col col-5">Aladin-SP Configuration</h1>
     {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
-        <div class="mb-3{% if form.patron_authorization_url.vars.required == 1 %} required{% endif %}">
-            {{ form_label(form.patron_authorization_url) }}
-            {{ form_widget(form.patron_authorization_url) }}
-            {{ form_help(form.patron_authorization_url) }}
-            {{ form_errors(form.patron_authorization_url) }}
-        </div>
-        <div class="mb-3{% if form.service_provider_name.vars.required == 1 %} required{% endif %}">
-            {{ form_label(form.service_provider_name) }}
-            {{ form_widget(form.service_provider_name) }}
-            {{ form_help(form.service_provider_name) }}
-            {{ form_errors(form.service_provider_name) }}
-        </div>
-        <div class="mb-3{% if form.memcached_host.vars.required == 1 %} required{% endif %}">
-            {{ form_label(form.memcached_host) }}
-            {{ form_widget(form.memcached_host) }}
-            {{ form_help(form.memcached_host) }}
-            {{ form_errors(form.memcached_host) }}
-        </div>
-        <div class="mb-3{% if form.memcached_port.vars.required == 1 %} required{% endif %}">
-            {{ form_label(form.memcached_port) }}
-            {{ form_widget(form.memcached_port) }}
-            {{ form_help(form.memcached_port) }}
-            {{ form_errors(form.memcached_port) }}
-        </div>
-        <div class="mb-3{% if form.cookie_prefix.vars.required == 1 %}required{% endif %}">
-            {{ form_label(form.cookie_prefix) }}
-            {{ form_widget(form.cookie_prefix) }}
-            {{ form_help(form.cookie_prefix) }}
-            {{ form_errors(form.cookie_prefix) }}
-        </div>
-        <div class="mb-3">
-            {{ form_widget(form.submit) }}
     {{ form_end(form) }}
 {% endblock %}
