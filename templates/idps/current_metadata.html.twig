@@ -20,8 +20,9 @@
     <div class="row align-items-center mb-3">
         <div class="col col-6">Click an IdP Entity to view its JSON metadata:</div>
         <div class="col col-6 text-end">
-            <a href="{{ path('convert_flatfile') }}" class="btn btn-primary">Convert Flatfile</a>
-            <a href="{{ path('generate_pdo_tables') }}" class="btn btn-primary">Create Tables</a>
+            <a href="/simplesaml/module.php/metarefresh/" class="btn btn-primary">Metarefresh (SSP)</a>
+            <a href="{{ path('convert_flatfile') }}" class="btn btn-success">Convert Flatfile</a>
+            <a href="{{ path('generate_pdo_tables') }}" class="btn btn-dark">Create Tables</a>
         </div>
     </div>
     <table class="table table-striped table-bordered">
