@@ -17,11 +17,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class IdpController extends AbstractController
 {
     /**
+     * Show the current IDP metadata.
+     *
+     * @return Response
+     *
      * @throws Exception
      * @throws \Exception
      */
     #[Route('/idps', name: 'current_metadata')]
-    public function currentMetadata(Request $request): Response
+    public function currentMetadata(): Response
     {
         $auth = new Auth();  // Create a new Auth object
         $auth->requireAdmin();  // Require authentication
@@ -36,6 +40,12 @@ class IdpController extends AbstractController
     }
 
     /**
+     * Delete an IDP.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      * @throws \Exception
      */
