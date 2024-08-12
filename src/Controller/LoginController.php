@@ -11,6 +11,8 @@ use App\Form\Type\WayfType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Memcached;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use SimpleSAML\Utils\Random;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -21,6 +23,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class LoginController extends AbstractController
 {
+
+    private LoggerInterface $aladinLogger;
+
+    public function __construct(LoggerInterface $aladinLogger)
+    {
+        $this->aladinLogger = $aladinLogger;
+    }
+
     /**
      * SAML SP Login script
      *
@@ -39,6 +49,7 @@ class LoginController extends AbstractController
         $error_intro = 'Login Error:';
         $errorController = new AladinErrorController();
         $error = new AladinError('authorization', $error_intro);
+
 
         // Service slug is a required parameter
         $slug = $request->query->get('service');
@@ -117,6 +128,8 @@ class LoginController extends AbstractController
         // Get the user ID attribute
         $user_id = $this->get_institution_user_id($institutionService, $user_attributes);
 
+        $this->aladinLogger->debug('Authenticated User: ' . $user_id . ' for ' . $institution->getName());
+
         // If the ID attribute is not found, show an error
         if ($user_id instanceof Exception) {
             $error->setIntro(
@@ -141,6 +154,8 @@ class LoginController extends AbstractController
             $error->setLog(true);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
+
+        $this->aladinLogger->debug('Authorized User: ' . $user_id . '@' . $index . ' for ' . $service->getName());
 
         # generate random session id for memcached key
         $randomUtils = new Random();
@@ -174,7 +189,10 @@ class LoginController extends AbstractController
 
             $m->set($sessionID, $data, time()+86400*14);  // Set the session data
 
+            $this->aladinLogger->debug('Set cookie ' . $cookie_name . ': ' . $sessionID . ' for ' . $user_id . '@' . $index);
+
             // Redirect to the service
+            $this->aladinLogger->info('Redirecting ' . $user_id . '@' . $index . ' to ' . $service->getUrl() . $service->getCallbackPath());
             return $this->redirect($service->getUrl() . $service->getCallbackPath());
         }
 
