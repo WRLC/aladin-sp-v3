@@ -11,7 +11,6 @@ use App\Form\Type\WayfType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Memcached;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use SimpleSAML\Utils\Random;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -155,7 +154,7 @@ class LoginController extends AbstractController
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
-        $this->aladinLogger->debug('Authorized User: ' . $user_id . '@' . $index . ' for ' . $service->getName());
+        $this->aladinLogger->info('Authorized User: ' . $user_id . '@' . $index . ' for ' . $service->getName());
 
         # generate random session id for memcached key
         $randomUtils = new Random();
@@ -188,6 +187,19 @@ class LoginController extends AbstractController
             }
 
             $m->set($sessionID, $data, time()+86400*14);  // Set the session data
+
+            $mdata = $m->get($sessionID);  // Get the session data
+            $mdata = explode("\r\n", $mdata);  // Explode the session data
+            $fmdata = [];
+            foreach ($mdata as $md) {
+                $tmp = explode('=', $md);
+                if (count($tmp) == 2) {
+                    $fmdata[$tmp[0]] = $tmp[1];
+                }
+            }
+            $jdata = preg_replace('/\s+/mu', ' ',json_encode($fmdata, JSON_PRETTY_PRINT));  // Encode the session data
+
+            $this->aladinLogger->debug('Memcached Session Data: ' . $jdata);
 
             $this->aladinLogger->debug('Set cookie ' . $cookie_name . ': ' . $sessionID . ' for ' . $user_id . '@' . $index);
 
