@@ -17,7 +17,13 @@
             <li>Add/update its <a href="/simplesaml/module.php/admin/federation/metadata-converter">SSP-formatted metadata</a> in <span class="font-monospace">/path/to/aladin-sp/aladin-config/simplesamlphp/metadata/saml20-idp-remote.php</span>, then <a href="{{ path('convert_flatfile') }}">convert the flatfile to PDO</a></li>
         </ul>
     </div>
-    <p>Click an IdP Entity to view its JSON metadata:</p>
+    <div class="row align-items-center mb-3">
+        <div class="col col-6">Click an IdP Entity to view its JSON metadata:</div>
+        <div class="col col-6 text-end">
+            <a href="{{ path('convert_flatfile') }}" class="btn btn-primary">Convert Flatfile</a>
+            <a href="{{ path('generate_pdo_tables') }}" class="btn btn-primary">Create Tables</a>
+        </div>
+    </div>
     <table class="table table-striped table-bordered">
         {% for idp in metadata %}
             <tr>
