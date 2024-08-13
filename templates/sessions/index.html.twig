@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+    {% block title %}Current Sessions | WRLC Aladin-SP{% endblock %}
+
+    {% block body %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item" aria-current="page">Current Sessions</li>
+            </ol>
+        </nav>
+        <div class="row align-center">
+            <h1 class="col col-6">Current Sessions</h1>
+            <div class="col col-6 text-end">
+                <a href="{{ path('sessions_clear') }}" class="btn btn-danger">Clear All Sessions</a>
+            </div>
+        </div>
+        <table class="table table-sm table striped table-hover table-bordered">
+            <thead class="table-dark">
+            <tr>
+                <th>Session</th>
+                <th>Service</th>
+                <th>UserName</th>
+                <th>Email</th>
+                <th>Name</th>
+                <th>GivenName</th>
+                <th>University</th>
+                <th>RemoteIP</th>
+                <th>Expiration</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, value in memcached %}
+                <tr style="font-size: 0.85em">
+                    <td>{{ key }}</td>
+                    <td>{{ value.Service }}</td>
+                    <td>{{ value.UserName }}</td>
+                    <td>{{ value.Email }}</td>
+                    <td>{{ value.Name }}</td>
+                    <td>{{ value.GivenName }}</td>
+                    <td>{{ value.University }}</td>
+                    <td>{{ value.RemoteIP }}</td>
+                    <td>{{ (value.Expiration|trim)|date("m/d/Y H:i:s") }}</td>
+                    <td>
+                        <a href="{{ path('session_clear', {'key': key}) }}" class="text-danger">CLEAR</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endblock %}

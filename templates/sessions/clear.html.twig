@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clear All Sessions | WRLC Aladin-SP{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('sessions') }}">Current Sessions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Clear All Sessions</li>
+        </ol>
+    </nav>
+    <h1 class="col col-5">Clear All Sessions</h1>
+    <p>Are you sure you want to clear all current Aladin-SP sessions?</p>
+    <p>This will not automatically log users out of all services, but the next time the service queries Aladin-SP about the user, the user will need to be re-authorized</p>
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+{% endblock %}

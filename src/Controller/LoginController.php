@@ -294,6 +294,7 @@ class LoginController extends AbstractController
         $data .= 'Email=' . strtolower($user_attributes[$institutionService->getInstitution()->getMailAttribute()][0]) . "\r\n";
         $data .= 'Name=' . $last_name . "\r\n";
         $data .= 'GivenName=' . $first_name . "\r\n";
+        $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";
 
         return $data;
     }
