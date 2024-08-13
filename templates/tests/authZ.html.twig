@@ -1,16 +1,5 @@
-{% extends 'base.html.twig' %}
+{% extends 'test.base.html.twig' %}
 {% block body %}
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            {% if institution %}
-                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ institution.name }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ service.name }}</a></li>
-            {% endif %}
-            <li class="breadcrumb-item active" aria-current="page">Authorization Test</li>
-        </ol>
-    </nav>
     <h1>Authorization Test</h1>
     <!-- Display the results of the authorization test -->
     <h2>Access {% if result.authorized == 1 %}Granted{% else %}Denied{% endif %}</h2>

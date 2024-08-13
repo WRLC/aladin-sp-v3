@@ -11,6 +11,7 @@ use App\Form\Type\authzTestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use SimpleSAML\Session;
+use SimpleSAML\Utils\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,6 +38,9 @@ class TestsController extends AbstractController
         $error = new AladinError('authentication', $error_intro);  // Create a new AladinError
         $errorController = new AladinErrorController();  // Create a new ErrorController
 
+        $auth = new Auth();  // Create a new Auth object
+        $isAuth = $auth->isAdmin();  // Check if the user is an admin
+
         $session = Session::getSessionFromRequest();  // Get the session
         $entityId = $session->getAuthData('default-sp', 'saml:sp:IdP');  // Get the entity ID
 
@@ -53,20 +57,25 @@ class TestsController extends AbstractController
         $index = $request->get('institution');  // Get the institution index
 
         if (!$index) {  // If the institution is not provided..
-            $form = $this->createForm(AuthnTestType::class, null, [
-                'institutions' => $entityManager->getRepository(Institution::class)->findAll(),
-            ]);  // Create the authentication form
-            $form->handleRequest($request);  // Handle the request
+            if ($isAuth) {
+                $form = $this->createForm(AuthnTestType::class, null, [
+                    'institutions' => $entityManager->getRepository(Institution::class)->findAll(),
+                ]);  // Create the authentication form
+                $form->handleRequest($request);  // Handle the request
 
-            if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
-                $institution = $form->get('institution')->getData();  // Get the institution
-                $index = $institution->getInstIndex();  // Get the institution index
-                return $this->redirectToRoute('auth_n_test', ['institution' => $index]);  // Redirect to the authentication test page
+                if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
+                    $institution = $form->get('institution')->getData();  // Get the institution
+                    $index = $institution->getInstIndex();  // Get the institution index
+                    return $this->redirectToRoute('auth_n_test', ['institution' => $index]);  // Redirect to the authentication test page
+                }
+
+                return $this->render('tests/authNForm.html.twig', [  // Render the authentication form
+                    'form' => $form->createView(),  // Set the form
+                ]);
+            } else {
+                $error->setErrors(['No institution provided.']);  // Set the error
+                return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
             }
-
-            return $this->render('tests/authNForm.html.twig', [  // Render the authentication form
-                'form' => $form->createView(),  // Set the form
-            ]);
         }
 
         // INSTITUTION
@@ -108,6 +117,9 @@ class TestsController extends AbstractController
         $error = new AladinError('authorization', $error_intro);  // Create a new AladinError
         $errorController = new AladinErrorController();  // Create a new ErrorController
 
+        $auth = new Auth();  // Create a new Auth object
+        $isAuth = $auth->isAdmin();  // Check if the user is an admin
+
         // INSTIUTION
         $index = $request->get('institution');  // Get the institution index
         if (!$index) {  // If the institution is not provided
@@ -134,22 +146,27 @@ class TestsController extends AbstractController
         // USER
         $user = $request->get('user');  // Get the user
         if (!$user) {  // If the user is not provided
-            $form = $this->createForm(AuthzTestType::class, null, [
-                'institution' => $institutionService->getInstitution(),
-                'service' => $institutionService->getService(),
-            ]);  // Create the authorization form
-            $form->handleRequest($request);  // Handle the request
+            if ($isAuth) {
+                $form = $this->createForm(AuthzTestType::class, null, [
+                    'institution' => $institutionService->getInstitution(),
+                    'service' => $institutionService->getService(),
+                ]);  // Create the authorization form
+                $form->handleRequest($request);  // Handle the request
 
-            if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
-                $user = $form->get('user')->getData();  // Get the user
-                return $this->redirectToRoute('auth_z_test', ['institution' => $index, 'service' => $slug, 'user' => $user]);  // Redirect to the authorization test page
+                if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
+                    $user = $form->get('user')->getData();  // Get the user
+                    return $this->redirectToRoute('auth_z_test', ['institution' => $index, 'service' => $slug, 'user' => $user]);  // Redirect to the authorization test page
+                }
+
+                return $this->render('tests/authZForm.html.twig', [
+                    'form' => $form,
+                    'institution' => $institutionService->getInstitution(),
+                    'service' => $institutionService->getService(),
+                ]);
+            } else {
+                $error->setErrors(['No user provided.']);  // Set the error
+                return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
             }
-
-            return $this->render('tests/authZForm.html.twig', [
-                'form' => $form,
-                'institution' => $institutionService->getInstitution(),
-                'service' => $institutionService->getService(),
-            ]);
         }
 
         // AUTHORIZATION
