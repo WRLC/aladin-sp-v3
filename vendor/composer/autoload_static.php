@@ -47,7 +47,6 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             'Symfony\\UX\\Turbo\\' => 17,
             'Symfony\\UX\\StimulusBundle\\' => 26,
-            'Symfony\\UX\\Icons\\' => 17,
             'Symfony\\Runtime\\Symfony\\Component\\' => 34,
             'Symfony\\Polyfill\\Php83\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -231,10 +230,6 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'Symfony\\UX\\StimulusBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/stimulus-bundle/src',
-        ),
-        'Symfony\\UX\\Icons\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/ux-icons/src',
         ),
         'Symfony\\Runtime\\Symfony\\Component\\' => 
         array (
