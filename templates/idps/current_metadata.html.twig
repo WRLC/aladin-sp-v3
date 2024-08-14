@@ -13,14 +13,14 @@
     <div class="alert alert-secondary" role="alert">
         <p>To add or update an authorized IdP, either:</p>
         <ul>
-            <li class="mb-2">Add/update an entry to the <a href="https://simplesamlphp.org/docs/contrib_modules/metarefresh/simplesamlphp-automated_metadata.html" target="_blank">SSP metarefresh module</a> config file at <span class="font-monospace">/path/to/aladin-sp/aladin-config/simplesamlphp/config/module_metarefresh.php</span>; or</li>
-            <li>Add/update its <a href="/simplesaml/module.php/admin/federation/metadata-converter">SSP-formatted metadata</a> in <span class="font-monospace">/path/to/aladin-sp/aladin-config/simplesamlphp/metadata/saml20-idp-remote.php</span>, then <a href="{{ path('convert_flatfile') }}">convert the flatfile to PDO</a></li>
+            <li class="mb-2">Add/update its entry in the <a href="https://simplesamlphp.org/docs/contrib_modules/metarefresh/simplesamlphp-automated_metadata.html" target="_blank">SSP metarefresh module</a> config file: <span class="font-monospace">aladin-config/simplesamlphp/config/module_metarefresh.php</span>; or</li>
+            <li>Add/update its <a href="/simplesaml/module.php/admin/federation/metadata-converter">SSP-formatted metadata entry</a> in <span class="font-monospace">aladin-config/simplesamlphp/metadata/saml20-idp-remote.php</span>, and then <a href="{{ path('convert_flatfile') }}">convert the flatfile to PDO</a></li>
         </ul>
     </div>
     <div class="row align-items-center mb-3">
         <div class="col col-6">Click an IdP Entity to view its JSON metadata:</div>
         <div class="col col-6 text-end">
-            <a href="/simplesaml/module.php/metarefresh/" class="btn btn-primary">Metarefresh (SSP)</a>
+            <a href="{{ path('metarefresh') }}" class="btn btn-primary">Metarefresh</a>
             <a href="{{ path('convert_flatfile') }}" class="btn btn-success">Convert Flatfile</a>
             <a href="{{ path('generate_pdo_tables') }}" class="btn btn-dark">Create Tables</a>
         </div>

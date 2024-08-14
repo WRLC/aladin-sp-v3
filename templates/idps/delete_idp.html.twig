@@ -7,12 +7,19 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ path('current_metadata') }}">Authorized Identity Providers</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Delete Identity Providers</li>
+            <li class="breadcrumb-item active" aria-current="page">Delete Identity Provider</li>
         </ol>
     </nav>
     <h1>Delete Identity Provider</h1>
-    <p>Are you sure you want to permanently delete the IdP '{{ entityid }}'? <strong>This action cannot be undone.</strong></p>
-    <div class="alert alert-warning">If the IdP is still in your metarefresh module config or your saml20-idp-remote flatfile, it will be re-added the next time metarefresh runs or you convert the flatfile to PDO.</div>
+    <p>Are you sure you want to permanently delete the IdP <strong>'{{ entityid }}'</strong>?</p>
+    <div class="alert alert-warning">
+        <div>To permanently delete the IdP from Aladin-SP, you must also delete its entry in:</div>
+        <ul>
+            <li><span class="font-monospace">aladin-config/simplesamlphp/config/module_metarefresh.php</span>; and/or</li>
+            <li><span class="font-monospace">aladin-config/simplesamlphp/metadata/saml20-idp-remote.php</span>.</li>
+        </ul>
+        <div>Otherwise, it will be re-added the next time metarefresh runs or the flatfile is converted to PDO.</div>
+    </div>
     {{ form_start(form) }}
     {{ form_end(form) }}
 {% endblock %}

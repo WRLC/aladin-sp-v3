@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Metarefresh | WRLC Aladin-SP{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('current_metadata') }}">Authorized Identity Providers</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Metarefresh</li>
+        </ol>
+    </nav>
+    <h1>Metarefresh</h1>
+    <div class="alert alert-secondary" role="alert">
+        <p>Metarefresh is a SimpleSAMLphp module that automatically fetches metadata from remote sources and stores it in a local cache.</p>
+        <p>It is configured in <span class="font-monospace">aladin-config/simplesamlphp/config/module_metarefresh.php</span>.</p>
+        <p>For more information, see the <a href="https://simplesamlphp.org/docs/stable/metarefresh" target="_blank">SimpleSAMLphp documentation</a>.</p>
+    </div>
+    <p>Click the button below to run metarefresh:</p>
+    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
+    {{ form_end(form) }}
+    <div class="text-secondary form-text">This may take a few minutes...</div>
+{% endblock %}

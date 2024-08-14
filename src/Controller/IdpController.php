@@ -5,8 +5,11 @@ namespace App\Controller;
 use App\Entity\AladinError;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error\Exception;
+use SimpleSAML\Logger;
+use SimpleSAML\Error;
 use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Metadata\MetaDataStorageHandlerPdo;
+use SimpleSAML\Module\metarefresh\Controller\MetaRefresh;
 use SimpleSAML\Utils\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -187,6 +190,61 @@ class IdpController extends AbstractController
 
         return $this->render('idps/flatfile.html.twig', [
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[Route('/idps/metarefresh', name: 'metarefresh')]
+    public function metarefresh(Request $request): Response
+    {
+        $auth = new Auth();  // Create a new Auth object
+        $auth->requireAdmin();  // Require authentication
+
+        $form = $this->createFormBuilder()
+            ->add('refresh', SubmitType::class, [
+                'label' => 'Refresh Metadata',
+                'attr' => ['class' => 'btn btn-primary']
+            ])
+            ->getForm();  // Create the config form
+        $form->handleRequest($request);  // Handle the request
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('metarefresh_results');
+        }
+        return $this->render('idps/metarefresh.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     * @throws \Exception
+     */
+    #[Route('/idps/metarefresh/results', name: 'metarefresh_results')]
+    public function metarefreshResults(Request $request): Response
+    {
+        $auth = new Auth();  // Create a new Auth object
+        $auth->requireAdmin();  // Require authentication
+
+        $metarefreshConfig = Configuration::getConfig('module_metarefresh.php');  // Get the metarefresh configuration
+        $metarefresh = new MetaRefresh($metarefreshConfig);  // Create a new MetaRefresh object
+
+        Logger::setCaptureLog(true);
+
+        try {
+            $metarefresh->main();
+        } catch (Exception $e) {
+            $e = Error\Exception::fromException($e);
+            $e->logWarning();
+        }
+
+        $logentries = Logger::getCapturedLog();
+
+        return $this->render('idps/metarefresh_results.html.twig', [
+            'logentries' => $logentries,
         ]);
     }
 
