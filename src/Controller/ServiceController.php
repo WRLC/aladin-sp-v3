@@ -17,6 +17,11 @@ class ServiceController extends AbstractController
 {
     /**
      * List all Service entities
+     *
+     * @param EntityManagerInterface $entityManager
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/service', name: 'list_services')]
@@ -30,11 +35,17 @@ class ServiceController extends AbstractController
 
         return $this->render('service/index.html.twig', [
             'services' => $services,  // Pass the Service
-            'title' => 'Services',  // Pass the title
         ]);
     }
 
     /**
+     * Create a new Service entity
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/service/new', name: 'create_service')]
@@ -58,11 +69,17 @@ class ServiceController extends AbstractController
 
         return $this->render('service/form.html.twig', [  // Render the new Institution page
             'form' => $form,  // Pass the form to the template
-            'title' => 'Add Service',  // Pass the title to the template
         ]);
     }
 
     /**
+     * Show a Service entity
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param string $slug
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/service/{slug}', name: 'show_service')]
@@ -77,13 +94,22 @@ class ServiceController extends AbstractController
             throw $this->createNotFoundException('Service not found');  // Throw a 404 exception
         }
 
+        $institutionServices = $service->getServiceInstitutions();  // Get the InstitutionServices for the Service
         return $this->render('service/show.html.twig', [  // Render the Institution show page
             'service' => $service,  // Pass the Institution entity to the template
-            'title' => $service->getName(),  // Pass the title to the template
+            'institutions' => $institutionServices,  // Pass the title to the template
         ]);
     }
 
     /**
+     * Edit a Service entity
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @param string $slug
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/service/{slug}/edit', name: 'edit_service')]
@@ -112,11 +138,18 @@ class ServiceController extends AbstractController
 
         return $this->render('service/form.html.twig', [  // Render the edit Institution page
             'form' => $form,  // Pass the form to the template
-            'title' => 'Edit ' . $service->getName(),  // Pass the title to the template
         ]);
     }
 
     /**
+     * Delete a Service entity
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @param string $slug
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/service/{slug}/delete', name: 'delete_service')]
@@ -148,7 +181,14 @@ class ServiceController extends AbstractController
         ]);  // Pass the title to the template
     }
 
-    public function alpha_services_slug($services): array
+    /**
+     * Sort Service entities by slug
+     *
+     * @param array $services
+     *
+     * @return array
+     */
+    public function alpha_services_slug(array $services): array
     {
         $alpha_services = [];
         foreach ($services as $service) {
@@ -156,5 +196,22 @@ class ServiceController extends AbstractController
         }
         ksort($alpha_services);
         return $alpha_services;
+    }
+
+    /**
+     * Sort InstitutionServices by institution sort order
+     *
+     * @param array $institutionServices
+     *
+     * @return array
+     */
+    public function alpha_institution_services(array $institutionServices): array
+    {
+        $alpha_institution_services = [];
+        foreach ($institutionServices as $institutionService) {
+            $alpha_institution_services[$institutionService->getInstitution()->getPosition()] = $institutionService;
+        }
+        ksort($alpha_institution_services);
+        return $alpha_institution_services;
     }
 }

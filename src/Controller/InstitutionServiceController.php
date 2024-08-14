@@ -93,10 +93,13 @@ class InstitutionServiceController extends AbstractController
      * @throws Exception
      */
     #[Route('/institution/{index}/{slug}/edit', name: 'edit_institution_service')]
+    #[Route('/services/{slug}/{index}/edit', name: 'edit_service_institution')]
     public function editInstitutionService(EntityManagerInterface $entityManager, Request $request, string $index, string $slug): Response
     {
         $auth = new Auth();
         $auth->requireAdmin();
+
+        $return = $this->setReturn($request);
 
         $inst_id = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
         $serv_id = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
@@ -114,7 +117,11 @@ class InstitutionServiceController extends AbstractController
             $entityManager->persist($institutionService);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Institution Service ' . $institutionService->getInstitution()->getName() . ': ' . $institutionService->getService()->getName() . ' updated successfully.');
+            $this->addFlash('success', 'Institutional Service ' . $institutionService->getInstitution()->getName() . ': ' . $institutionService->getService()->getName() . ' updated successfully.');
+
+            if ($return == 'service') {
+                return $this->redirectToRoute('show_service', ['slug' => $slug]);
+            }
 
             return $this->redirectToRoute('show_institution', ['index' => $index]);
         }
@@ -123,8 +130,8 @@ class InstitutionServiceController extends AbstractController
             'form' => $form,
             'institution' => $institutionService->getInstitution(),
             'service' => $institutionService->getService(),
-            'title' => 'Edit ' . $institutionService->getInstitution()->getName() . ': ' . $institutionService->getService()->getName(),
             'type' => 'edit',
+            'return' => $return,
         ]);
     }
 
@@ -141,10 +148,13 @@ class InstitutionServiceController extends AbstractController
      * @throws Exception
      */
     #[Route('/institution/{index}/{slug}/delete', name: 'delete_institution_service')]
+    #[Route('/services/{slug}/{index}/delete', name: 'delete_service_institution')]
     public function deleteInstitutionService(EntityManagerInterface $entityManager, Request $request, string $index, string $slug): Response
     {
         $auth = new Auth();
         $auth->requireAdmin();
+
+        $return = $this->setReturn($request);
 
         $inst_id = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
         $serv_id = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
@@ -163,7 +173,11 @@ class InstitutionServiceController extends AbstractController
 
             $this->addFlash('success', 'Institution Service ' . $institutionService->getInstitution()->getName() . ': ' . $institutionService->getService()->getName() . ' deleted successfully.');
 
-            return $this->redirectToRoute('show_institution', ['index' => $index]);
+            if ($return == 'service') {
+                return $this->redirectToRoute('list_services');
+            }
+
+            return $this->redirectToRoute('list_institutions');
         }
 
         return $this->render('institution_service/delete.html.twig', [
@@ -171,7 +185,19 @@ class InstitutionServiceController extends AbstractController
             'institution' => $institutionService->getInstitution(),
             'service' => $institutionService->getService(),
             'title' => 'Delete ' . $institutionService->getInstitution()->getName() . ': ' . $institutionService->getService()->getName(),
+            'return' => $return,
         ]);
+    }
+
+    private function setReturn(Request $request): string
+    {
+        $return = 'institution';
+
+        if ($request->get('_route') == 'edit_service_institution' || $request->get('_route') == 'delete_service_institution') {
+            $return = 'service';
+        }
+
+        return $return;
     }
 
 }

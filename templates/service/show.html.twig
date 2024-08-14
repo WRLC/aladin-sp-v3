@@ -39,5 +39,44 @@
             </tr>
         </tbody>
     </table>
+    <div class="mb-3">
+        <h2 class="col col-9">Institutional Services</h2>
+        {% if service.serviceInstitutions|length > 0 %}
+            <table class="table table-striped">
+                <thead>
+                <tr class="table-dark">
+                    <th class="col-3">Institution</th>
+                    <th class="col-1">IdP User </th>
+                    <th class="col-1">Auth type</th>
+                    <th class="col-4">Authorized</th>
+                    <th class="col-3"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for institution in institutions|sort((a, b) => a.institution.name <=> b.institution.name) %}
+                    <tr>
+                        <td>{{ institution.Institution.name }}</td>
+                        <td>{{ institution.IdAttribute }}</td>
+                        <td>{{ institution.authzType }}</td>
+                        <td>
+                            <ul class="list-group list-group-horizontal">
+                                {% for member in institution.AuthzMembers %}
+                                    <li class="list-group-item">{{ member.member }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td class="text-end">
+                            <a href="{{ path('auth_z_test', {'institution': institution.Institution.index, 'service': service.slug}) }}" class="btn btn-success btn-sm">Test AuthZ</a>
+                            <a href="{{ path('edit_service_institution', {'index': institution.Institution.index, 'slug': service.slug}) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ path('delete_service_institution', {'index': institution.Institution.index, 'slug': service.slug}) }}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="mb3">No institutional services found for {{ service.name }}.</div>
+        {% endif %}
+    </div>
 
 {% endblock %}

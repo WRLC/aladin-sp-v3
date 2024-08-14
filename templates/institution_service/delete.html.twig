@@ -1,22 +1,33 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Delete Institutional Service | WRLC Aladin-SP{% endblock %}
+
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.Index}) }}">{{ institution.Name }}</a></li>
+            {% if return == 'service' %}
+                <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_service', {'slug': service.Slug}) }}">{{ service.Name }}</a></li>
+            {% else %}
+                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.Index}) }}">{{ institution.Name }}</a></li>
+            {% endif %}
             <li class="breadcrumb-item active" aria-current="page">Delete Institutional Service</li>
         </ol>
     </nav>
-    <h1>Delete Service</h1>
+    <h1>Delete Institutional Service</h1>
     {{ form_start(form) }}
     <div class="mb-3">
         Are you sure you want to delete the institutional service "{{ institution.Name }}: {{ service.Name }}"?
     </div>
     <div class="mb-3">
-        {{ form_widget(form.delete, {'attr': {'class': 'btn btn-danger'}, 'label':  'Delete Institution'}) }}
-        <a href="{{ path('list_institutions') }}" class="btn btn-secondary">Cancel</a>
+        {{ form_widget(form.delete, {'label':  'Delete Institution'}) }}
+        {% if return == 'service' %}
+            <a href="{{ path('show_service', {'slug': service.Slug}) }}" class="btn btn-secondary">Cancel</a>
+        {% else %}
+            <a href="{{ path('show_institution', {'index': institution.Index}) }}" class="btn btn-secondary">Cancel</a>
+        {% endif %}
     </div>
     {{ form_end(form) }}
 {% endblock %}
