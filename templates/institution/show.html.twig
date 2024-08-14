@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ institution.Name }} | WRLC Aladin-SP{% endblock %}
+
 {% block body %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -68,7 +70,7 @@
         </tbody>
     </table>
     <div class="mb-3">
-        <h2 class="col col-9">Institutional Services</h2>
+        <h2>Institutional Services</h2>
         {% if institution.InstitutionServices|length > 0 %}
             <table class="table table-striped">
                 <thead>
@@ -120,6 +122,45 @@
             {{ form_end(form) }}
         {% else %}
             <div><small><em>All available services have been added.</em></small></div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <h2>Current Sessions</h2>
+        {% if sessions|length > 0 %}
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Session</th>
+                        <th>Svc</th>
+                        <th>UID</th>
+                        <th>Email</th>
+                        <th>FN</th>
+                        <th>Name</th>
+                        <th>IP</th>
+                        <th>Expiration</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in sessions %}
+                        <tr style="font-size: 0.85em">
+                            <td>{{ key }}</td>
+                            <td>{{ value.Service }}</td>
+                            <td>{{ value.UserName }}</td>
+                            <td>{{ value.Email }}</td>
+                            <td>{{ value.GivenName }}</td>
+                            <td>{{ value.Name }}</td>
+                            <td>{{ value.RemoteIP }}</td>
+                            <td>{{ (value.Expiration|trim)|date("m/d/Y H:i:s") }}</td>
+                            <td>
+                                <a href="{{ path('institution_session_clear', {'index': institution.index, 'key': key}) }}" class="text-danger">CLEAR</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="mb3">No active sessions found.</div>
         {% endif %}
     </div>
 {% endblock %}

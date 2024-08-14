@@ -43,6 +43,7 @@
         <h2 class="col col-9">Institutional Services</h2>
         {% if service.serviceInstitutions|length > 0 %}
             <table class="table table-striped">
+                <caption class="text-secondary form-text">To add an institutional service for {{ service.Name }}, please visit the page of the <a href="{{ path('list_institutions') }}">institution</a> you wish to add the service for.</caption>
                 <thead>
                 <tr class="table-dark">
                     <th class="col-3">Institution</th>
@@ -78,5 +79,43 @@
             <div class="mb3">No institutional services found for {{ service.name }}.</div>
         {% endif %}
     </div>
-
+    <div class="mb-3">
+        <h2>Current Sessions</h2>
+        {% if sessions|length > 0 %}
+            <table class="table table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th>Session</th>
+                    <th>Inst</th>
+                    <th>UID</th>
+                    <th>Email</th>
+                    <th>FN</th>
+                    <th>Name</th>
+                    <th>IP</th>
+                    <th>Expiration</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for key, value in sessions %}
+                    <tr style="font-size: 0.85em">
+                        <td>{{ key }}</td>
+                        <td>{{ value.University }}</td>
+                        <td>{{ value.UserName }}</td>
+                        <td>{{ value.Email }}</td>
+                        <td>{{ value.GivenName }}</td>
+                        <td>{{ value.Name }}</td>
+                        <td>{{ value.RemoteIP }}</td>
+                        <td>{{ (value.Expiration|trim)|date("m/d/Y H:i:s") }}</td>
+                        <td>
+                            <a href="{{ path('service_session_clear', {'slug': service.slug, 'key': key}) }}" class="text-danger">CLEAR</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="mb3">No active sessions found.</div>
+        {% endif %}
+    </div>
 {% endblock %}

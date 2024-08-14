@@ -1,31 +1,33 @@
 {% extends 'base.html.twig' %}
 
-    {% block title %}Current Sessions | WRLC Aladin-SP{% endblock %}
+{% block title %}Current Sessions | WRLC Aladin-SP{% endblock %}
 
-    {% block body %}
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item" aria-current="page">Current Sessions</li>
-            </ol>
-        </nav>
-        <div class="row align-center">
-            <h1 class="col col-6">Current Sessions</h1>
-            <div class="col col-6 text-end">
-                <a href="{{ path('sessions_clear') }}" class="btn btn-danger">Clear All Sessions</a>
-            </div>
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item" aria-current="page">Current Sessions</li>
+        </ol>
+    </nav>
+    <div class="row align-center">
+        <h1 class="col col-6">Current Sessions</h1>
+        <div class="col col-6 text-end">
+            <a href="{{ path('sessions_clear') }}" class="btn btn-danger">Clear All Sessions</a>
         </div>
+    </div>
+    <p class="text-muted">Sessions are stored in Memcached and expire after 14 days.</p>
+    {% if memcached|length > 0 %}
         <table class="table table-sm table striped table-hover table-bordered">
             <thead class="table-dark">
             <tr>
                 <th>Session</th>
-                <th>Service</th>
-                <th>UserName</th>
+                <th>Svc</th>
+                <th>Inst</th>
+                <th>UID</th>
                 <th>Email</th>
+                <th>FN</th>
                 <th>Name</th>
-                <th>GivenName</th>
-                <th>University</th>
-                <th>RemoteIP</th>
+                <th>IP</th>
                 <th>Expiration</th>
                 <th></th>
             </tr>
@@ -35,11 +37,11 @@
                 <tr style="font-size: 0.85em">
                     <td>{{ key }}</td>
                     <td>{{ value.Service }}</td>
+                    <td>{{ value.University }}</td>
                     <td>{{ value.UserName }}</td>
                     <td>{{ value.Email }}</td>
-                    <td>{{ value.Name }}</td>
                     <td>{{ value.GivenName }}</td>
-                    <td>{{ value.University }}</td>
+                    <td>{{ value.Name }}</td>
                     <td>{{ value.RemoteIP }}</td>
                     <td>{{ (value.Expiration|trim)|date("m/d/Y H:i:s") }}</td>
                     <td>
@@ -49,4 +51,7 @@
             {% endfor %}
             </tbody>
         </table>
-    {% endblock %}
+    {% else %}
+        <div class="mb3">No active sessions found.</div>
+    {% endif %}
+{% endblock %}

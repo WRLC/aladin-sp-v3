@@ -131,6 +131,16 @@ class InstitutionController extends AbstractController
             return !in_array($service->getSlug(), $serviceSlugs);  // Return the services not in the service slugs array
         });
 
+        $sessionController = new SessionsController();  // Create a new SessionsController
+        $m = $sessionController->createMemcachedConnection($entityManager);  // Create a memcached connection
+        $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
+
+        $filteredSessions = [];  // Initialize the filtered sessions array
+        foreach ($sessions as $key => $session) {  // For each session
+            if (trim($session['University']) == $index) {  // If the key contains the Institution index
+                $filteredSessions[$key] = $session;  // Add the session to the filtered sessions
+            }
+        }
 
         $form = $this->createForm(InstitutionServiceSelectType::class, null, ['services' => $services]);  // Create a form for the Institution entity
         $form->handleRequest($request);
@@ -145,7 +155,7 @@ class InstitutionController extends AbstractController
             'idpDetails' => $idpDetails,  // Pass the IdP details to the template
             'services' => $services,  // Pass the services to the template
             'form' => $form,  // Pass the form to the template
-            'title' => $institution->getName(),  // Pass the title to the template
+            'sessions' => $filteredSessions,  // Pass the filtered sessions to the template
         ]);
     }
 
@@ -263,7 +273,6 @@ class InstitutionController extends AbstractController
         foreach ($metadata as $idp) {  // For each IdP
             if (is_array($idp) && $idp['entityid'] === $entityid) {  // If the IdP is an array and the entity ID matches
                 $details = $idp;  // Set the details to the IdP
-                dump($details);  // Dump the details
                 break;
             }
         }

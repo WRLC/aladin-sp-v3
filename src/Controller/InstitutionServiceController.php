@@ -24,7 +24,7 @@ class InstitutionServiceController extends AbstractController
      *
      * @return Response
      */
-    #[Route('/institution/{index}/{id}', name: 'show_institution_service')]
+    #[Route('/institution/{index}/{slug}', name: 'show_institution_service')]
     public function showInstitutionService(string $index): Response
     {
         // Don't want to show the institution service, just redirect to the institution
@@ -93,7 +93,7 @@ class InstitutionServiceController extends AbstractController
      * @throws Exception
      */
     #[Route('/institution/{index}/{slug}/edit', name: 'edit_institution_service')]
-    #[Route('/services/{slug}/{index}/edit', name: 'edit_service_institution')]
+    #[Route('/service/{slug}/{index}/edit', name: 'edit_service_institution')]
     public function editInstitutionService(EntityManagerInterface $entityManager, Request $request, string $index, string $slug): Response
     {
         $auth = new Auth();
@@ -148,7 +148,7 @@ class InstitutionServiceController extends AbstractController
      * @throws Exception
      */
     #[Route('/institution/{index}/{slug}/delete', name: 'delete_institution_service')]
-    #[Route('/services/{slug}/{index}/delete', name: 'delete_service_institution')]
+    #[Route('/service/{slug}/{index}/delete', name: 'delete_service_institution')]
     public function deleteInstitutionService(EntityManagerInterface $entityManager, Request $request, string $index, string $slug): Response
     {
         $auth = new Auth();
@@ -189,6 +189,13 @@ class InstitutionServiceController extends AbstractController
         ]);
     }
 
+    /**
+     * Set the return route.
+     *
+     * @param Request $request
+     *
+     * @return string
+     */
     private function setReturn(Request $request): string
     {
         $return = 'institution';

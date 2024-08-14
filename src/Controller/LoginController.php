@@ -288,13 +288,13 @@ class LoginController extends AbstractController
         $first_name = $user_attributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
 
         $data = 'UserName=' . strtolower($user_attributes[$institutionService->getInstitution()->$method()][0]) . "\r\n";
-        $data .= 'University=' . $institutionService->getInstitution()->getName() . "\r\n";
+        $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";
+        $data .= 'University=' . $institutionService->getInstitution()->getIndex() . "\r\n";
+        $data .= 'Email=' . strtolower($user_attributes[$institutionService->getInstitution()->getMailAttribute()][0]) . "\r\n";
+        $data .= 'GivenName=' . $first_name . "\r\n";
+        $data .= 'Name=' . $last_name . "\r\n";
         $data .= 'RemoteIP=' . $_SERVER['REMOTE_ADDR'] . "\r\n";
         $data .= 'Expiration=' . time()+(86400*14) . "\r\n";
-        $data .= 'Email=' . strtolower($user_attributes[$institutionService->getInstitution()->getMailAttribute()][0]) . "\r\n";
-        $data .= 'Name=' . $last_name . "\r\n";
-        $data .= 'GivenName=' . $first_name . "\r\n";
-        $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";
 
         return $data;
     }

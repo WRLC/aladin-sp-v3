@@ -95,9 +95,22 @@ class ServiceController extends AbstractController
         }
 
         $institutionServices = $service->getServiceInstitutions();  // Get the InstitutionServices for the Service
+
+        $sessionController = new SessionsController();  // Create a new SessionsController
+        $m = $sessionController->createMemcachedConnection($entityManager);  // Create a memcached connection
+        $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
+
+        $filteredSessions = [];  // Initialize the filtered sessions array
+        foreach ($sessions as $key => $session) {  // For each session
+            if (trim($session['Service']) == $slug) {  // If the key contains the Institution index
+                $filteredSessions[$key] = $session;  // Add the session to the filtered sessions
+            }
+        }
+
         return $this->render('service/show.html.twig', [  // Render the Institution show page
             'service' => $service,  // Pass the Institution entity to the template
             'institutions' => $institutionServices,  // Pass the title to the template
+            'sessions' => $filteredSessions,  // Pass the filtered sessions to the template
         ]);
     }
 

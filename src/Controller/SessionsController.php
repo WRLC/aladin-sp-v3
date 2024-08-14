@@ -16,50 +16,46 @@ use Symfony\Component\Routing\Attribute\Route;
 class SessionsController extends AbstractController
 {
     /**
+     * Display all Aladin-SP sessions
+     *
+     * @param EntityManagerInterface $entityManager
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/sessions', name: 'sessions')]
     public function memcached(EntityManagerInterface $entityManager): Response
     {
+        // Check if user is admin
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $m = new Memcached();
-        $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();
-        $mServerPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();
-        $m->addServer($mServer, $mServerPort);
-        $items = $this->getAllKeys($mServer, $mServerPort);
-        $memcached = [];
-        foreach ($items as $item) {
-            if (str_starts_with($item, '_')) {
-                $raw = $m->get($item);
-                $lines = explode("\n", $raw);
-                $memcached[$item] = [];
-                foreach ($lines as $line) {
-                    $parts = explode('=', $line);
-                    if (count($parts) === 2) {
-                        $memcached[$item][$parts[0]] = $parts[1];
-                    }
-                }
-            }
-        }
-        $orderedMemcached = [];
-        foreach ($memcached as $key => $value) {
-            $orderedMemcached[$key] = $value['Expiration'];
-        }
-        array_multisort($orderedMemcached, SORT_ASC, $memcached);
+        $m = $this->createMemcachedConnection($entityManager);  // Create memcached connection
+        $memcached = $this->getOrderedAladin($m);  // Order memcached data by expiration date
+
+        // Render the sessions page
         return $this->render('sessions/index.html.twig', ['memcached' => $memcached]);
     }
 
     /**
+     * Clear all Aladin-SP sessions
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/sessions/clear', name: 'sessions_clear')]
     public function memcachedClear(EntityManagerInterface $entityManager, Request $request): Response
     {
+        // Check if user is admin
         $auth = new Auth();
         $auth->requireAdmin();
 
+        // Create form
         $form = $this->createFormBuilder()
             ->add('clear', SubmitType::class, [
                 'label' => 'Clear',
@@ -67,52 +63,119 @@ class SessionsController extends AbstractController
             ])
             ->getForm();
 
-        $form->handleRequest($request);
+        $form->handleRequest($request);  // Handle form request
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $m = new Memcached();
-            $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();
-            $mServerPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();
-            $m->addServer($mServer, $mServerPort);
-            $items = $this->getAllKeys($mServer, $mServerPort);
-            foreach ($items as $item) {
-                if (str_starts_with($item, '_')) {
-                    $m->delete($item);
-                }
+        if ($form->isSubmitted() && $form->isValid()) {  // If form is submitted and valid
+
+            $m = $this->createMemcachedConnection($entityManager);  // Create memcached connection
+            $memcached = $this->getOrderedAladin($m);  // Filter out non-Aladin-SP sessions
+
+            foreach ($memcached as $item) {  // Loop through all items
+                $m->delete($item);  // Delete the item
             }
+
+            // Add success message and redirect to sessions page
             $this->addFlash('success', 'All Aladin-SP sessions cleared');
             return $this->redirectToRoute('sessions');
         }
+
+        // Render the clear sessions page
         return $this->render('sessions/clear.html.twig', ['form' => $form]);
     }
 
     /**
+     * Clear a specific Aladin-SP session
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param string $key
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/sessions/clear/{key}', name: 'session_clear')]
-    public function memcachedClearKey(EntityManagerInterface $entityManager, string $key): Response
+    #[Route('/institution/{index}/sessions/clear/{key}/', name: 'institution_session_clear')]
+    #[Route('/service/{slug}/sessions/clear/{key}/', name: 'service_session_clear')]
+    public function sessionClear(EntityManagerInterface $entityManager, Request $request, string $key, string $index = null, string $slug = null): Response
     {
+        // Check if user is admin
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $m = new Memcached();
-        $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();
-        $mServerPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();
-        $m->addServer($mServer, $mServerPort);
-        $m->delete($key);
-        $this->addFlash('success', 'Session ' . $key . ' cleared');
+        $m = $this->createMemcachedConnection($entityManager); // Create memcached connection
+        $m->delete($key);  // Delete the session
+
+        $this->addFlash('success', 'Session ' . $key . ' cleared');  // Add success message
+
+        // Redirect to the appropriate page
+        if ($request->attributes->get('_route') === 'institution_session_clear') {  // If route is institution session clear
+            return $this->redirectToRoute('show_institution', ['index' => $index]);  // Redirect to institution sessions page
+        }
+        if ($request->attributes->get('_route') === 'service_session_clear') {  // If route is service session clear
+            return $this->redirectToRoute('show_service', ['slug' => $slug]);  // Redirect to service sessions page
+        }
+
+        // Default redirect to sessions page
         return $this->redirectToRoute('sessions');
     }
 
     /**
+     * Create a memcached connection
+     *
+     * @param EntityManagerInterface $entityManager
+     *
+     * @return Memcached
+     */
+    public function createMemcachedConnection(EntityManagerInterface $entityManager): Memcached
+    {
+        $m = new Memcached();  // Create a new Memcached object
+
+        // Get memcached server and port from database
+        $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();
+        $mServerPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();
+
+        $m->addServer($mServer, $mServerPort);  // Add the memcached server
+
+        return $m;  // Return the memcached object
+    }
+
+    /**
+     * Get all Aladin-SP sessions ordered by expiration date
+     *
+     * @param Memcached $m
+     *
+     * @return array
+     *
      * @throws Exception
      */
-    private function getAllKeys(string $host, int $port): array
+    public function getOrderedAladin(Memcached $m): array
     {
+        $items = $this->getAllKeys($m);  // Get all keys from memcached
+        $memcached = $this->getAllMemcached($m, $items);  // Get all memcached data for the given keys
+        $memcached = $this->filterAladin($memcached);  // Filter out non-Aladin-SP sessions
+
+        return $this->orderMemcachedData($memcached);  // Order memcached data by expiration date
+
+    }
+
+    /**
+     * Get all current keys from memcached
+     *
+     * @param Memcached $m
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    private function getAllKeys(Memcached $m): array
+    {
+        $host = $m->getServerList()[0]['host'];
+        $port = $m->getServerList()[0]['port'];
+
         $allKeys = [];
         $sock = fsockopen($host, $port, $errno, $errstr);
         if ($sock === false) {
-            throw new Exception("Error connection to server {$host} on port {$port}: ({$errno}) {$errstr}");
+            throw new Exception("Error connection to server $host on port $port: ($errno) $errstr");
         }
 
         if (fwrite($sock, "stats items\n") === false) {
@@ -133,11 +196,10 @@ class SessionsController extends AbstractController
         }
 
         foreach ($slabCounts as $slabNr => $slabCount) {
-            if (fwrite($sock, "lru_crawler metadump {$slabNr}\n") === false) {
+            if (fwrite($sock, "lru_crawler metadump $slabNr\n") === false) {
                 throw new Exception('Error writing to socket');
             }
 
-            $count = 0;
             while (($line = fgets($sock)) !== false) {
                 $line = trim($line);
                 if ($line === 'END') {
@@ -147,7 +209,6 @@ class SessionsController extends AbstractController
                 // key=foobar exp=1596440293 la=1596439293 cas=8492 fetch=no cls=24 size=14908
                 if (preg_match('!^key=(\S+)!', $line, $matches)) {
                     $allKeys[] = $matches[1];
-                    $count++;
                 }
             }
         }
@@ -157,5 +218,68 @@ class SessionsController extends AbstractController
         }
 
         return $allKeys;
+    }
+
+    /**
+     * Get all memcached data for the given keys
+     *
+     * @param Memcached $m
+     * @param array $keys
+     *
+     * @return array
+     */
+    private function getAllMemcached(Memcached $m, Array $keys): array
+    {
+        $memcached = [];
+        foreach ($keys as $item) {
+            if (str_starts_with($item, '_')) {
+                $raw = $m->get($item);
+                $lines = explode("\n", $raw);
+                $memcached[$item] = [];
+                foreach ($lines as $line) {
+                    $parts = explode('=', $line);
+                    if (count($parts) === 2) {
+                        $memcached[$item][$parts[0]] = $parts[1];
+                    }
+                }
+            }
+        }
+        return $memcached;
+    }
+
+    /**
+     * Order memcached data by expiration date
+     *
+     * @param array $memcached
+     *
+     * @return array
+     */
+    private function orderMemcachedData(array $memcached): array
+    {
+        $orderedMemcached = [];
+        foreach ($memcached as $key => $value) {
+            $orderedMemcached[$key] = $value['Expiration'];
+        }
+        array_multisort($orderedMemcached, SORT_ASC, $memcached);
+
+        return $memcached;
+    }
+
+    /**
+     * Filter out non-Aladin-SP sessions
+     *
+     * @param array $memcached
+     *
+     * @return array
+     */
+    private function filterAladin(array $memcached): array
+    {
+        $sessions = [];  // Initialize sessions array
+        foreach ($memcached as $key => $value) {  // Loop through all items
+            if (key_exists('UserName', $value)) {  // If item contains a UserName, it's an Aladin-SP session
+                $sessions[$key] = $value;  // Add the session to the sessions array
+            }
+        }
+        return $sessions;  // Return the sessions array
     }
 }
