@@ -11,8 +11,8 @@ WRLC SAML Service Provider with multi-SSO authentication, Alma user authorizatio
 * Memcached (incl. PHP Memcached extension) (installed automatically in the Docker container)
 
 ### External Dependencies
-* WRLC Patron Authorization Service (w/Alma API): https://github.com/WRLC/patron-authorization-service
-* WRLC local-dev-traefik: https://github.com/WRLC/local-dev-traefik
+* WRLC Patron Authorization Service (for authorization using Ex Libris Alma API): https://github.com/WRLC/patron-authorization-service
+* WRLC local-dev-traefik (for local networking of Docker containers): https://github.com/WRLC/local-dev-traefik
 
 ### Included in codebase
 * Symfony 6.x (w/Doctrine, Twig, and other core components) (already included in codebase)
@@ -42,10 +42,14 @@ WRLC SAML Service Provider with multi-SSO authentication, Alma user authorizatio
 1. Visit the Aladin-SP homepage: `https://simplesamlphp.wrlc.localhost/`
 2. Login with the password set for `SSP_ADMINPASSWORD` in the `aladin-config/simplesamlphp/config/.env` file. (Default: `another_secret_here`)
 3. Configure Aladin-SP settings at https://simplesamlphp.wrlc.localhost/config
-   1. Patron Authorization endpoint URL. If using the WRLC Patron Authorization Service with Docker, this will be http://patronauth:8080/lookup/patrons.
-   2. SSP Service Provider. Select the service provider created in `aladin-config/simplesamlphp/config/authsources.php`.
-   3. Memcached Host. If using the Docker container, this will be `aladinsp-memcached`.
-   4. Memcached Port. If using the Docker container, this will be `11211`.
-   5. Cookie Prefix. This can be any string, but should be unique to Aladin-SP.
-   6. Cookie Domain. This should be the domain of the Aladin-SP instance. (Default: `wrlc.localhost`)
+   1. Patron Authorization endpoint URL: If using the WRLC Patron Authorization Service with Docker, this will be http://patronauth:8080/lookup/patrons.
+   2. SSP Service Provider: Select the service provider created in `aladin-config/simplesamlphp/config/authsources.php`.
+   3. Memcached Host: If using the Docker container, this will be `aladinsp-memcached`.
+   4. Memcached Port: If using the Docker container, this will be `11211`.
+   5. Cookie Prefix: This can be any string, but should be unique to Aladin-SP.
+   6. Cookie Domain: This should be the domain of the Aladin-SP instance. (Default: `wrlc.localhost`)
 4. Create the SSP PDO tables: https://simplesamlphp.wrlc.localhost/config/pdo
+
+## Adding external Identity Providers (IdPs)
+
+Instructions coming soon...
