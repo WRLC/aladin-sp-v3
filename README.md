@@ -5,18 +5,18 @@ WRLC SAML Service Provider with multi-SSO authentication, Alma user authorizatio
 ## Archicture/Major Dependencies
 
 ### Installed automatically in Docker Container (for local dev)
-* PHP 8.1 or higher (installed automatically in the Docker container)
-* MySQL, MariaDB, PostgreSQL, or SQLite (installed automatically in the Docker container)
-* nginx or Apache (installed automatically in the Docker container)
-* Memcached (incl. PHP Memcached extension) (installed automatically in the Docker container)
+* PHP 8.1 or higher 
+* MySQL, MariaDB, PostgreSQL, or SQLite 
+* nginx or Apache
+* Memcached (incl. PHP Memcached extension)
 
 ### External Dependencies
 * WRLC Patron Authorization Service (for authorization using Ex Libris Alma API): https://github.com/WRLC/patron-authorization-service
 * WRLC local-dev-traefik (for local networking of Docker containers): https://github.com/WRLC/local-dev-traefik
 
 ### Included in codebase
-* Symfony 6.x (w/Doctrine, Twig, and other core components) (already included in codebase)
-* SimpleSAMLphp (w/Metarefresh, Cron, and Multiauth modules) (already included in codebase)
+* Symfony 6.x (w/Doctrine, Twig, and other core components) (already included in codebase): https://symfony.com/
+* SimpleSAMLphp 2.2.x (w/Metarefresh, Cron, and Multiauth modules) (already included in codebase): https://simplesamlphp.org/
 
 ## Installation (Local Development)
 
