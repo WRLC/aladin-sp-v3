@@ -35,15 +35,15 @@
             <tbody>
             {% for key, value in memcached %}
                 <tr style="font-size: 0.85em">
-                    <td>{{ key }}</td>
-                    <td>{{ value.Service }}</td>
-                    <td>{{ value.University }}</td>
-                    <td>{{ value.UserName }}</td>
-                    <td>{{ value.Email }}</td>
-                    <td>{{ value.GivenName }}</td>
-                    <td>{{ value.Name }}</td>
-                    <td>{{ value.RemoteIP }}</td>
-                    <td>{{ (value.Expiration|trim)|date("m/d/Y H:i:s") }}</td>
+                    <td>{% if key|default %}{{ key }}{% endif %}</td>
+                    <td>{% if value.Service|default %}{{ value.Service }}{% endif %}</td>
+                    <td>{% if value.University|default %}{{ value.University }}{% endif %}</td>
+                    <td>{% if value.UserName|default %}{{ value.UserName }}{% endif %}</td>
+                    <td>{% if value.Email|default %}{{ value.Email }}{% endif %}</td>
+                    <td>{% if value.GivenName|default %}{{ value.GivenName }}{% endif %}</td>
+                    <td>{% if value.Name|default %}{{ value.Name }}{% endif %}</td>
+                    <td>{% if value.RemoteIP|default %}{{ value.RemoteIP }}{% endif %}</td>
+                    <td>{% if value.Expiration|default %}{{ (value.Expiration|trim)|date("m/d/Y H:i:s") }}{% endif %}</td>
                     <td>
                         <a href="{{ path('session_clear', {'key': key}) }}" class="text-danger">CLEAR</a>
                     </td>
