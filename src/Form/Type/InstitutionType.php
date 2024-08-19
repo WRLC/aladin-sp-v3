@@ -105,6 +105,19 @@ class InstitutionType extends AbstractType
                 'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
                 'required' => false,
             ])
+            ->add('special_transform', ChoiceType::class, [
+                'attr' => ['class' => 'form-select'],
+                'label' => 'Special Transform for UserID?',
+                'label_attr' => ['class' => 'form-label'],
+                'choices' => [
+                    'No' => false,
+                    'Yes' => true,
+                ],
+                'placeholder' => '-- Select Yes or No --',
+                'help' => 'Whether the special transform function (splitting the IdP User ID at the "@" symbol and using the first part as the User ID) should be used for this institution.',
+                'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
+                'required' => true,
+            ])
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
                 'label' => 'Add Institution'

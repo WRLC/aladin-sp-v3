@@ -82,6 +82,12 @@
             {{ form_help(form.id_attribute) }}
             {{ form_errors(form.id_attribute) }}
         </div>
+        <div class="mb-3{% if form.special_transform.vars.required %} required{% endif %}">
+            {{ form_label(form.special_transform) }}
+            {{ form_widget(form.special_transform) }}
+            {{ form_help(form.special_transform) }}
+            {{ form_errors(form.special_transform) }}
+        </div>
         <div class="actions">
             {% if form.vars.value.id is null %}
                 {{ form_widget(form.save) }}

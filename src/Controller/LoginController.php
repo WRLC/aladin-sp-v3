@@ -127,6 +127,16 @@ class LoginController extends AbstractController
         // Get the user ID attribute
         $user_id = $this->get_institution_user_id($institutionService, $user_attributes);
 
+        // Get the special transform toggler value
+        $transform = $institution->getSpecialTransform();
+
+        // If the inst requires a special transform...
+        if ($transform) {
+            $split_email = explode('@', $user_id);  // split the user id at the '@'
+            $user_id = $split_email[0];  // set the user id to the first part
+        }
+
+        // Log the authentication result
         $this->aladinLogger->debug('Authenticated User: ' . $user_id . ' for ' . $institution->getName());
 
         // If the ID attribute is not found, show an error

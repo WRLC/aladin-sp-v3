@@ -100,7 +100,7 @@ class IdpController extends AbstractController
      * @throws Exception
      * @throws \Exception
      */
-    #[Route('/config/pdo', name: 'generate_pdo_tables')]
+    #[Route('/idps/pdo', name: 'generate_pdo_tables')]
     public function generatePdoTables(Request $request): Response
     {
         $auth = new Auth();  // Create a new Auth object
@@ -129,7 +129,7 @@ class IdpController extends AbstractController
                     }
                 }
             }
-            return $this->redirectToRoute('config');  // Redirect to the config page
+            return $this->redirectToRoute('current_metadata');  // Redirect to the config page
         }
 
         return $this->render('idps/generate_pdo.html.twig', [
@@ -147,7 +147,7 @@ class IdpController extends AbstractController
      * @throws Exception
      * @throws \Exception
      */
-    #[Route('/config/flatfile', name: 'convert_flatfile')]
+    #[Route('/idps/flatfile', name: 'convert_flatfile')]
     public function convertFlatfile(Request $request): Response
     {
         $auth = new Auth();  // Create a new Auth object
@@ -185,7 +185,7 @@ class IdpController extends AbstractController
 
             $this->addFlash('success', 'Successfully converted flatfile to PDO.');  // Add a success flash message
 
-            return $this->redirectToRoute('config');  // Redirect to the config page
+            return $this->redirectToRoute('current_metadata');  // Redirect to the config page
         }
 
         return $this->render('idps/flatfile.html.twig', [

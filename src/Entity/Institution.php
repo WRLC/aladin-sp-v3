@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -53,7 +54,7 @@ class Institution
      * The sorting order of the Institution in the wayf menu and other lists.
      */
     #[Gedmo\SortablePosition]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $position = null;
 
     /**
@@ -93,6 +94,12 @@ class Institution
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $id_attribute = null;
+
+    /**
+     * The Institution special transform toggler
+     */
+    #[ORM\Column(nullable: true)]
+    private ?bool $special_transform = false;
 
     /**
      * The Institution services linked to this Institution.
@@ -346,6 +353,24 @@ class Institution
     public function setIdAttribute(?string $id_attribute): static
     {
         $this->id_attribute = $id_attribute;
+
+        return $this;
+    }
+
+    /**
+     * Get the Special Transform toggler state
+     */
+    public function getSpecialTransform(): ?bool
+    {
+        return $this->special_transform;
+    }
+
+    /**
+     * Set the Special Transform toggler state
+     */
+    public function setSpecialTransform(?bool $special_transform): static
+    {
+        $this->special_transform = $special_transform;
 
         return $this;
     }
