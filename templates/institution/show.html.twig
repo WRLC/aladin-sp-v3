@@ -149,7 +149,11 @@
                     {% for key, value in sessions %}
                         <tr style="font-size: 0.85em">
                             <td>{{ key }}</td>
-                            <td>{{ value.Service }}</td>
+                            <td>
+                                {% if value.Service|default %}
+                                    {{ value.Service }}
+                                {% endif %}
+                            </td>
                             <td>{{ value.UserName }}</td>
                             <td>{{ value.Email }}</td>
                             <td>{{ value.GivenName }}</td>
