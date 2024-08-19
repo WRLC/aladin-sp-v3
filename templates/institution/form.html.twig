@@ -77,8 +77,9 @@
             {{ form_errors(form.first_name_attribute) }}
         </div>
         <div class="mb-3{% if form.id_attribute.vars.required %} required{% endif %}">
-            {{ form_label(form.id_attribute, null, {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.id_attribute, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.id_attribute) }}
+            {{ form_widget(form.id_attribute) }}
+            {{ form_help(form.id_attribute) }}
             {{ form_errors(form.id_attribute) }}
         </div>
         <div class="actions">
