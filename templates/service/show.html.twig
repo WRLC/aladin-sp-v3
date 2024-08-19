@@ -60,7 +60,7 @@
                         <td>{{ institution.IdAttribute }}</td>
                         <td>{{ institution.authzType }}</td>
                         <td>
-                            <ul class="list-group list-group-horizontal">
+                            <ul class="list-group list-group-horizontal" style="flex-wrap: wrap;">
                                 {% for member in institution.AuthzMembers %}
                                     <li class="list-group-item">{{ member.member }}</li>
                                 {% endfor %}
