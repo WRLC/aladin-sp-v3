@@ -12,12 +12,14 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            {% if return == service %}
-                <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('show_service', {'slug': service.slug}) }}">{{ service.name }}</a></li>
-            {% elseif institution %}
-                <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
-                <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ institution.name }}</a></li>
+            {% if return|default %}
+                {% if return == service %}
+                    <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('show_service', {'slug': service.slug}) }}">{{ service.name }}</a></li>
+                {% elseif institution %}
+                    <li class="breadcrumb-item"><a href="{{ path('list_institutions') }}">Institutions</a></li>
+                    <li class="breadcrumb-item"><a href="{{ path('show_institution', {'index': institution.index}) }}">{{ institution.name }}</a></li>
+                {% endif %}
             {% endif %}
             <li class="breadcrumb-item active" aria-current="page">{{ command }} Institutional Service</li>
         </ol>
