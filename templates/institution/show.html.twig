@@ -89,7 +89,7 @@
                             <td>{{ service.IdAttribute }}</td>
                             <td>{{ service.authzType }}</td>
                             <td>
-                                <ul class="list-group list-group-horizontal">
+                                <ul class="list-group list-group-horizontal" style="flex-wrap: wrap;">
                                     {% for member in service.AuthzMembers %}
                                         <li class="list-group-item">{{ member.member }}</li>
                                     {% endfor %}
