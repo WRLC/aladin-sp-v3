@@ -34,8 +34,6 @@ class InstitutionServiceType extends AbstractType
             $authzTypeHelp = '';
         }
 
-        dump($builder->getData()->getAuthzType());
-
         $authzMemberLabel = 'Authorized ' . $authzType;
         $authzMembersHelp = $authzTypeHelp;
 
