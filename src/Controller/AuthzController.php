@@ -95,7 +95,6 @@ class AuthzController extends AbstractController
             // If we're still here (phew!), we had at least one matching role...
             $authz->setAuthorized(true);  // ...so grant access
             $authz->setMatch($matchingRoles);  // ...set the matching roles
-            dump($authz);
             return $this->returnAuthz($authz);  // ...and return the authorization
         }
 
