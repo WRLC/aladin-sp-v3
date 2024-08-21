@@ -42,7 +42,9 @@
                     <!-- Otherwise, display the groups/roles -->
                     <!-- If the authzType is group, display the group (there can be only one) -->
                     {% if result.authzType == 'user_group' %}
-                        <pre class="mb-0">{{ result.match }}</pre>
+                        {% for group in result.match %}
+                            <pre class="mb-0">{{ group }}</pre>
+                        {% endfor %}
                     {% endif %}
                     <!-- If the authzType is role, display the roles (there can me more than one) -->
                     {% if result.authzType == 'user_role' %}
