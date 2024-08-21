@@ -100,13 +100,11 @@ class AuthzController extends AbstractController
 
         // ALMA GROUP $authz_type (only users with matching user_group)
         if ($authzType == 'user_group') {
-            foreach ($attributes['user_group'] as $userGroup) {
-                if (in_array($userGroup['value'], $authzMembers)) {
+                if (in_array($attributes['user_group']['value'], $authzMembers)) {
                     $authz->setAuthorized(true);
-                    $authz->setMatch([$userGroup['value']]);
+                    $authz->setMatch([$attributes['user_group']['value']]);
                     return $this->returnAuthz($authz);
                 }
-            }
             // If we're still here, the user group isn't authorized
             return $this->returnAuthz($authz);  // Deny access
         }
