@@ -60,7 +60,7 @@ when@prod:
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: stream
-                path: php://stderr
+                path: "%kernel.logs_dir%/aladin.error.log"
                 level: debug
                 formatter: monolog.formatter.json
             console:
@@ -75,5 +75,6 @@ when@prod:
             aladin:
                 type: rotating_file
                 level: debug
-                handler: nested
+                path: "%kernel.logs_dir%/aladin.debug.log"
+                handler: aladin
                 channels: ["aladin"]
