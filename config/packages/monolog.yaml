@@ -10,7 +10,7 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event", "!aladin"]
+                channels: ["!event"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -65,4 +65,4 @@ when@prod:
                 type: stream
                 level: debug
                 path: "%kernel.logs_dir%/aladin.debug.log"
-                channels: ["!aladin"]
+                channels: ["aladin"]
