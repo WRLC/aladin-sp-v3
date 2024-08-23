@@ -65,5 +65,4 @@ when@prod:
                 type: stream
                 level: debug
                 path: "%kernel.logs_dir%/aladin.debug.log"
-                handler: aladin
                 channels: ["!aladin"]
