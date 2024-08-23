@@ -10,7 +10,7 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event"]
+                channels: ["!event", "!aladin"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
@@ -22,13 +22,7 @@ when@dev:
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine", "!console"]
-            aladin:
-                type: rotating_file
-                level: debug
-                path: "%kernel.logs_dir%/aladin.log"
-                handler: aladin
-                channels: ["aladin"]
+                channels: ["!event", "!doctrine", "!console", "!aladin"]
 
 when@test:
     monolog:
@@ -43,11 +37,6 @@ when@test:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-            aladin:
-                type: rotating_file
-                level: debug
-                handler: nested
-                channels: ["aladin"]
 
 when@prod:
     monolog:
@@ -73,7 +62,7 @@ when@prod:
                 path: php://stderr
                 formatter: monolog.formatter.json
             aladin:
-                type: rotating_file
+                type: stream
                 level: debug
                 path: "%kernel.logs_dir%/aladin.debug.log"
                 handler: aladin
