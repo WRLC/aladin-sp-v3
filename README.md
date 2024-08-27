@@ -23,6 +23,14 @@ WRLC SAML Service Provider with multi-SSO authentication, Alma user authorizatio
 * SimpleSAMLphp 2.x (w/Metarefresh, Cron, and Multiauth modules): https://simplesamlphp.org/
 * SSP Metarefresh module: https://simplesamlphp.org/docs/contrib_modules/metarefresh/simplesamlphp-automated_metadata.html
 
+## Local development
+
+When using the included Docker configuration for local development, a few things are preset for you in Aladin-SP:
+
+* Aladin-SP URL: https://simplesamlphp.wrlc.localhost/
+* SSP Admin password: `another_secret_here`
+* Memcached Host and port: `aladinsp-memcached` and `11211` (these must still be added to the Aladin-SP configuration in the installation instructions below)
+
 ## Installation
 
 There are a lot of moving parts to make Aladin-SP, SimpleSAMLphp and Symfony play nice with each other.
@@ -66,11 +74,11 @@ There are a lot of moving parts to make Aladin-SP, SimpleSAMLphp and Symfony pla
 
 #### All Environments
 
-4. Copy the SimpleSAMLphp `.env` file: `cp aladin-config/simplesamlphp/config/.env.template aladin-config/simplesamlphp/config/.env`
+1. Copy the SimpleSAMLphp `.env` file: `cp aladin-config/simplesamlphp/config/.env.template aladin-config/simplesamlphp/config/.env`
 
 #### Production environment only
 
-5. Add production env values to the SimpleSAMLphp config `.env` file:
+2. Add production env values to the SimpleSAMLphp config `.env` file:
     1. `SSP_BASEURLPATH`: the public URL for your Aladin-SP, with the `/simplesaml` path appended
     2. `SSP_METADATA_DIR`: replace `/app/` with the server path to Aladin-SP; the rest should be unchanged
     3. `SSP_CERTDIR`: replace `/app/` with the server path to Aladin-SP; the rest should be unchanged
@@ -87,21 +95,21 @@ There are a lot of moving parts to make Aladin-SP, SimpleSAMLphp and Symfony pla
 
 #### All environments
 
-6. Copy the SimpleSAMLphp `authsources.php` file: `cp aladin-config/simplesamlphp/config/authsources.php.dist aladin-config/simplesamlphp/config/authsources.php`
-7. Create a SimpleSAMLphp service provider in the `authsources.php` file. (See: https://simplesamlphp.org/docs/stable/simplesamlphp-sp.html#configuring-the-sp)
-8. Copy the SSP Metarefresh configuration file: `cp aladin-config/simplesamlphp/config/module_metarefresh.php.dist aladin-config/simplesamlphp/config/module_metarefresh.php`
-9. Add entries for IdP metadata URLs to `module_metarefresh.php` (see "Adding Identity Providers" section below)
-10. Copy the SimpleSAMLphp `saml20-idp-remote.php` file: `cp aladin-config/simplesamlphp/metadata/saml20-idp-remote.php.dist aladin-config/simplesamlphp/metadata/saml20-idp-remote.php`
-11. Add entries for IdP metadata to `saml20-idp-remote.php` (see "Adding Identity Providers" section below)
+3. Copy the SimpleSAMLphp `authsources.php` file: `cp aladin-config/simplesamlphp/config/authsources.php.dist aladin-config/simplesamlphp/config/authsources.php`
+4. Create a SimpleSAMLphp service provider in the `authsources.php` file. (See: https://simplesamlphp.org/docs/stable/simplesamlphp-sp.html#configuring-the-sp)
+5. Copy the SSP Metarefresh configuration file: `cp aladin-config/simplesamlphp/config/module_metarefresh.php.dist aladin-config/simplesamlphp/config/module_metarefresh.php`
+6. Add entries for IdP metadata URLs to `module_metarefresh.php` (see "Adding Identity Providers" section below)
+7. Copy the SimpleSAMLphp `saml20-idp-remote.php` file: `cp aladin-config/simplesamlphp/metadata/saml20-idp-remote.php.dist aladin-config/simplesamlphp/metadata/saml20-idp-remote.php`
+8. Add entries for IdP metadata to `saml20-idp-remote.php` (see "Adding Identity Providers" section below)
 
 #### Production environment only 
 
-12. Copy the SSP Cron configuration file: `cp aladin-config/simplesamlphp/config/module_cron.php.dist aladin-config/simplesamlphp/config/module_cron.php`
-13. Configure `module_cron.php`
+9. Copy the SSP Cron configuration file: `cp aladin-config/simplesamlphp/config/module_cron.php.dist aladin-config/simplesamlphp/config/module_cron.php`
+10. Configure `module_cron.php`: set a custom value for `$config['key']`; set the rest based on your preferences (see https://simplesamlphp.org/docs/stable/cron/cron.html)
 
 #### All environments
 
-14. Create a self-signed certificate for the SP: `openssl req -newkey rsa:3072 -new -x509 -days 3652 -nodes -out aladin-config/simplesamlphp/cert/saml.crt -keyout aladin-config/simplesamlphp/cert/saml.pem`
+11. Create a self-signed certificate for the SP: `openssl req -newkey rsa:3072 -new -x509 -days 3652 -nodes -out aladin-config/simplesamlphp/cert/saml.crt -keyout aladin-config/simplesamlphp/cert/saml.pem`
 
 ### Symfony Deployment 
 
@@ -125,9 +133,36 @@ There are a lot of moving parts to make Aladin-SP, SimpleSAMLphp and Symfony pla
    4. Memcached Port: probably `11211`.
    5. Cookie Prefix: This can be any string, but should be unique to your Aladin-SP.
    6. Cookie Domain: This should be the domain—but not subdomain—of the Aladin-SP instance. (Default: `.wrlc.localhost`)
-26. Create the SSP PDO tables: https://{your-aladin-sp-url}/config/pdo
+4. Create the SSP PDO tables: https://{your-aladin-sp-url}/config/pdo
 
+#### Production environment only
 
-## Adding Identity Providers (IdPs)
+5. Set up a cron job: see SSP's cron result page in Aladin-SP for suggested crontab file (https:{your-aladin-sp-url}/simplesaml/module.php/cron/info)
 
-Instructions coming soon...
+## Adding/Updating Identity Providers (IdPs)
+
+SAML IdPs can be added to Aladin-SP in two ways: via SSP's metarefresh module (w/cron job) or via flatfile.
+
+Aladin-SP stores IdP metadata in its database, so in IdP metadata must ultimately be converted to a PDO.
+
+This, of course, assumes you've already exchanged metadata with the IdP
+
+### Metarefresh (Automatic Metadata Management)
+
+1. Add/edit IdP entries in `{server-path-to-aladin-sp}/aladin-config/simplesamlphp/config/module_metarefresh`
+   * For the proper format of a metarefresh IdP entry, see https://simplesamlphp.org/docs/contrib_modules/metarefresh/simplesamlphp-automated_metadata.html#configuring-the-metarefresh-module
+   * The two most important settings in a metarefresh IdP are:
+     1. `'sources' => 'src'`: the URL where Metadata can be retrieved for the Idp; and
+     2. `'outputFormat'`: should be set to `'pdo'`
+2. Manually run metarefresh to retrieve the IdP's metadata: https://{your-aladin-sp-url}/idps/metarefresh
+
+### Flatfile (Manual Metadata Management)
+
+1. Add/edit IdP metadata in `{server-path-to-aladin-sp}/aladin-config/simplesamlphp/metadata/saml20-idp-remote.php`
+   * For SSP's documentation, see https://simplesamlphp.org/docs/2.3/simplesamlphp-sp.html#adding-idps-to-the-sp
+   * IdP metadata will probably be provided in XML format, but must be stored in the flatfile as a PHP associative array; SSP provides a tool to convert the XML to PHP that can be accessed at: https://{your-aladin-sp-url}/simplesaml/module.php/admin/federation/metadata-converter
+2. Convert the contents of `saml20-idp-remote.php` to PDO: https://{your-aladin-sp-url}/idps/flatfile
+
+To delete an IdP, first delete it from Aladin-SP's IdPs list (), then delete its entry in the metarefresh config file or flatfile. If it's not deleted from there, it will re-appear in the IdP list the next time cron runs or the flatfile is converted to PDO.
+
+To update metadata for an IdP listed in the flatfile, simply update the metadata in the file and convert the contents to PDO again. SSP will update the corresponding database entry automatically.
