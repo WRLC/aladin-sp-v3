@@ -18,7 +18,7 @@ WRLC SAML Service Provider with multi-SSO authentication, Alma user authorizatio
   * FastAPI Azure Function app: https://github.com/WRLC/patron-authorization-service-azure-func
 * WRLC local-dev-traefik (for local networking of Docker containers): https://github.com/WRLC/local-dev-traefik
 
-### Dependencies ncluded in repo
+### Dependencies included in repo
 * Symfony 6.x (w/Doctrine, Twig, and other core components): https://symfony.com/
 * SimpleSAMLphp 2.x (w/Metarefresh, Cron, and Multiauth modules): https://simplesamlphp.org/
 * SSP Metarefresh module: https://simplesamlphp.org/docs/contrib_modules/metarefresh/simplesamlphp-automated_metadata.html
