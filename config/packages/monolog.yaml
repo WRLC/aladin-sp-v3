@@ -71,12 +71,3 @@ when@prod:
                 level: warning
                 path: "%kernel.logs_dir%/aladin.error.log"
                 channels: ["aladin_error"]
-            aladin_critical:
-                type: symfony_mailer
-                from_email: 'no_reply@wrlc.org'
-                to_email: 'webmaster@wrlc.org'
-                subject: 'Aladin-SP Critical Error'
-                level: critical
-                formatter: monolog.formatter.html
-                content_type: text/html
-
