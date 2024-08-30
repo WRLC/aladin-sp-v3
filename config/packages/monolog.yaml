@@ -49,7 +49,7 @@ when@prod:
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: stream
-                path: "%kernel.logs_dir%/aladin.error.log"
+                path: php://stderr
                 level: debug
                 formatter: monolog.formatter.json
             console:
@@ -66,3 +66,16 @@ when@prod:
                 level: debug
                 path: "%kernel.logs_dir%/aladin.debug.log"
                 channels: ["aladin"]
+            aladin-error:
+                type: stream
+                level: warning
+                path: "%kernel.logs_dir%/aladin.error.log"
+            aladin-critical:
+                type: symfony_mailer
+                from_email: 'no_reply@wrlc.org'
+                to_email: 'webmaster@wrlc.org'
+                subject: 'Aladin-SP Critical Error'
+                level: critical
+                formatter: monolog.formatter.html
+                content_type: text/html
+
