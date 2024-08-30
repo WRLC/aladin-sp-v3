@@ -127,6 +127,17 @@ class LoginController extends AbstractController
         // Get the user ID attribute
         $user_id = $this->get_institution_user_id($institutionService, $user_attributes);
 
+        // If user id is null, there's a problem with attribute names
+        if ($user_id == null) {
+            $error->setIntro('No user ID attribute found');
+            $error->setErrors([
+                'The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.',
+                'Please contact the WRLC Service Desk: servicedesk@wrlc.org'
+            ]);
+            $error->setLog(true);
+            return $this->render('error.html.twig', $errorController->renderError($error));
+        }
+
         // Get the special transform toggler value
         $transform = $institution->getSpecialTransform();
 
@@ -256,9 +267,9 @@ class LoginController extends AbstractController
      * @param InstitutionService $institutionService
      * @param array $user_attributes
      *
-     * @return string | Exception
+     * @return string|Exception|null
      */
-    private function get_institution_user_id(InstitutionService $institutionService, array $user_attributes): string | Exception
+    private function get_institution_user_id(InstitutionService $institutionService, array $user_attributes): string | Exception | null
     {
         try {
             // Get the user ID attribute
@@ -293,14 +304,20 @@ class LoginController extends AbstractController
             return new Exception('User ID for ' . $institutionService->getService()->getName() . ' not found');
         }
 
+        $email = $user_attributes[$institutionService->getInstitution()->getMailAttribute()][0] ?? '';
+
+        if ($email == '') {
+            return new Exception('Email address for ' . $institutionService->getService()->getName() . ' not found');
+        }
+
         // Set optional name attributes
         $last_name = $user_attributes[$institutionService->getInstitution()->getNameAttribute()][0] ?? '';
         $first_name = $user_attributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
 
-        $data = 'UserName=' . strtolower($user_attributes[$institutionService->getInstitution()->$method()][0]) . "\r\n";
+        $data = 'UserName=' . strtolower($uid) . "\r\n";
         $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";
         $data .= 'University=' . $institutionService->getInstitution()->getIndex() . "\r\n";
-        $data .= 'Email=' . strtolower($user_attributes[$institutionService->getInstitution()->getMailAttribute()][0]) . "\r\n";
+        $data .= 'Email=' . strtolower($email) . "\r\n";
         $data .= 'GivenName=' . $first_name . "\r\n";
         $data .= 'Name=' . $last_name . "\r\n";
         $data .= 'RemoteIP=' . $_SERVER['REMOTE_ADDR'] . "\r\n";
