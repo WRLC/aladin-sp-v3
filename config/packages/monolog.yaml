@@ -68,13 +68,13 @@ when@prod:
                 path: "%kernel.logs_dir%/aladin.debug.log"
                 formatter: monolog.formatter.syslog
                 channels: ["aladin"]
-            aladin-error:
+            aladin_error:
                 type: stream
                 level: warning
                 path: "%kernel.logs_dir%/aladin.error.log"
                 formatter: monolog.formatter.syslog
                 channels: ["aladin_error"]
-            aladin-critical:
+            aladin_critical:
                 type: symfony_mailer
                 from_email: 'no_reply@wrlc.org'
                 to_email: 'webmaster@wrlc.org'
