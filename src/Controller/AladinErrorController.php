@@ -3,11 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\AladinError;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AladinErrorController extends AbstractController
 {
+    private LoggerInterface $aladinErrorLogger;
+
+    public function __construct(LoggerInterface $aladinErrorLogger)
+    {
+        $this->aladinErrorLogger = $aladinErrorLogger;
+    }
 
     /**
      * Render an error
@@ -38,8 +44,7 @@ class AladinErrorController extends AbstractController
     private function logError(AladinError $error): void
     {
         // Log the error
-        $logger = new Logger('event');
-        $logger->error('[' . $error->getType() . '] ' . $error->getIntro() . ':', $error->getErrors());
+        $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ':', $error->getErrors());
     }
 
 }
