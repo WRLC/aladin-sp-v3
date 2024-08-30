@@ -2,6 +2,7 @@ monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
         - aladin
+        - aladin-error
 
 when@dev:
     monolog:
@@ -70,6 +71,7 @@ when@prod:
                 type: stream
                 level: warning
                 path: "%kernel.logs_dir%/aladin.error.log"
+                channels: ["!aladin", "!deprecation"]
             aladin-critical:
                 type: symfony_mailer
                 from_email: 'no_reply@wrlc.org'

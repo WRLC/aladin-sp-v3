@@ -130,10 +130,7 @@ class LoginController extends AbstractController
         // If user id is null, there's a problem with attribute names
         if ($user_id == null) {
             $error->setIntro('No user ID attribute found');
-            $error->setErrors([
-                'The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.',
-                'Please contact the WRLC Service Desk: servicedesk@wrlc.org'
-            ]);
+            $error->setErrors(['The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.']);
             $error->setLog(true);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
