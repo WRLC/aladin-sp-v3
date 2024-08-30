@@ -52,7 +52,6 @@ when@prod:
                 type: stream
                 path: "%kernel.logs_dir%/aladin.error.log"
                 level: debug
-                formatter: monolog.formatter.syslog
             console:
                 type: console
                 process_psr_3_messages: false
@@ -66,13 +65,11 @@ when@prod:
                 type: stream
                 level: debug
                 path: "%kernel.logs_dir%/aladin.debug.log"
-                formatter: monolog.formatter.syslog
                 channels: ["aladin"]
             aladin_error:
                 type: stream
                 level: warning
                 path: "%kernel.logs_dir%/aladin.error.log"
-                formatter: monolog.formatter.syslog
                 channels: ["aladin_error"]
             aladin_critical:
                 type: symfony_mailer
