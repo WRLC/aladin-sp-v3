@@ -38,7 +38,7 @@ class AladinErrorController extends AbstractController
     private function logError(AladinError $error): void
     {
         // Log the error
-        $logger = new Logger('aladin-error');
+        $logger = new Logger('event');
         $logger->error('[' . $error->getType() . '] ' . $error->getIntro() . ':', $error->getErrors());
     }
 
