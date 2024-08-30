@@ -10,6 +10,7 @@ use App\Form\Type\AuthnTestType;
 use App\Form\Type\authzTestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use SimpleSAML\Session;
 use SimpleSAML\Utils\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,6 +21,12 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class TestsController extends AbstractController
 {
+    private LoggerInterface $aladinErrorLogger;
+
+    public function __construct(LoggerInterface $aladinErrorLogger)
+    {
+        $this->aladinErrorLogger = $aladinErrorLogger;
+    }
 
     /**
      * Authentication test
@@ -90,6 +97,7 @@ class TestsController extends AbstractController
         $attributes = $authnController->authn_user($entityManager, $institution);  // Authenticate the user and get the attributes
         if (is_subclass_of($attributes, Exception::class)) {  // If the attributes are an Exception
             $error->setErrors([$attributes->getMessage()]);  // Set the error
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $attributes->getMessage());
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
@@ -176,9 +184,12 @@ class TestsController extends AbstractController
         if ($result['errors']) {  // If there's an error in the result
             if (str_starts_with($result['match'][0], 'HTTP/1.1 404 Not Found returned for')){
                 $error->setErrors(['User "' . $user . '" not found for ' . $institution->getName()]);  // Set the error
+                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . 'User "' . $user . '" not found for ' . $institution->getName());
             }
             else {
                 $error->setErrors($result['match']);
+                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match']);
+
             }
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }

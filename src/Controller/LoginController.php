@@ -24,10 +24,12 @@ class LoginController extends AbstractController
 {
 
     private LoggerInterface $aladinLogger;
+    private LoggerInterface $aladinErrorLogger;
 
-    public function __construct(LoggerInterface $aladinLogger)
+    public function __construct(LoggerInterface $aladinLogger, LoggerInterface $aladinErrorLogger)
     {
         $this->aladinLogger = $aladinLogger;
+        $this->aladinErrorLogger = $aladinErrorLogger;
     }
 
     /**
@@ -120,7 +122,7 @@ class LoginController extends AbstractController
         if ($user_attributes instanceof Exception) {
             $error->setIntro('Authentication failed');
             $error->setErrors([$user_attributes->getMessage()]);
-            $error->setLog(true);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $user_attributes->getMessage());
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
@@ -131,7 +133,7 @@ class LoginController extends AbstractController
         if ($user_id == null) {
             $error->setIntro('No user ID attribute found');
             $error->setErrors(['The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.']);
-            $error->setLog(true);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.');
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
@@ -154,7 +156,7 @@ class LoginController extends AbstractController
                 $institution->getName()
             );
             $error->setErrors([$user_id->getMessage()]);
-            $error->setLog(true);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $user_id->getMessage());
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
@@ -168,7 +170,7 @@ class LoginController extends AbstractController
                 $institution->getName() . ' user '. $user_id .' not authorized for '. $service->getName()
             );
             $error->setErrors($result['match']);
-            $error->setLog(true);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match']);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
@@ -200,7 +202,7 @@ class LoginController extends AbstractController
             if ($data instanceof Exception) {
                 $error->setIntro('Failed to set user session');
                 $error->setErrors([$data->getMessage()]);
-                $error->setLog(true);
+                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $data->getMessage());
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
 
@@ -230,7 +232,7 @@ class LoginController extends AbstractController
         else {
             $error->setIntro('Failed to set cookie');
             $error->setErrors(['Cookie name: '. $cookie_name]);
-            $error->setLog(true);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: '. $cookie_name);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
     }

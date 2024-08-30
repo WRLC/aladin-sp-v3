@@ -50,9 +50,9 @@ when@prod:
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: stream
-                path: php://stderr
+                path: "%kernel.logs_dir%/aladin.error.log"
                 level: debug
-                formatter: monolog.formatter.json
+                formatter: monolog.formatter.syslog
             console:
                 type: console
                 process_psr_3_messages: false
@@ -66,12 +66,14 @@ when@prod:
                 type: stream
                 level: debug
                 path: "%kernel.logs_dir%/aladin.debug.log"
+                formatter: monolog.formatter.syslog
                 channels: ["aladin"]
             aladin-error:
                 type: stream
                 level: warning
                 path: "%kernel.logs_dir%/aladin.error.log"
-                channels: ["!aladin", "!deprecation"]
+                formatter: monolog.formatter.syslog
+                channels: ["aladin-error"]
             aladin-critical:
                 type: symfony_mailer
                 from_email: 'no_reply@wrlc.org'
