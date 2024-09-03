@@ -8,6 +8,7 @@ use App\Entity\Institution;
 use App\Entity\InstitutionService;
 use App\Entity\Service;
 use App\Form\Type\WayfType;
+use App\Form\Type\WaygType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Memcached;
@@ -55,10 +56,45 @@ class LoginController extends AbstractController
         // Service slug is a required parameter
         $slug = $request->query->get('service');
 
-        // If no service is provided, show an error
+        // Institution index is a required parameter
+        $index = $request->query->get('institution');
+
+        // If no service is provided...
         if (!$slug) {
-            $error->setIntro('Missing service parameter');
-            return $this->render('error.html.twig', $errorController->renderError($error));
+            if (!$index) {  // ...and no institution is provided, show an error
+                $error->setIntro('Missing service parameter');
+                return $this->render('error.html.twig', $errorController->renderError($error));
+            }
+            else {  // ...but an institution is provided
+
+                // Get the institution
+                $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+
+                // If the institution is not found, return an error page
+                if (!$institution) {
+                    $error->setErrors(['Invalid institution parameter: '. $index]);
+                    return $this->render('error.html.twig', $errorController->renderError($error));
+                }
+
+                // Get all institutional services for the institution
+                $institutionServices = $entityManager->getRepository(InstitutionService::class)
+                    ->findBy(['Institution' => $institution->getId()]);
+
+                // If no institutional services found, show an error
+                if (count($institutionServices) == 0) {
+                    $error->setIntro($institution->getName() .' authorization is not available at this time.');
+                    return $this->render('error.html.twig', $errorController->renderError($error));
+                }
+
+                $form = $this->generate_wayg($institutionServices);  // Generate the WAYG form
+                $form->handleRequest($request);  // Handle the form request
+
+                // Render the WAYG form
+                return $this->render('login/wayg.html.twig', [
+                    'institution' => $institution,
+                    'form' => $form,
+                ]);
+            }
         }
 
         // Get the service
@@ -69,9 +105,6 @@ class LoginController extends AbstractController
             $error->setIntro('Invalid service parameter: '. $slug);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
-
-        // Institution index is a required parameter
-        $index = $request->query->get('institution');
 
         // If no institution is provided, show the WAYF
         if (!$index) {
@@ -235,6 +268,31 @@ class LoginController extends AbstractController
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: '. $cookie_name);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
+    }
+
+    /**
+     * Generate the WAYG form
+     *
+     * @param array $institutionServices
+     *
+     * @return FormInterface
+     */
+    private function generate_wayg(array $institutionServices): FormInterface
+    {
+        // Get the services
+        $services = [];  // Initialize the services array
+        foreach ($institutionServices as $inst_service) {  // For each institutional service...
+            $services[] = $inst_service->getService();  // ...add the service to the services array
+        }
+
+        // Sort services
+        $alpha_services = [];
+        foreach ($services as $service) {
+            $alpha_services[$service->getName()] = $service;
+        }
+        ksort($alpha_services);
+
+        return $this->createForm(WaygType::class, null, ['services' => $alpha_services, 'institution' => $institutionServices[0]->getInstitution()->getName()]);
     }
 
     /**
