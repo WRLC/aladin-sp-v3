@@ -1,0 +1,23 @@
+{% extends 'public.base.html.twig' %}
+
+{% block title %}Select service{% endblock %}
+
+{% block body %}
+    <div class="container-fluid text-center" style="max-width: 450px">
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+        <div class="alert alert-secondary">
+            You may be redirected to your campus login page after you select a service.
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts2 %}
+    <script>
+        document.getElementById('wayg_service').addEventListener('change', function() {
+            let service = this.value;
+            if (service !== '') {
+                document.location.href = '/login?institution={{ institution.index }}' + '&service=' + service;
+            }
+        });
+    </script>
+{% endblock %}
