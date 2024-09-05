@@ -5,6 +5,7 @@ namespace Doctrine\Bundle\DoctrineBundle\DependencyInjection;
 use Doctrine\DBAL\Schema\LegacySchemaManagerFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Proxy\ProxyFactory;
@@ -221,6 +222,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->booleanNode('disable_type_comments')->end()
                 ->scalarNode('server_version')->end()
+                ->integerNode('idle_connection_ttl')->defaultValue(600)->end()
                 ->scalarNode('driver_class')->end()
                 ->scalarNode('wrapper_class')->end()
                 ->booleanNode('keep_slave')
@@ -659,6 +661,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('auto_mapping')->defaultFalse()->end()
                     ->scalarNode('naming_strategy')->defaultValue('doctrine.orm.naming_strategy.default')->end()
                     ->scalarNode('quote_strategy')->defaultValue('doctrine.orm.quote_strategy.default')->end()
+                    ->scalarNode('typed_field_mapper')->defaultValue('doctrine.orm.typed_field_mapper.default')->end()
                     ->scalarNode('entity_listener_resolver')->defaultNull()->end()
                     ->scalarNode('repository_factory')->defaultValue('doctrine.orm.container_repository_factory')->end()
                     ->arrayNode('schema_ignore_classes')
@@ -802,13 +805,28 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->fixXmlConfig('identity_generation_preference')
+                ->children()
+                    ->arrayNode('identity_generation_preferences')
+                        ->info('Configures the preferences for identity generation when using the AUTO strategy. Valid values are "SEQUENCE" or "IDENTITY".')
+                        ->useAttributeAsKey('platform')
+                        ->prototype('scalar')
+                            ->beforeNormalization()
+                                ->ifString()
+                                ->then(static function ($v) {
+                                    return constant(ClassMetadata::class . '::GENERATOR_TYPE_' . strtoupper($v));
+                                })
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $node;
     }
 
     /**
-     * Return a ORM cache driver node for an given entity manager
+     * Return an ORM cache driver node for a given entity manager
      */
     private function getOrmCacheDriverNode(string $name): ArrayNodeDefinition
     {

@@ -77,7 +77,8 @@ EOT);
         unset($params['dbname'], $params['url']);
 
         if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
-            $params['dbname'] = 'postgres';
+            /** @psalm-suppress InvalidArrayOffset It's still available in DBAL 3.x that we need to support */
+            $params['dbname'] = $params['default_dbname'] ?? 'postgres';
         }
 
         if (! $input->getOption('force')) {
@@ -104,7 +105,6 @@ EOT);
 
         try {
             if ($shouldDropDatabase) {
-                /** @psalm-suppress TypeDoesNotContainType Bogus error, Doctrine\DBAL\Schema\AbstractSchemaManager<Doctrine\DBAL\Platforms\AbstractPlatform> does contain Doctrine\DBAL\Schema\SQLiteSchemaManager */
                 if ($schemaManager instanceof SQLiteSchemaManager) {
                     // dropDatabase() is deprecated for Sqlite
                     $connection->close();
