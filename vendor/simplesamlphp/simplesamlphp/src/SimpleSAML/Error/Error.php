@@ -85,7 +85,7 @@ class Error extends Exception
         string|array $errorCode,
         Throwable $cause = null,
         ?int $httpCode = null,
-        ErrorCodes $errorCodes = null
+        ErrorCodes $errorCodes = null,
     ) {
         if (is_array($errorCode)) {
             $this->parameters = $errorCode;
@@ -125,9 +125,12 @@ class Error extends Exception
      *
      * Extend this to use custom ErrorCodes instance (with custom error codes and their title / description tags).
      *
+     * This has to be public to allow Login to get an object
+     * containing custom error codes if they in use.
+     *
      * @return ErrorCodes
      */
-    protected function getErrorCodes(): ErrorCodes
+    public function getErrorCodes(): ErrorCodes
     {
         return new ErrorCodes();
     }

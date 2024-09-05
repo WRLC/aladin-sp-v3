@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace SimpleSAML\Error;
 
 use SimpleSAML\Locale\Translate;
+use SimpleSAML\Module\core\Controller\Login;
 
-use function array_key_exists;
 use function array_merge;
 
 /**
@@ -16,6 +16,13 @@ use function array_merge;
  */
 class ErrorCodes
 {
+    public function __construct()
+    {
+        // Automatically register instances of subclasses with Login to allow
+        // custom ErrorCodes to work in a redirect environment
+        Login::registerErrorCodeClass($this);
+    }
+
     // TODO PHPv8.1 - Consider moving to final consts for these default error codes to prevent overrides.
     public const ACSPARAMS = 'ACSPARAMS';
     public const ARSPARAMS = 'ARSPARAMS';
@@ -40,6 +47,7 @@ class ErrorCodes
     public const NOTFOUND = 'NOTFOUND';
     public const NOTFOUNDREASON = 'NOTFOUNDREASON';
     public const NOTSET = 'NOTSET';
+    public const ADMINNOTHASHED = 'ADMINNOTHASHED';
     public const NOTVALIDCERT = 'NOTVALIDCERT';
     public const PROCESSASSERTION = 'PROCESSASSERTION';
     public const PROCESSAUTHNREQUEST = 'PROCESSAUTHNREQUEST';
@@ -90,6 +98,7 @@ class ErrorCodes
             self::NOTFOUND => Translate::noop('Page not found'),
             self::NOTFOUNDREASON => Translate::noop('Page not found'),
             self::NOTSET => Translate::noop('Password not set'),
+            self::ADMINNOTHASHED => Translate::noop('Admin password not set to a hashed value'),
             self::NOTVALIDCERT => Translate::noop('Invalid certificate'),
             self::PROCESSASSERTION => Translate::noop('Error processing response from Identity Provider'),
             self::PROCESSAUTHNREQUEST => Translate::noop('Error processing request from Service Provider'),
@@ -238,6 +247,13 @@ class ErrorCodes
             self::NOTSET => Translate::noop("" .
                 "The password in the configuration (auth.adminpassword) is not changed " .
                 "from the default value. Please edit the configuration file."),
+            self::ADMINNOTHASHED => Translate::noop("" .
+                "The password in the configuration (auth.adminpassword) is not a hashed value. " .
+                "Full details on how to fix this are supplied at " .
+                "https://github.com/simplesamlphp/simplesamlphp/wiki/" .
+                "Frequently-Asked-Questions-(FAQ)#failed-to-login-to-the-" .
+                "admin-page-with-and-error-message-admin-password-" .
+                "not-set-to-a-hashed-value"),
             self::NOTVALIDCERT => Translate::noop('You did not present a valid certificate.'),
             self::PROCESSASSERTION => Translate::noop('We did not accept the response sent from the Identity Provider.'),
             self::PROCESSAUTHNREQUEST => Translate::noop("" .

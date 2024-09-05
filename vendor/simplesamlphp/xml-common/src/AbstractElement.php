@@ -219,7 +219,7 @@ abstract class AbstractElement implements SerializableElementInterface
      * Extract localized names from the children of a given element.
      *
      * @param \DOMElement $parent The element we want to search.
-     * @return static[] An array of objects of this class.
+     * @return array<static> An array of objects of this class.
      */
     public static function getChildrenOfClass(DOMElement $parent): array
     {
@@ -230,6 +230,11 @@ abstract class AbstractElement implements SerializableElementInterface
                 && $node->namespaceURI === static::getNamespaceURI()
                 && $node->localName === static::getLocalName()
             ) {
+                // Normalize the DOMElement by importing it into a clean empty document
+                $newDoc = DOMDocumentFactory::create();
+                /** @var \DOMElement $node */
+                $node = $newDoc->appendChild($newDoc->importNode($node, true));
+
                 $ret[] = static::fromXML($node);
             }
         }

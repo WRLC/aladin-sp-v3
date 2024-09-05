@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleSAML\XML;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use DOMElement;
 use SimpleSAML\Assert\Assert;
 
@@ -151,13 +152,15 @@ class Utils
      */
     public static function xsDateTimeToTimestamp(string $time): int
     {
-        Assert::validDateTimeZulu($time);
+        Assert::validDateTime($time);
 
-        $dateTime1 = DateTimeImmutable::createFromFormat(DateTimeImmutable::ISO8601, $time);
-        $dateTime2 = DateTimeImmutable::createFromFormat(DateTimeImmutable::RFC3339_EXTENDED, $time);
+        $dateTime1 = DateTimeImmutable::createFromFormat(DateTimeInterface::ISO8601, $time);
+        $dateTime2 = DateTimeImmutable::createFromFormat(DateTimeInterface::RFC3339_EXTENDED, $time);
 
         $dateTime = $dateTime1 ?: $dateTime2;
         Assert::isInstanceOf($dateTime, DateTimeImmutable::class);
+        Assert::same($dateTime->getTimeZone()->getName(), 'Z');
+
         return $dateTime->getTimestamp();
     }
 }

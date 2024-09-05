@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleSAML\Utils;
 
 use SimpleSAML\Configuration;
+use SimpleSAML\Error;
 
 /**
  * Utility class for SimpleSAMLphp configuration management and manipulation.
@@ -85,8 +86,8 @@ class Config
                     sprintf(
                         'Config directory specified by environment variable SIMPLESAMLPHP_CONFIG_DIR is not a ' .
                         'directory.  Given: "%s"',
-                        $configDirEnv
-                    )
+                        $configDirEnv,
+                    ),
                 );
             }
             $configDir = $configDirEnv;

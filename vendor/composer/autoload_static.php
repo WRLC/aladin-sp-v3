@@ -118,6 +118,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'Symfony\\Bridge\\Monolog\\' => 23,
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'SimpleSAML\\XML\\' => 15,
+            'SimpleSAML\\XMLSecurity\\' => 23,
             'SimpleSAML\\Module\\sanitycheck\\' => 30,
             'SimpleSAML\\Module\\saml\\' => 23,
             'SimpleSAML\\Module\\multiauth\\' => 28,
@@ -142,6 +143,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Link\\' => 9,
+            'Psr\\Http\\Message\\' => 17,
             'Psr\\EventDispatcher\\' => 20,
             'Psr\\Container\\' => 14,
             'Psr\\Clock\\' => 10,
@@ -154,6 +156,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             'Monolog\\' => 8,
             'Masterminds\\' => 12,
+        ),
+        'L' => 
+        array (
+            'League\\Uri\\' => 11,
         ),
         'G' => 
         array (
@@ -515,6 +521,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/xml-common/src',
         ),
+        'SimpleSAML\\XMLSecurity\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplesamlphp/xml-security/src',
+        ),
         'SimpleSAML\\Module\\sanitycheck\\' => 
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/sanitycheck/src',
@@ -587,6 +597,11 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/psr/link/src',
         ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
         'Psr\\EventDispatcher\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/event-dispatcher/src',
@@ -623,14 +638,18 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
+        'League\\Uri\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/uri-interfaces',
+        ),
         'Gettext\\Languages\\' => 
         array (
             0 => __DIR__ . '/..' . '/gettext/languages/src',
         ),
         'Gettext\\' => 
         array (
-            0 => __DIR__ . '/..' . '/gettext/translator/src',
-            1 => __DIR__ . '/..' . '/gettext/gettext/src',
+            0 => __DIR__ . '/..' . '/gettext/gettext/src',
+            1 => __DIR__ . '/..' . '/gettext/translator/src',
         ),
         'Gedmo\\' => 
         array (

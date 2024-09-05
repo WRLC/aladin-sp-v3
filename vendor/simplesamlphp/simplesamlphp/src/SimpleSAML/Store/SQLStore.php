@@ -8,8 +8,21 @@ use Exception;
 use PDO;
 use PDOException;
 use SimpleSAML\Assert\Assert;
-use SimpleSAML\Configuration;
-use SimpleSAML\Logger;
+use SimpleSAML\{Configuration, Logger, Utils};
+
+use function array_keys;
+use function count;
+use function gmdate;
+use function implode;
+use function in_array;
+use function intval;
+use function rand;
+use function serialize;
+use function sha1;
+use function strlen;
+use function unserialize;
+use function urldecode;
+use function rawurlencode;
 
 /**
  * A data store using a RDBMS to keep the data.
@@ -89,7 +102,7 @@ class SQLStore implements StoreInterface
         } catch (PDOException $e) {
             $this->pdo->exec(
                 'CREATE TABLE ' . $this->prefix .
-                '_tableVersion (_name VARCHAR(30) PRIMARY KEY NOT NULL, _version INTEGER NOT NULL)'
+                '_tableVersion (_name VARCHAR(30) PRIMARY KEY NOT NULL, _version INTEGER NOT NULL)',
             );
             $this->setTableVersion('tableVersion', 1);
             return;
@@ -110,7 +123,7 @@ class SQLStore implements StoreInterface
                     $update = [
                         'ALTER TABLE ' . $this->prefix . '_tableVersion DROP CONSTRAINT IF EXISTS ' .
                           $this->prefix . '_tableVersion__name_key',
-                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD PRIMARY KEY (_name)'
+                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD PRIMARY KEY (_name)',
                     ];
                     break;
                 case 'sqlsrv':
@@ -122,7 +135,7 @@ class SQLStore implements StoreInterface
                     $update = [
                         'ALTER TABLE ' . $this->prefix . '_tableVersion DROP INDEX IF EXISTS SELECT CONSTRAINT_NAME ' .
                           'FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME=' . $this->prefix . '_tableVersion',
-                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD CONSTRAINT _name PRIMARY KEY CLUSTERED (_name)'
+                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD CONSTRAINT _name PRIMARY KEY CLUSTERED (_name)',
                     ];
                     break;
                 case 'sqlite':
@@ -140,21 +153,21 @@ class SQLStore implements StoreInterface
                           $this->prefix . '_tableVersion',
                         'DROP TABLE ' . $this->prefix . '_tableVersion',
                         'ALTER TABLE ' . $this->prefix . '_tableVersion_new RENAME TO ' .
-                          $this->prefix . '_tableVersion'
+                          $this->prefix . '_tableVersion',
                     ];
                     break;
                 case 'mysql':
                     // Drop old index and add primary key
                     $update = [
                         'ALTER TABLE ' . $this->prefix . '_tableVersion DROP INDEX _name',
-                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD PRIMARY KEY (_name)'
+                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD PRIMARY KEY (_name)',
                     ];
                     break;
                 default:
                     // Drop old index and add primary key
                     $update = [
                         'ALTER TABLE ' . $this->prefix . '_tableVersion DROP INDEX _name',
-                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD PRIMARY KEY (_name)'
+                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD PRIMARY KEY (_name)',
                     ];
                     break;
             }
@@ -183,7 +196,7 @@ class SQLStore implements StoreInterface
         } elseif ($tableVer < 2 && $tableVer > 0) {
             throw new Exception(
                 'No upgrade path available. Please migrate to the latest 1.16+ '
-                . 'version of SimpleSAMLphp first before upgrading to 2.x.'
+                . 'version of SimpleSAMLphp first before upgrading to 2.x.',
             );
         }
 
@@ -242,7 +255,7 @@ class SQLStore implements StoreInterface
         $this->insertOrUpdate(
             $this->prefix . '_tableVersion',
             ['_name'],
-            ['_name' => $name, '_version' => $version]
+            ['_name' => $name, '_version' => $version],
         );
         $this->tableVersions[$name] = $version;
     }
@@ -334,6 +347,10 @@ class SQLStore implements StoreInterface
      */
     public function get(string $type, string $key): mixed
     {
+        if ($type == 'session') {
+            $key = $this->hashData($key);
+        }
+
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -380,6 +397,10 @@ class SQLStore implements StoreInterface
             $this->cleanKVStore();
         }
 
+        if ($type == 'session') {
+            $key = $this->hashData($key);
+        }
+
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -410,6 +431,10 @@ class SQLStore implements StoreInterface
      */
     public function delete(string $type, string $key): void
     {
+        if ($type == 'session') {
+            $key = $this->hashData($key);
+        }
+
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -422,5 +447,18 @@ class SQLStore implements StoreInterface
         $query = 'DELETE FROM ' . $this->prefix . '_kvstore WHERE _type=:_type AND _key=:_key';
         $query = $this->pdo->prepare($query);
         $query->execute($data);
+    }
+
+
+    /**
+     * Calculates an URL-safe sha-256 hash.
+     *
+     * @param string $data
+     * @return string The hashed data.
+     */
+    private function hashData(string $data): string
+    {
+        $secretSalt = (new Utils\Config())->getSecretSalt();
+        return hash_hmac('sha256', $data, $secretSalt);
     }
 }

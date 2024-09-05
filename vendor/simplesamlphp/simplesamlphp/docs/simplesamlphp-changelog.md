@@ -3,15 +3,81 @@
 [TOC]
 
 This document lists the changes between versions of SimpleSAMLphp.
-See the upgrade notes for specific information about upgrading.
+See the [upgrade notes](https://simplesamlphp.org/docs/stable/simplesamlphp-upgrade-notes.html) for specific information about upgrading.
+
+## Version 2.3.0
+
+Released 2024-08-20
+
+* The SubjectID authproc-filter now has a new option `hashed`, which if set to true
+  will automatically hash the unique part of the ID. This will also automatically
+  make the unique part of the ID in compliance with the specs (#2006)
+* Add microsecond support to the FileLoggingHandler (#2084)
+* Session ID's are now hashed when stored in a database (#2106)
+* Improved HTML 5 compatibility (#2162)
+* Fix: preloaded resource not used (#2207)
+
+`authorize`
+
+* Feature: allow a user to reauthenticate with a different account (simplesamlphp/simplesamlphp-module-authorize#17) (v1.5.0)
+* Feature: show user what account he's using when authorization fails (simplesamlphp/simplesamlphp-module-authorize#20) (v1.6.0)
+* Fix: fix faulty translation (v1.6.1)
+
+`consent`
+
+* Update Luxembourgish translations (v1.4.0)
+
+`negotiate`
+
+* Add support for SPNEGO channel binding (v2.3.1)
+
+`sqlauth`
+
+* Add username_regex option - run regular expression over username before querying the
+  database (simplesamlphp/simplesamlphp-module-sqlauth#11) (v1.3.0)
 
 ## Version 2.2.3
 
-Released TBD
+Released 2024-08-20
 
-## Version 30-04-2024
+* Added a missing use-statement that would cause a 'class not found' exception.
+* Improved Luxembourgish (LB) translations (#2129, #2140)
+* Fix regression introduced in v2.2.2 regarding autofilling usernames.
+* Restore the possibility to set `trusted.url.domains` to null
+* Improved documentation on cachedir-setting (#2153)
+* Fix bug in post.twig (#2161)
+* Fix MDQ cache file bugs (#2200)
 
-Released TBD
+`adfs`
+
+* Fixed metadata download to become a proper xml-file
+* Prevent metadata-download from ever being cached
+
+`authorize`
+
+* Fixed logout button (simplesamlphp/simplesamlphp-module-authorize#16) (v1.4.1)
+
+`ldap`
+
+* Fixed a bug that would throw an unhandled exception to the user if they would enter
+  a non-existing organization and `username_organization_method` is set to `allow` or `force` (v2.3.6).
+
+`metarefresh`
+
+* Fixed incorrect parsing of configuration (v1.2.2)
+
+`radius`
+
+* Fixed security bug known as Blast-Radius (CVE-2024-3596) (simplesamlphp/simplesamlphp-module-radius#10) (v2.0.2)
+
+## Version 2.2.2
+
+:warning: IMPORTANT NOTE :warning:
+
+Due to a mistake, this bugfix-release can turn out to become a backwards-incompatibility for those who override the loginuserpass.twig in their custom theme.
+Please update your theme to reflect the changes in [this commit](https://github.com/simplesamlphp/simplesamlphp/pull/2022/commits/691199e9b963a2861d731e6583555c7a8df39992) before updating.
+
+Released 2024-04-30
 
 * Fix regression when setting the host-variable in `saml20-idp-hosted` (was #1922)
 * Fix posting the form to the incorrect endpoint when using an authsource based on UserPassOrgBase (#2022)
@@ -24,7 +90,7 @@ Released TBD
 `admin`
 
 * Set custom security header to properly display phpinfo-page
-* Hide file-upload button for metadata-converter is uploads are disabled at PHP-level
+* Hide file-upload button for metadata-converter if uploads are disabled at PHP-level
 
 `exampleauth`
 
@@ -38,6 +104,10 @@ Released TBD
 
 Fixed a bug where base64 encoded strings were not decoded using the `strict` flag, leading
 to an incorrect error message.
+
+`sqlauth`
+
+* Add username_regex option (simplesamlphp/simplesamlphp-module-sqlauth#11) (v1.3.0)
 
 ## Version 2.2.1
 
@@ -158,6 +228,9 @@ Released 2023-10-30
 * Changed the UNIQUE constraint for the SP LogoutStore database to PRIMARY KEY to
   prevent confusing warnings in Drupal (#1862)
 * Add Accept HTTP headers to MDQ queries (#1865)
+
+### Chores
+
 * The custom error- and exception handlers were moved to their very own classes (#1858)
 
 ## Version 2.0.8
