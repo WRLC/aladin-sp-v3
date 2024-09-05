@@ -40,20 +40,13 @@ final class Broadcaster implements BroadcasterInterface
      */
     public const TOPIC_PATTERN = 'https://symfony.com/ux-turbo/%s/%s';
 
-    private $name;
-    private $hub;
+    private ?ExpressionLanguage $expressionLanguage;
 
-    /** @var ExpressionLanguage|null */
-    private $expressionLanguage;
-
-    public function __construct(string $name, HubInterface $hub)
-    {
-        $this->name = $name;
-        $this->hub = $hub;
-
-        if (class_exists(ExpressionLanguage::class)) {
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
+    public function __construct(
+        private string $name,
+        private HubInterface $hub,
+    ) {
+        $this->expressionLanguage = class_exists(ExpressionLanguage::class) ? new ExpressionLanguage() : null;
     }
 
     public function broadcast(object $entity, string $action, array $options): void
@@ -65,11 +58,11 @@ final class Broadcaster implements BroadcasterInterface
         $entityClass = ClassUtil::getEntityClass($entity);
 
         if (!isset($options['rendered_action'])) {
-            throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));
+            throw new \InvalidArgumentException(\sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));
         }
 
         if (!isset($options['topics']) && !isset($options['id'])) {
-            throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": either option "topics" or "id" is missing, or the PropertyAccess component is not installed. Try running "composer require property-access".', $entityClass));
+            throw new \InvalidArgumentException(\sprintf('Cannot broadcast entity of class "%s": either option "topics" or "id" is missing, or the PropertyAccess component is not installed. Try running "composer require property-access".', $entityClass));
         }
 
         $topics = [];
@@ -96,10 +89,10 @@ final class Broadcaster implements BroadcasterInterface
 
         if (0 === \count($options['topics'])) {
             if (!isset($options['id'])) {
-                throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": the option "topics" is empty and "id" is missing.', $entityClass));
+                throw new \InvalidArgumentException(\sprintf('Cannot broadcast entity of class "%s": the option "topics" is empty and "id" is missing.', $entityClass));
             }
 
-            $options['topics'] = (array) sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id'])));
+            $options['topics'] = (array) \sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id'])));
         }
 
         $update = new Update(

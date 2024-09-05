@@ -3,9 +3,9 @@
 
 namespace <?= $namespace ?>;
 
-<?= $use_statements; ?>
+<?= $class_data->getUseStatements(); ?>
 
-class <?= $class_name ?> extends WebTestCase<?= "\n" ?>
+<?= $class_data->getClassDeclaration() ?>
 {
     private KernelBrowser $client;
     private EntityManagerInterface $manager;
@@ -27,6 +27,7 @@ class <?= $class_name ?> extends WebTestCase<?= "\n" ?>
 
     public function testIndex(): void
     {
+        $this->client->followRedirects();
         $crawler = $this->client->request('GET', $this->path);
 
         self::assertResponseStatusCodeSame(200);
