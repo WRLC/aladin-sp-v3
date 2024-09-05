@@ -4,10 +4,22 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Module\authorize\Auth\Process;
 
+use Exception;
 use SimpleSAML\Assert\Assert;
 use SimpleSAML\Auth;
 use SimpleSAML\Module;
 use SimpleSAML\Utils;
+
+use function array_diff;
+use function array_key_exists;
+use function array_keys;
+use function array_push;
+use function implode;
+use function is_array;
+use function is_bool;
+use function is_string;
+use function preg_match;
+use function var_export;
 
 /**
  * Filter to authorize only certain users.
@@ -55,6 +67,18 @@ class Authorize extends Auth\ProcessingFilter
     protected array $valid_attribute_values = [];
 
     /**
+     * Flag to allow re-authentication when user is not authorized
+     * @var bool
+     */
+    protected bool $allow_reauthentication = false;
+
+    /**
+     * The attribute to show in the error page
+     * @var string|null
+     */
+    protected ?string $show_user_attribute = null;
+
+    /**
      * Initialize this filter.
      * Validate configuration parameters.
      *
@@ -92,23 +116,35 @@ class Authorize extends Auth\ProcessingFilter
             unset($config['errorURL']);
         }
 
+        if (isset($config['allow_reauthentication']) && is_bool($config['allow_reauthentication'])) {
+            $this->allow_reauthentication = $config['allow_reauthentication'];
+            unset($config['allow_reauthentication']);
+        }
+
+        if (isset($config['show_user_attribute']) && is_string($config['show_user_attribute'])) {
+            $this->show_user_attribute = $config['show_user_attribute'];
+            unset($config['show_user_attribute']);
+        }
+
         foreach ($config as $attribute => $values) {
             if (is_string($values)) {
                 $arrayUtils = new Utils\Arrays();
                 $values = $arrayUtils->arrayize($values);
             } elseif (!is_array($values)) {
-                throw new \Exception(
-                    'Filter Authorize: Attribute values is neither string nor array: ' . var_export($attribute, true)
-                );
+                throw new Exception(sprintf(
+                    'Filter Authorize: Attribute values is neither string nor array: %s',
+                    var_export($attribute, true),
+                ));
             }
 
             foreach ($values as $value) {
                 if (!is_string($value)) {
-                    throw new \Exception(
-                        'Filter Authorize: Each value should be a string for attribute: ' .
-                        var_export($attribute, true) . ' value: ' . var_export($value, true) .
-                        ' Config is: ' . var_export($config, true)
-                    );
+                    throw new Exception(sprintf(
+                        'Filter Authorize: Each value should be a string for attribute: %s value: %s config: %s',
+                        var_export($attribute, true),
+                        var_export($value, true),
+                        var_export($config, true),
+                    ));
                 }
             }
             $this->valid_attribute_values[$attribute] = $values;
@@ -128,12 +164,13 @@ class Authorize extends Auth\ProcessingFilter
         $authorize = $this->deny;
         $attributes = &$state['Attributes'];
         $ctx = [];
+
         // Store the rejection message array in the $state
         if (!empty($this->reject_msg)) {
             $state['authprocAuthorize_reject_msg'] = $this->reject_msg;
         }
         $state['authprocAuthorize_errorURL'] = $this->errorURL;
-
+        $state['authprocAuthorize_allow_reauthentication'] = $this->allow_reauthentication;
         $arrayUtils = new Utils\Arrays();
         foreach ($this->valid_attribute_values as $name => $patterns) {
             if (array_key_exists($name, $attributes)) {
@@ -143,8 +180,9 @@ class Authorize extends Auth\ProcessingFilter
                         if ($this->regex) {
                             $matched = preg_match($pattern, $value);
                         } else {
-                            $matched = ($value == $pattern);
+                            $matched = ($value === $pattern);
                         }
+
                         if ($matched) {
                             $authorize = ($this->deny ? false : true);
                             array_push($ctx, $name);
@@ -154,12 +192,23 @@ class Authorize extends Auth\ProcessingFilter
                 }
             }
         }
+
         if (!$authorize) {
+            if ($this->show_user_attribute !== null && array_key_exists($this->show_user_attribute, $attributes)) {
+                $userAttribute =  $attributes[$this->show_user_attribute][0] ?? null;
+                if ($userAttribute !== null) {
+                    $state['authprocAuthorize_user_attribute'] = $userAttribute;
+                }
+            }
+
             // Try to hint at which attributes may have failed as context for errorURL processing
             if ($this->deny) {
                 $state['authprocAuthorize_ctx'] = implode(' ', $ctx);
             } else {
-                $state['authprocAuthorize_ctx'] = implode(' ', array_diff(array_keys($this->valid_attribute_values), $ctx));
+                $state['authprocAuthorize_ctx'] = implode(
+                    ' ',
+                    array_diff(array_keys($this->valid_attribute_values), $ctx),
+                );
             }
             $this->unauthorized($state);
         }

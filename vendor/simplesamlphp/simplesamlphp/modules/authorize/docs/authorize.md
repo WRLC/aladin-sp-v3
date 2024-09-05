@@ -55,6 +55,24 @@ REFEDS SAML2 Metadata Deployment Profile for errorURL. Defaults to TRUE.
 **Note**: This option needs to be boolean (TRUE/FALSE) else it will be
           considered an attribute matching rule.
 
+### `allow_reauthentication`
+
+This option can be used to allow users to re-authenticate if they are
+unauthorized. If set to TRUE, the user will be shown a button to re-authenticate.
+If set to FALSE, the user will not be shown a button to re-authenticate.
+
+**Note**: This option needs to be boolean (TRUE/FALSE) else it will be
+          considered FALSE.
+
+### `show_user_attribute`
+
+This option can be used to show the user attribute, to inform the with which
+account they are logged in. If set to a valid attribute, the user will see
+the first value of that attribute.
+
+**Note**: This option needs to be a string else it will be considered disabled.
+          Default value is NULL.
+
 ## Attribute Rules
 
 Each additional filter configuration option is considered an attribute matching
