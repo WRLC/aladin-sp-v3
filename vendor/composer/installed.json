@@ -1425,17 +1425,17 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "3.2.1",
-            "version_normalized": "3.2.1.0",
+            "version": "3.2.2",
+            "version_normalized": "3.2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "722cea6536775206e81744542b36fa7c9a4ea3e5"
+                "reference": "831a1eb7d260925528cdbb49cc1866c0357cf147"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/722cea6536775206e81744542b36fa7c9a4ea3e5",
-                "reference": "722cea6536775206e81744542b36fa7c9a4ea3e5",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/831a1eb7d260925528cdbb49cc1866c0357cf147",
+                "reference": "831a1eb7d260925528cdbb49cc1866c0357cf147",
                 "shasum": ""
             },
             "require": {
@@ -1468,7 +1468,7 @@
                 "ext-dom": "Provides support for XSD validation for XML mapping files",
                 "symfony/cache": "Provides cache support for Setup Tool with doctrine/cache 2.0"
             },
-            "time": "2024-06-26T21:48:58+00:00",
+            "time": "2024-08-23T10:03:52+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1510,7 +1510,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/3.2.1"
+                "source": "https://github.com/doctrine/orm/tree/3.2.2"
             },
             "install-path": "../doctrine/orm"
         },
