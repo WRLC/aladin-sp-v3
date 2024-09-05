@@ -3359,16 +3359,16 @@
         },
         {
             "name": "symfony/asset-mapper",
-            "version": "v6.4.9",
+            "version": "v6.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/asset-mapper.git",
-                "reference": "cfef86386f7f09132eb78afd4deea7c6c59e0c58"
+                "reference": "6a9672ca468ce411f61b38151ab66a1584672f5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/asset-mapper/zipball/cfef86386f7f09132eb78afd4deea7c6c59e0c58",
-                "reference": "cfef86386f7f09132eb78afd4deea7c6c59e0c58",
+                "url": "https://api.github.com/repos/symfony/asset-mapper/zipball/6a9672ca468ce411f61b38151ab66a1584672f5e",
+                "reference": "6a9672ca468ce411f61b38151ab66a1584672f5e",
                 "shasum": ""
             },
             "require": {
@@ -3418,7 +3418,7 @@
             "description": "Maps directories of assets & makes them available in a public directory with versioned filenames.",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/asset-mapper/tree/v6.4.9"
+                "source": "https://github.com/symfony/asset-mapper/tree/v6.4.11"
             },
             "funding": [
                 {
@@ -3434,7 +3434,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-28T07:15:22+00:00"
+            "time": "2024-08-20T21:02:21+00:00"
         },
         {
             "name": "symfony/cache",
@@ -4990,16 +4990,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v6.4.9",
+            "version": "v6.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "6e9db0025db565bcf8f1d46ed734b549e51e6045"
+                "reference": "4c92046bb788648ff1098cc66da69aa7eac8cb65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/6e9db0025db565bcf8f1d46ed734b549e51e6045",
-                "reference": "6e9db0025db565bcf8f1d46ed734b549e51e6045",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/4c92046bb788648ff1098cc66da69aa7eac8cb65",
+                "reference": "4c92046bb788648ff1098cc66da69aa7eac8cb65",
                 "shasum": ""
             },
             "require": {
@@ -5063,7 +5063,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v6.4.9"
+                "source": "https://github.com/symfony/http-client/tree/v6.4.11"
             },
             "funding": [
                 {
@@ -5079,7 +5079,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-28T07:59:05+00:00"
+            "time": "2024-08-26T06:30:21+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
