@@ -70,8 +70,8 @@ class SessionsController extends AbstractController
             $m = $this->createMemcachedConnection($entityManager);  // Create memcached connection
             $memcached = $this->getOrderedAladin($m);  // Filter out non-Aladin-SP sessions
 
-            foreach ($memcached as $item) {  // Loop through all items
-                $m->delete($item);  // Delete the item
+            foreach ($memcached as $key => $item) {  // Loop through all items
+                $m->delete($key);  // Delete the item
             }
 
             // Add success message and redirect to sessions page
@@ -87,8 +87,10 @@ class SessionsController extends AbstractController
      * Clear a specific Aladin-SP session
      *
      * @param EntityManagerInterface $entityManager
+     * @param Request $request
      * @param string $key
-     *
+     * @param string|null $index
+     * @param string|null $slug
      * @return Response
      *
      * @throws Exception
