@@ -11,6 +11,7 @@ use App\Form\Type\authzTestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
+use SimpleSAML\Auth\Simple;
 use SimpleSAML\Session;
 use SimpleSAML\Utils\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,15 +52,6 @@ class TestsController extends AbstractController
         $session = Session::getSessionFromRequest();  // Get the session
         $entityId = $session->getAuthData('default-sp', 'saml:sp:IdP');  // Get the entity ID
 
-        if ($entityId) {  // If the session data contains 'default-sp'
-            $institutionController = new InstitutionController();  // Create a new InstitutionController
-            $idp = $institutionController->getIdpDetails($entityId);  // Get the IDP details
-            return $this->render('tests/authN.html.twig', [  // Render the authentication page
-                'attributes' => $session->getAuthData('default-sp', 'Attributes'),  // Set the attributes
-                'idp' => $idp,  // Set the institution
-            ]);
-        }
-
         // INDEX
         $index = $request->get('institution');  // Get the institution index
 
@@ -92,6 +84,16 @@ class TestsController extends AbstractController
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
+        if ($entityId) {  // If the session data contains 'default-sp'
+            $institutionController = new InstitutionController();  // Create a new InstitutionController
+            $idp = $institutionController->getIdpDetails($entityId);  // Get the IDP details
+            return $this->render('tests/authN.html.twig', [  // Render the authentication page
+                'attributes' => $session->getAuthData('default-sp', 'Attributes'),  // Set the attributes
+                'idp' => $idp,  // Set the IdP
+                'institution' => $institution,  // Set the institution
+            ]);
+        }
+
         // AUTHENTICATION
         $authnController = new AuthnController();  // Create a new LoginController
         $attributes = $authnController->authn_user($entityManager, $institution);  // Authenticate the user and get the attributes
@@ -106,6 +108,37 @@ class TestsController extends AbstractController
             'attributes' => $attributes,  // Set the attributes
             'institution' => $institution,  // Set the institution
         ]);
+    }
+
+    /**
+     * Clear the authentication session
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return Response|null
+     */
+    #[Route('/authN/clear', name: 'auth_n_test_clear')]
+    public function authN_clear(EntityManagerInterface $entityManager, Request $request): Response|null
+    {
+        $index = $request->get('institution');  // Get the institution index
+
+        if (!$index) {  // If the institution is not provided
+            $this->addFlash('error', 'No institution specified' );  // Add a flash message
+            return $this->redirectToRoute('auth_n_test');  // Redirect to the authentication test
+        }
+
+        // INSTITUTION
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+
+        if (!$institution) {  // If the institution is not found
+            $this->addFlash('error', 'Institution not found');  // Add a flash message
+            return $this->redirectToRoute('auth_n_test');  // Redirect to the authentication test
+        }
+
+        $auth = new Simple('default-sp');  # Create a new Auth object
+        $auth->logout('/authN?institution=' . $index);  # Logout the user
+        return null;
     }
 
     /**
