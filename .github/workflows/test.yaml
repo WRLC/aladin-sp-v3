@@ -5,7 +5,7 @@ on: [push]
 jobs:
   phpunit:
     runs-on: ubuntu-latest
-
+    environment: "Symfony Testing"
     services:
       mysql:
         image: mariadb:10.5.12
