@@ -18,9 +18,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: php-actions/composer@v6
       - uses: php-actions/phpunit@v4
         with:
           php_version: '8.1'
           php_extensions: "curl gd mbstring mysqli pdo pdo_mysql xml soap opcache intl ldap memcached"
+      - uses: php-actions/composer@v6
       - run: vendor/bin/phpunit
