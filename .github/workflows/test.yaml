@@ -25,6 +25,4 @@ jobs:
       - uses: php-actions/composer@v6
       - run: vendor/bin/phpunit
         env:
-           NGINX_HOST: ""
-           CONFIG_DIR: "/app/aladin-config/simplesamlphp/config"
-           TEST_USER: "gourley"
+          ROOT_DIR: ${{ github.workspace }}
