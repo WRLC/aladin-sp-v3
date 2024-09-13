@@ -23,8 +23,8 @@ jobs:
           php_version: '8.1'
           php_extensions: "curl gd mbstring mysqli pdo pdo_mysql xml soap opcache intl ldap memcached"
       - uses: php-actions/composer@v6
-      - env:
-          NGINX_HOST: ""
-          CONFIG_DIR: "/app/aladin-config/simplesamlphp/config"
-          TEST_USER: "gourley"
       - run: vendor/bin/phpunit
+        env:
+           NGINX_HOST: ""
+           CONFIG_DIR: "/app/aladin-config/simplesamlphp/config"
+           TEST_USER: "gourley"
