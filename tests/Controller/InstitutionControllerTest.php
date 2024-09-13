@@ -10,10 +10,10 @@ class InstitutionControllerTest extends WebTestCase
 
     public function testSomething(): void
     {
-        Configuration::setConfigDir($_ENV['CONFIG_DIR']);
+        Configuration::setConfigDir(getenv('CONFIG_DIR'));
 
         $client = static::createClient();
-        $client->request('GET', $_ENV['NGINX_HOST'] . '/authZ?institution=wr&service=service_desk&user=' . $_ENV['TEST_USER']);
+        $client->request('GET', getenv('NGINX_HOST') . '/authZ?institution=wr&service=service_desk&user=' . getenv('TEST_USER'));
 
 
         $this->assertResponseIsSuccessful();
