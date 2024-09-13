@@ -17,6 +17,10 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-        - uses: actions/checkout@v3
-        - uses: php-actions/composer@v6
-        - run: vendor/bin/phpunit
+      - uses: actions/checkout@v3
+      - uses: php-actions/composer@v6
+      - uses: php-actions/phpunit@v4
+        with:
+          php_version: '8.1'
+          php_extensions: "curl gd mbstring mysqli pdo pdo_mysql xml soap opcache intl ldap memcached"
+      - run: vendor/bin/phpunit
