@@ -215,13 +215,13 @@ class TestsController extends AbstractController
         $result = $authzController->authz($institutionService, $user);  // Authorize the user
 
         if ($result['errors']) {  // If there's an error in the result
-            if (str_starts_with($result['match'][0], 'HTTP/1.1 404 Not Found returned for')){
+            if ($result['match'][0] == 'Alma user not found') {
                 $error->setErrors(['User "' . $user . '" not found for ' . $institution->getName()]);  // Set the error
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . 'User "' . $user . '" not found for ' . $institution->getName());
             }
             else {
                 $error->setErrors($result['match']);
-                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match']);
+                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
 
             }
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
