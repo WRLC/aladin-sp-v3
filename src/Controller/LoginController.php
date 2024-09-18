@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\AladinError;
-use App\Entity\Config;
 use App\Entity\Institution;
 use App\Entity\InstitutionService;
 use App\Entity\Service;
@@ -149,7 +148,7 @@ class LoginController extends AbstractController
 
         // Authentication
         $authnController = new AuthnController();  // Create a new AuthnController
-        $user_attributes = $authnController->authn_user($entityManager, $institution);  // Authenticate the user
+        $user_attributes = $authnController->authn_user($institution);  // Authenticate the user
 
         // If authentication fails, return an error page
         if ($user_attributes instanceof Exception) {
@@ -195,7 +194,7 @@ class LoginController extends AbstractController
 
         // Authorization
         $authzController = new AuthzController();  // Create a new AuthzController
-        $result = $authzController->authz($entityManager, $institutionService, $user_id);  // Authorize the user
+        $result = $authzController->authz($institutionService, $user_id);  // Authorize the user
 
         // If the user is not authorized, show an error
         if (!$result['authorized']) {
@@ -213,7 +212,7 @@ class LoginController extends AbstractController
         $randomUtils = new Random();
         $sessionID = $randomUtils->generateID();
 
-        $cookie_prefix = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'cookie_prefix'])->getValue();  // Get the cookie prefix
+        $cookie_prefix = $_ENV['COOKIE_PREFIX'];  // Get the cookie prefix
 
         $cookie_name = $cookie_prefix . $service->getSlug();  // Create the cookie name
 
@@ -221,13 +220,13 @@ class LoginController extends AbstractController
         if (setcookie($cookie_name, $sessionID, [
             'expires' => time()+(86400*14),
             'path' =>'/',
-            'domain' => $entityManager->getRepository(Config::class)->findOneBy(['name' => 'cookie_domain'])->getValue(),
+            'domain' => $_ENV['COOKIE_DOMAIN'],
         ])) {
 
             // Set the session data
             $m = new Memcached();  // Create a new Memcached object
-            $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();  // Get the Memcached host
-            $mPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();  // Get the Memcached port
+            $mServer = $_ENV['MEMCACHED_HOST'];  // Get the Memcached host
+            $mPort = $_ENV['MEMCACHED_PORT'];  // Get the Memcached port
             $m->addServer($mServer, intval($mPort));  // Add the server
             $data = $this->set_data_string($institutionService, $user_attributes);  // Create the data string
 

@@ -149,6 +149,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'Psr\\Clock\\' => 10,
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
+            'PhpOption\\' => 10,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
@@ -163,6 +164,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'G' => 
         array (
+            'GrahamCampbell\\ResultType\\' => 26,
             'Gettext\\Languages\\' => 18,
             'Gettext\\' => 8,
             'Gedmo\\' => 6,
@@ -173,6 +175,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'D' => 
         array (
+            'Dotenv\\' => 7,
             'Doctrine\\SqlFormatter\\' => 22,
             'Doctrine\\Persistence\\' => 21,
             'Doctrine\\ORM\\' => 13,
@@ -622,6 +625,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'PhpOption\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
         'PHPStan\\PhpDocParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
@@ -642,6 +649,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
+        'GrahamCampbell\\ResultType\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
         'Gettext\\Languages\\' => 
         array (
             0 => __DIR__ . '/..' . '/gettext/languages/src',
@@ -658,6 +669,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'Egulias\\EmailValidator\\' => 
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
+        ),
+        'Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
         'Doctrine\\SqlFormatter\\' => 
         array (

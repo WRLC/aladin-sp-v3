@@ -5,10 +5,9 @@
  */
 
 use SimpleSAML\Utils\HTTP;
-use Symfony\Component\Dotenv\Dotenv;
 
-$dotenv = new Dotenv();
-$dotenv->load(__DIR__.'/.env');
+$dotenv = Dotenv\Dotenv::createImmutable( __DIR__ . '/../../../', '.env.local');
+$dotenv->safeLoad();
 
 $httpUtils = new HTTP();
 
@@ -765,7 +764,7 @@ $config = [
      */
     'memcache_store.servers' => [
         [
-            ['hostname' => $_ENV['SSP_MEMCACHE_SERVER'], 'port' => $_ENV['SSP_MEMCACHE_PORT']],
+            ['hostname' => $_ENV['MEMCACHED_HOST'], 'port' => $_ENV['MEMCACHED_PORT']],
         ],
     ],
 
