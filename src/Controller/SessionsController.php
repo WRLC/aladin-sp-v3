@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Config;
 use Doctrine\ORM\EntityManagerInterface;
 use Memcached;
 use SimpleSAML\Error\Exception;
@@ -123,18 +122,16 @@ class SessionsController extends AbstractController
 
     /**
      * Create a memcached connection
-     *
-     * @param EntityManagerInterface $entityManager
-     *
+     **
      * @return Memcached
      */
-    public function createMemcachedConnection(EntityManagerInterface $entityManager): Memcached
+    public function createMemcachedConnection(): Memcached
     {
         $m = new Memcached();  // Create a new Memcached object
 
         // Get memcached server and port from database
-        $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();
-        $mServerPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();
+        $mServer = $_ENV['MEMCACHED_HOST'];
+        $mServerPort = $_ENV['MEMCACHED_PORT'];
 
         $m->addServer($mServer, $mServerPort);  // Add the memcached server
 

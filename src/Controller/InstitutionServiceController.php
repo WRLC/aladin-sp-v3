@@ -23,6 +23,7 @@ class InstitutionServiceController extends AbstractController
      * @param string $index
      *
      * @return Response
+     * @noinspection PhpUnused
      */
     #[Route('/institution/{index}/{slug}', name: 'show_institution_service')]
     public function showInstitutionService(string $index): Response

@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Authz;
-use App\Entity\Config;
 use App\Entity\InstitutionService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -19,7 +17,6 @@ class AuthzController extends AbstractController
     /**
      * Authorize the user
      *
-     * @param EntityManagerInterface $entityManager
      * @param InstitutionService $institutionService
      * @param string $user
      *
@@ -27,7 +24,7 @@ class AuthzController extends AbstractController
      *
      * @throws TransportExceptionInterface
      */
-    public function authz(EntityManagerInterface $entityManager, InstitutionService $institutionService, string $user): array
+    public function authz(InstitutionService $institutionService, string $user): array
     {
         $authz = new Authz($institutionService);  // Create a new Authz object defaulting to unauthorized
 
@@ -58,7 +55,7 @@ class AuthzController extends AbstractController
         }
 
         // Get the alma user attributes, because everything else depends on them
-        $attributes = $this->get_alma_attributes($entityManager, $user, $institutionService->getInstitution()->getAlmaLocationCode());  // Alma user attributes
+        $attributes = $this->get_alma_attributes($user, $institutionService->getInstitution()->getAlmaLocationCode());  // Alma user attributes
 
         // If there's an error in the Alma attributes...
         if (key_exists('error', $attributes)) {
@@ -119,7 +116,6 @@ class AuthzController extends AbstractController
     /**
      * Get the Alma user attributes
      *
-     * @param EntityManagerInterface $entityManager
      * @param string $user
      * @param string $almaCode
      *
@@ -127,10 +123,10 @@ class AuthzController extends AbstractController
      *
      * @throws TransportExceptionInterface
      */
-    private function get_alma_attributes(EntityManagerInterface $entityManager, string $user, string $almaCode): array
+    private function get_alma_attributes(string $user, string $almaCode): array
     {
         // Get Patron Authorization URL
-        $patronAuthorizationUrl = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'patron_authorization_url'])->getValue();
+        $patronAuthorizationUrl = $_ENV['PATRON_AUTHORIZATION_URL'];
         $userApiCall = $patronAuthorizationUrl . '?uid=' . $user . '&inst=' . $almaCode;  // Set the Alma API call
 
         return $this->session_api_call($userApiCall);  // Return the response

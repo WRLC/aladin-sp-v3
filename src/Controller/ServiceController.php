@@ -217,6 +217,7 @@ class ServiceController extends AbstractController
      * @param array $institutionServices
      *
      * @return array
+     * @noinspection PhpUnused
      */
     public function alpha_institution_services(array $institutionServices): array
     {

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\AladinError;
-use App\Entity\Config;
 use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -43,15 +42,15 @@ class LogoutController extends AbstractController
 
         $serviceUrl = $service->getUrl();
 
-        $cookiePrefix = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'cookie_prefix'])->getValue();
+        $cookiePrefix = $_ENV['COOKIE_PREFIX'];
         $cookieName = $cookiePrefix . $service->getSlug();
-        $cookieDomain = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'cookie_domain'])->getValue();
+        $cookieDomain = $_ENV['COOKIE_DOMAIN'];
 
         if ($cookieValue = $_COOKIE[$cookieName]) {  # Get the cookie value from the cookie
             # Delete the cookie value from memcache
             $m = new Memcached();  # create memcache object
-            $mServer = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_host'])->getValue();  # Get the memcache server
-            $mServerPort = $entityManager->getRepository(Config::class)->findOneBy(['name' => 'memcached_port'])->getValue();  # Get the memcache server port
+            $mServer = $_ENV['MEMCACHED_HOST'];  # Get the memcache server
+            $mServerPort = $_ENV['MEMCACHED_PORT'];  # Get the memcache server port
             $m->addServer($mServer, $mServerPort);  # Add the memcache server
             $m->delete($cookieValue);  # Delete the session from memcache
             setcookie($cookieName, '', time() - 3600, '/', $cookieDomain); # Expire the cookie
@@ -59,7 +58,8 @@ class LogoutController extends AbstractController
 
         try {
             $session = Session::getSessionFromRequest();
-        } catch (Exception $e) {  # If there's an exception, there's no session to destroy...
+        } /** @noinspection PhpUnusedLocalVariableInspection */
+        catch (Exception $e) {  # If there's an exception, there's no session to destroy...
             return $this->redirect($serviceUrl);  # ...so just redirect to the service URL
         }
         $session->cleanup();  # Cleanup the session

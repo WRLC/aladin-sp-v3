@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpUnused */
+
+/** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Controller;
 
@@ -6,7 +8,6 @@ use App\Entity\AladinError;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error\Exception;
 use SimpleSAML\Logger;
-use SimpleSAML\Error;
 use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Metadata\MetaDataStorageHandlerPdo;
 use SimpleSAML\Module\metarefresh\Controller\MetaRefresh;
@@ -220,6 +221,7 @@ class IdpController extends AbstractController
     }
 
     /**
+     *
      * @throws Exception
      * @throws \Exception
      */
@@ -232,14 +234,9 @@ class IdpController extends AbstractController
         $metarefreshConfig = Configuration::getConfig('module_metarefresh.php');  // Get the metarefresh configuration
         $metarefresh = new MetaRefresh($metarefreshConfig);  // Create a new MetaRefresh object
 
-        Logger::setCaptureLog(true);
+        Logger::setCaptureLog();
 
-        try {
-            $metarefresh->main();
-        } catch (Exception $e) {
-            $e = Error\Exception::fromException($e);
-            $e->logWarning();
-        }
+        $metarefresh->main();
 
         $logentries = Logger::getCapturedLog();
 

@@ -1,0 +1,410 @@
+Sep 18 07:01:39 simplesamlphp WARNING [TR7a4e1374] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_BASEURLPATH" at /app/aladin-config/simplesamlphp/config/config.php:37
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 5 /app/aladin-config/simplesamlphp/config/config.php:37 (require)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_LOGDIR" at /app/aladin-config/simplesamlphp/config/config.php:72
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 5 /app/aladin-config/simplesamlphp/config/config.php:72 (require)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_CERTDIR" at /app/aladin-config/simplesamlphp/config/config.php:94
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 5 /app/aladin-config/simplesamlphp/config/config.php:94 (require)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_NAME" at /app/aladin-config/simplesamlphp/config/config.php:132
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 5 /app/aladin-config/simplesamlphp/config/config.php:132 (require)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_EMAIL" at /app/aladin-config/simplesamlphp/config/config.php:133
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 5 /app/aladin-config/simplesamlphp/config/config.php:133 (require)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:01:39 simplesamlphp WARNING [TR7a4e1374] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Error loading session: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] SimpleSAML\Error\Error: UNHANDLEDEXCEPTION
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ExceptionHandler.php:32 (SimpleSAML\Error\ExceptionHandler::customExceptionHandler)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/symfony/error-handler/ErrorHandler.php:538 (Symfony\Component\ErrorHandler\ErrorHandler::handleException)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 [builtin] (N/A)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Caused by: Exception: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Backtrace:
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 21 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:233 (SimpleSAML\Memcache::addMemcacheServer)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 20 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:315 (SimpleSAML\Memcache::loadMemcacheServerGroup)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 19 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:367 (SimpleSAML\Memcache::getMemcacheServers)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 18 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:67 (SimpleSAML\Memcache::get)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 17 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Store/MemcacheStore.php:45 (SimpleSAML\Store\MemcacheStore::get)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 16 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/SessionHandlerStore.php:56 (SimpleSAML\SessionHandlerStore::loadSession)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 15 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:348 (SimpleSAML\Session::getSession)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 14 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:262 (SimpleSAML\Session::getSessionFromRequest)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 13 /tmp/simplesaml/admin/ContainerFb2qhDl/getSessionService.php:21 (ContainerFb2qhDl\getSessionService::do)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 12 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 11 /tmp/simplesaml/admin/ContainerFb2qhDl/getConfigService.php:21 (ContainerFb2qhDl\getConfigService::do)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 10 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 9 /app/vendor/symfony/dependency-injection/Container.php:229 (Symfony\Component\DependencyInjection\Container::make)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 8 /app/vendor/symfony/dependency-injection/Container.php:211 (Symfony\Component\DependencyInjection\Container::get)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 7 /app/vendor/symfony/http-kernel/Controller/ContainerControllerResolver.php:40 (Symfony\Component\HttpKernel\Controller\ContainerControllerResolver::instantiateController)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 6 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:128 (Symfony\Component\HttpKernel\Controller\ControllerResolver::createController)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 5 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:96 (Symfony\Component\HttpKernel\Controller\ControllerResolver::getController)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 4 /app/vendor/symfony/http-kernel/HttpKernel.php:164 (Symfony\Component\HttpKernel\HttpKernel::handleRaw)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 3 /app/vendor/symfony/http-kernel/HttpKernel.php:76 (Symfony\Component\HttpKernel\HttpKernel::handle)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 2 /app/vendor/symfony/http-kernel/Kernel.php:197 (Symfony\Component\HttpKernel\Kernel::handle)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 1 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Module.php:234 (SimpleSAML\Module::process)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:17 (N/A)
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Error report with id 38b83950 generated.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Language "pt-br" not installed. Check config.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Language "zh-tw" not installed. Check config.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Language "pt-br" not installed. Check config.
+Sep 18 07:01:39 simplesamlphp ERROR [TR7a4e1374] Language "zh-tw" not installed. Check config.
+Sep 18 07:02:50 simplesamlphp WARNING [TR4d25fb96] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_BASEURLPATH" at /app/aladin-config/simplesamlphp/config/config.php:37
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 5 /app/aladin-config/simplesamlphp/config/config.php:37 (require)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_LOGDIR" at /app/aladin-config/simplesamlphp/config/config.php:72
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 5 /app/aladin-config/simplesamlphp/config/config.php:72 (require)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_CERTDIR" at /app/aladin-config/simplesamlphp/config/config.php:94
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 5 /app/aladin-config/simplesamlphp/config/config.php:94 (require)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_NAME" at /app/aladin-config/simplesamlphp/config/config.php:132
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 5 /app/aladin-config/simplesamlphp/config/config.php:132 (require)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_EMAIL" at /app/aladin-config/simplesamlphp/config/config.php:133
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 5 /app/aladin-config/simplesamlphp/config/config.php:133 (require)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:50 simplesamlphp WARNING [TR4d25fb96] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Error loading session: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] SimpleSAML\Error\Error: UNHANDLEDEXCEPTION
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ExceptionHandler.php:32 (SimpleSAML\Error\ExceptionHandler::customExceptionHandler)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/symfony/error-handler/ErrorHandler.php:538 (Symfony\Component\ErrorHandler\ErrorHandler::handleException)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 [builtin] (N/A)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Caused by: Exception: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Backtrace:
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 21 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:233 (SimpleSAML\Memcache::addMemcacheServer)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 20 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:315 (SimpleSAML\Memcache::loadMemcacheServerGroup)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 19 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:367 (SimpleSAML\Memcache::getMemcacheServers)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 18 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:67 (SimpleSAML\Memcache::get)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 17 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Store/MemcacheStore.php:45 (SimpleSAML\Store\MemcacheStore::get)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 16 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/SessionHandlerStore.php:56 (SimpleSAML\SessionHandlerStore::loadSession)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 15 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:348 (SimpleSAML\Session::getSession)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 14 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:262 (SimpleSAML\Session::getSessionFromRequest)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 13 /tmp/simplesaml/admin/ContainerFb2qhDl/getSessionService.php:21 (ContainerFb2qhDl\getSessionService::do)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 12 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 11 /tmp/simplesaml/admin/ContainerFb2qhDl/getConfigService.php:21 (ContainerFb2qhDl\getConfigService::do)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 10 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 9 /app/vendor/symfony/dependency-injection/Container.php:229 (Symfony\Component\DependencyInjection\Container::make)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 8 /app/vendor/symfony/dependency-injection/Container.php:211 (Symfony\Component\DependencyInjection\Container::get)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 7 /app/vendor/symfony/http-kernel/Controller/ContainerControllerResolver.php:40 (Symfony\Component\HttpKernel\Controller\ContainerControllerResolver::instantiateController)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 6 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:128 (Symfony\Component\HttpKernel\Controller\ControllerResolver::createController)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 5 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:96 (Symfony\Component\HttpKernel\Controller\ControllerResolver::getController)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 4 /app/vendor/symfony/http-kernel/HttpKernel.php:164 (Symfony\Component\HttpKernel\HttpKernel::handleRaw)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 3 /app/vendor/symfony/http-kernel/HttpKernel.php:76 (Symfony\Component\HttpKernel\HttpKernel::handle)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 2 /app/vendor/symfony/http-kernel/Kernel.php:197 (Symfony\Component\HttpKernel\Kernel::handle)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 1 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Module.php:234 (SimpleSAML\Module::process)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:17 (N/A)
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Error report with id 5ff88d8e generated.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Language "pt-br" not installed. Check config.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Language "zh-tw" not installed. Check config.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Language "pt-br" not installed. Check config.
+Sep 18 07:02:50 simplesamlphp ERROR [TR4d25fb96] Language "zh-tw" not installed. Check config.
+Sep 18 07:02:53 simplesamlphp WARNING [TRf537507d] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_BASEURLPATH" at /app/aladin-config/simplesamlphp/config/config.php:37
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 5 /app/aladin-config/simplesamlphp/config/config.php:37 (require)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_LOGDIR" at /app/aladin-config/simplesamlphp/config/config.php:72
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 5 /app/aladin-config/simplesamlphp/config/config.php:72 (require)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_CERTDIR" at /app/aladin-config/simplesamlphp/config/config.php:94
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 5 /app/aladin-config/simplesamlphp/config/config.php:94 (require)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_NAME" at /app/aladin-config/simplesamlphp/config/config.php:132
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 5 /app/aladin-config/simplesamlphp/config/config.php:132 (require)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_EMAIL" at /app/aladin-config/simplesamlphp/config/config.php:133
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 5 /app/aladin-config/simplesamlphp/config/config.php:133 (require)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:02:53 simplesamlphp WARNING [TRf537507d] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Error loading session: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] SimpleSAML\Error\Error: UNHANDLEDEXCEPTION
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ExceptionHandler.php:32 (SimpleSAML\Error\ExceptionHandler::customExceptionHandler)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/symfony/error-handler/ErrorHandler.php:538 (Symfony\Component\ErrorHandler\ErrorHandler::handleException)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 [builtin] (N/A)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Caused by: Exception: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Backtrace:
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 21 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:233 (SimpleSAML\Memcache::addMemcacheServer)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 20 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:315 (SimpleSAML\Memcache::loadMemcacheServerGroup)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 19 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:367 (SimpleSAML\Memcache::getMemcacheServers)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 18 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:67 (SimpleSAML\Memcache::get)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 17 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Store/MemcacheStore.php:45 (SimpleSAML\Store\MemcacheStore::get)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 16 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/SessionHandlerStore.php:56 (SimpleSAML\SessionHandlerStore::loadSession)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 15 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:348 (SimpleSAML\Session::getSession)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 14 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:262 (SimpleSAML\Session::getSessionFromRequest)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 13 /tmp/simplesaml/admin/ContainerFb2qhDl/getSessionService.php:21 (ContainerFb2qhDl\getSessionService::do)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 12 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 11 /tmp/simplesaml/admin/ContainerFb2qhDl/getConfigService.php:21 (ContainerFb2qhDl\getConfigService::do)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 10 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 9 /app/vendor/symfony/dependency-injection/Container.php:229 (Symfony\Component\DependencyInjection\Container::make)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 8 /app/vendor/symfony/dependency-injection/Container.php:211 (Symfony\Component\DependencyInjection\Container::get)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 7 /app/vendor/symfony/http-kernel/Controller/ContainerControllerResolver.php:40 (Symfony\Component\HttpKernel\Controller\ContainerControllerResolver::instantiateController)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 6 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:128 (Symfony\Component\HttpKernel\Controller\ControllerResolver::createController)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 5 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:96 (Symfony\Component\HttpKernel\Controller\ControllerResolver::getController)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 4 /app/vendor/symfony/http-kernel/HttpKernel.php:164 (Symfony\Component\HttpKernel\HttpKernel::handleRaw)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 3 /app/vendor/symfony/http-kernel/HttpKernel.php:76 (Symfony\Component\HttpKernel\HttpKernel::handle)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 2 /app/vendor/symfony/http-kernel/Kernel.php:197 (Symfony\Component\HttpKernel\Kernel::handle)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 1 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Module.php:234 (SimpleSAML\Module::process)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:17 (N/A)
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Error report with id 8fcc3f54 generated.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Language "pt-br" not installed. Check config.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Language "zh-tw" not installed. Check config.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Language "pt-br" not installed. Check config.
+Sep 18 07:02:53 simplesamlphp ERROR [TRf537507d] Language "zh-tw" not installed. Check config.
+Sep 18 07:04:00 simplesamlphp WARNING [TR0247adcc] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_BASEURLPATH" at /app/aladin-config/simplesamlphp/config/config.php:37
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 5 /app/aladin-config/simplesamlphp/config/config.php:37 (require)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_LOGDIR" at /app/aladin-config/simplesamlphp/config/config.php:72
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 5 /app/aladin-config/simplesamlphp/config/config.php:72 (require)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_CERTDIR" at /app/aladin-config/simplesamlphp/config/config.php:94
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 5 /app/aladin-config/simplesamlphp/config/config.php:94 (require)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_NAME" at /app/aladin-config/simplesamlphp/config/config.php:132
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 5 /app/aladin-config/simplesamlphp/config/config.php:132 (require)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_EMAIL" at /app/aladin-config/simplesamlphp/config/config.php:133
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 5 /app/aladin-config/simplesamlphp/config/config.php:133 (require)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:04:00 simplesamlphp WARNING [TR0247adcc] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Error loading session: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] SimpleSAML\Error\Error: UNHANDLEDEXCEPTION
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ExceptionHandler.php:32 (SimpleSAML\Error\ExceptionHandler::customExceptionHandler)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/symfony/error-handler/ErrorHandler.php:538 (Symfony\Component\ErrorHandler\ErrorHandler::handleException)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 [builtin] (N/A)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Caused by: Exception: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Backtrace:
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 21 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:233 (SimpleSAML\Memcache::addMemcacheServer)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 20 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:315 (SimpleSAML\Memcache::loadMemcacheServerGroup)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 19 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:367 (SimpleSAML\Memcache::getMemcacheServers)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 18 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:67 (SimpleSAML\Memcache::get)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 17 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Store/MemcacheStore.php:45 (SimpleSAML\Store\MemcacheStore::get)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 16 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/SessionHandlerStore.php:56 (SimpleSAML\SessionHandlerStore::loadSession)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 15 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:348 (SimpleSAML\Session::getSession)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 14 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:262 (SimpleSAML\Session::getSessionFromRequest)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 13 /tmp/simplesaml/admin/ContainerFb2qhDl/getSessionService.php:21 (ContainerFb2qhDl\getSessionService::do)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 12 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 11 /tmp/simplesaml/admin/ContainerFb2qhDl/getConfigService.php:21 (ContainerFb2qhDl\getConfigService::do)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 10 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 9 /app/vendor/symfony/dependency-injection/Container.php:229 (Symfony\Component\DependencyInjection\Container::make)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 8 /app/vendor/symfony/dependency-injection/Container.php:211 (Symfony\Component\DependencyInjection\Container::get)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 7 /app/vendor/symfony/http-kernel/Controller/ContainerControllerResolver.php:40 (Symfony\Component\HttpKernel\Controller\ContainerControllerResolver::instantiateController)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 6 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:128 (Symfony\Component\HttpKernel\Controller\ControllerResolver::createController)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 5 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:96 (Symfony\Component\HttpKernel\Controller\ControllerResolver::getController)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 4 /app/vendor/symfony/http-kernel/HttpKernel.php:164 (Symfony\Component\HttpKernel\HttpKernel::handleRaw)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 3 /app/vendor/symfony/http-kernel/HttpKernel.php:76 (Symfony\Component\HttpKernel\HttpKernel::handle)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 2 /app/vendor/symfony/http-kernel/Kernel.php:197 (Symfony\Component\HttpKernel\Kernel::handle)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 1 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Module.php:234 (SimpleSAML\Module::process)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:17 (N/A)
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Error report with id d9f4fcde generated.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Language "pt-br" not installed. Check config.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Language "zh-tw" not installed. Check config.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Language "pt-br" not installed. Check config.
+Sep 18 07:04:00 simplesamlphp ERROR [TR0247adcc] Language "zh-tw" not installed. Check config.
+Sep 18 07:12:14 simplesamlphp WARNING [TR4f096212] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_BASEURLPATH" at /app/aladin-config/simplesamlphp/config/config.php:37
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 5 /app/aladin-config/simplesamlphp/config/config.php:37 (require)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_LOGDIR" at /app/aladin-config/simplesamlphp/config/config.php:72
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 5 /app/aladin-config/simplesamlphp/config/config.php:72 (require)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_CERTDIR" at /app/aladin-config/simplesamlphp/config/config.php:94
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 5 /app/aladin-config/simplesamlphp/config/config.php:94 (require)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_NAME" at /app/aladin-config/simplesamlphp/config/config.php:132
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 5 /app/aladin-config/simplesamlphp/config/config.php:132 (require)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] SimpleSAML\Error\Exception: Warning - Undefined array key "SSP_TECHNICALCONTACT_EMAIL" at /app/aladin-config/simplesamlphp/config/config.php:133
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 6 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ErrorHandler.php:64 (SimpleSAML\Error\ErrorHandler::customErrorHandler)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 5 /app/aladin-config/simplesamlphp/config/config.php:133 (require)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 4 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:160 (SimpleSAML\Configuration::loadFromFile)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 3 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:292 (SimpleSAML\Configuration::getConfig)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Configuration.php:374 (SimpleSAML\Configuration::getInstance)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/simplesamlphp/simplesamlphp/public/_include.php:24 (require_once)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:12 (N/A)
+Sep 18 07:12:14 simplesamlphp WARNING [TR4f096212] The configuration file '/app/aladin-config/simplesamlphp/config/config.php' generates output. Please review your configuration.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Error loading session: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] SimpleSAML\Error\Error: UNHANDLEDEXCEPTION
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Error/ExceptionHandler.php:32 (SimpleSAML\Error\ExceptionHandler::customExceptionHandler)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/symfony/error-handler/ErrorHandler.php:538 (Symfony\Component\ErrorHandler\ErrorHandler::handleException)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 [builtin] (N/A)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Caused by: Exception: Invalid hostname for server in the 'memcache_store.servers' configuration option. The hostname is supposed to be a string.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Backtrace:
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 21 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:233 (SimpleSAML\Memcache::addMemcacheServer)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 20 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:315 (SimpleSAML\Memcache::loadMemcacheServerGroup)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 19 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:367 (SimpleSAML\Memcache::getMemcacheServers)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 18 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Memcache.php:67 (SimpleSAML\Memcache::get)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 17 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Store/MemcacheStore.php:45 (SimpleSAML\Store\MemcacheStore::get)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 16 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/SessionHandlerStore.php:56 (SimpleSAML\SessionHandlerStore::loadSession)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 15 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:348 (SimpleSAML\Session::getSession)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 14 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Session.php:262 (SimpleSAML\Session::getSessionFromRequest)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 13 /tmp/simplesaml/admin/ContainerFb2qhDl/getSessionService.php:21 (ContainerFb2qhDl\getSessionService::do)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 12 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 11 /tmp/simplesaml/admin/ContainerFb2qhDl/getConfigService.php:21 (ContainerFb2qhDl\getConfigService::do)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 10 /tmp/simplesaml/admin/ContainerFb2qhDl/SimpleSAML_KernelProdContainer.php:96 (ContainerFb2qhDl\SimpleSAML_KernelProdContainer::load)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 9 /app/vendor/symfony/dependency-injection/Container.php:229 (Symfony\Component\DependencyInjection\Container::make)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 8 /app/vendor/symfony/dependency-injection/Container.php:211 (Symfony\Component\DependencyInjection\Container::get)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 7 /app/vendor/symfony/http-kernel/Controller/ContainerControllerResolver.php:40 (Symfony\Component\HttpKernel\Controller\ContainerControllerResolver::instantiateController)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 6 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:128 (Symfony\Component\HttpKernel\Controller\ControllerResolver::createController)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 5 /app/vendor/symfony/http-kernel/Controller/ControllerResolver.php:96 (Symfony\Component\HttpKernel\Controller\ControllerResolver::getController)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 4 /app/vendor/symfony/http-kernel/HttpKernel.php:164 (Symfony\Component\HttpKernel\HttpKernel::handleRaw)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 3 /app/vendor/symfony/http-kernel/HttpKernel.php:76 (Symfony\Component\HttpKernel\HttpKernel::handle)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 2 /app/vendor/symfony/http-kernel/Kernel.php:197 (Symfony\Component\HttpKernel\Kernel::handle)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 1 /app/vendor/simplesamlphp/simplesamlphp/src/SimpleSAML/Module.php:234 (SimpleSAML\Module::process)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] 0 /app/vendor/simplesamlphp/simplesamlphp/public/module.php:17 (N/A)
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Error report with id e968e4e5 generated.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Language "pt-br" not installed. Check config.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Language "zh-tw" not installed. Check config.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Language "pt-br" not installed. Check config.
+Sep 18 07:12:14 simplesamlphp ERROR [TR4f096212] Language "zh-tw" not installed. Check config.
