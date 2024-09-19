@@ -2,6 +2,16 @@
 
 WRLC SAML Service Provider with multi-SSO authentication, Alma user authorization, and memcached-based sessions/cookies.
 
+[SimpleSAMLphp](https://simplesamlphp.org/) provides the SAML Service Provider (SP) functionality, while Symfony provides the application UI, logic and database management.
+
+Multiple applications can re-use Aladin-SP as their SAML service provider, alleviating the need to set up SSO each time a new application is deployed.
+
+In addition, Aladin-SP can be configured to authenticate users with multiple identity providers (IdPs). For authentication an application, Aladin-SP provides users with a list of IdPs to choose from.
+
+Once authenticated, Aladin-SP can check a user's authorization to access an application based on username, Alma patron record details, or solely based on successful IdP authentication.
+
+Once a user is authorized for an application, user details are stored in memcached. A cookie is set with the memcached key as its value. The external application can then use the memcached key in the cookie to retrieve user details from the memcached session.
+
 ## Archicture/Major Dependencies
 
 ### Prerequisites (installed automatically in Dockerfile for local dev)
@@ -59,9 +69,17 @@ The repo includes a Docker Compose configuration for local development. The conf
     ```bash
     cp .env.local.template .env.local`
     ```
-4. Create a self-signed certificate for the SP: 
+4. Create a self-signed certificate for the SimpleSAMLphp Service Provider (SP): 
     ```bash
     openssl req -newkey rsa:3072 -new -x509 -days 3652 -nodes -out aladin-config/simplesamlphp/cert/saml.crt -keyout aladin-config/simplesamlphp/cert/saml.pem
+    ```
+5. Copy the SSP `authsources.php` file: 
+    ```bash
+    cp aladin-config/simplesamlphp/config/authsources.php.dist aladin-config/simplesamlphp/config/authsources.php
+    ```
+6. Copy the SSP Metarefresh config file `module_metarefresh.php`: 
+    ```bash
+    cp aladin-config/simplesamlphp/config/module_metarefresh.php.dist aladin-config/simplesamlphp/config/module_metarefresh.php
     ```
 5. Create the Symfony database tables/schema: 
     ```bash
