@@ -6,6 +6,8 @@ services:
     volumes:
       - ./:/app
       - ~/.gitconfig:/etc/gitconfig
+    secrets:
+      - user_ssh_key
     depends_on:
       - aladinsp-memcached
       - aladinsp-mariadb
@@ -48,6 +50,10 @@ services:
       - aladinsp_mariadb_data:/var/lib/mysql
     networks:
       - proxy
+
+secrets:
+  user_ssh_key:
+    file: ~/.ssh/id_rsa
 
 volumes:
     aladinsp_mariadb_data:

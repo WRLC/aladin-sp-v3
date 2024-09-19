@@ -22,8 +22,5 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && php -r "unlink('composer-setup.php');"
 
-# Add ssh keys
-COPY aladin-config/ssh /root/.ssh
-
 # Add vendor/bin to PATH
 ENV PATH="${PATH}:/app/drupal-main/vendor/bin"
