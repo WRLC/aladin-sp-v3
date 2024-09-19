@@ -25,10 +25,5 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Add ssh keys
 COPY aladin-config/ssh /root/.ssh
 
-# Set up git config (replace with own info)
-RUN git config --global --add safe.directory /app \
-    && git config --global user.email "boone@wrlc.org" \
-    && git config --global user.name "Tom Boone"
-
 # Add vendor/bin to PATH
 ENV PATH="${PATH}:/app/drupal-main/vendor/bin"

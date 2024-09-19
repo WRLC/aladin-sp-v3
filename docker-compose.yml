@@ -5,6 +5,7 @@ services:
     working_dir: /app
     volumes:
       - ./:/app
+      - ~/.gitconfig:/etc/gitconfig
     depends_on:
       - aladinsp-memcached
       - aladinsp-mariadb
