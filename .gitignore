@@ -29,6 +29,7 @@ aladin-config/simplesamlphp/cert/*.pem
 ###< simplesamlphp certificate ###
 
 ###> simplesamlphp config ###
+aladin-config/simplesamlphp/config/authsources.php
 aladin-config/simplesamlphp/config/module_metarefresh.php
 ###< simplesamlphp config ###
 
