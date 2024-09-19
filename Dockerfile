@@ -24,3 +24,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 # Add vendor/bin to PATH
 ENV PATH="${PATH}:/app/drupal-main/vendor/bin"
+
+# Add ssh keys from secrets
+RUN mkdir -p /root/.ssh
+RUN ln -s /run/secrets/user_ssh_key /root/.ssh/id_rsa
