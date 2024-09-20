@@ -37,6 +37,11 @@ Once a user is authorized for an application, user details are stored in memcach
 
 The repo includes a Docker Compose configuration for local development. The configuration includes containers for the PHP-FPM (including Aladin-SP/Symfony/SimpleSAMLphp, MariaDB, nginx, and memcached), nginx, memcached, and MariaDB.
 
+For git functionality in the PHP container, the following two files should be present on the host machine:
+
+* `~/.gitconfig`: a git configuration that includes the username and email address associated with your user on the repo's remote origin (e.g., Github).
+* `~/.ssh/id_rsa`: an RSA private key associated with your user on the repo's remote origin.
+
 ### Starting the Docker Containers
 
 1. Start the **Traefik** container: see https://github.com/WRLC/local-dev-traefik
