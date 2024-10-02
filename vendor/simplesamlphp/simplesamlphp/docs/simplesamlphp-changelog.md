@@ -5,6 +5,40 @@
 This document lists the changes between versions of SimpleSAMLphp.
 See the [upgrade notes](https://simplesamlphp.org/docs/stable/simplesamlphp-upgrade-notes.html) for specific information about upgrading.
 
+## Version 2.3.3
+
+Released TBD
+
+## Version 2.3.2
+
+Released 2024-09-06
+
+* Fixed a regression that led to fonts & icons not being loaded correctly (#2237)
+* Fixed a regression that caused the languages in the language-bar to be all in English.
+
+`admin`
+
+* Only load metadata-converter.js when file-upload is enabled.
+
+## Version 2.3.1
+
+Released 2024-09-05
+
+* Fixed accidental backwards incompatibility for plain-text admin passwords (#2212)
+* Fixed support for `pt-br` and `zh-tw` dialects (#2216)
+* Run ob_end_clean() on configuration file parsing error (#2219)
+* Fixed an incorrect exception message when string-style endpoints are used.
+* Reduced all of the overhead logging related to HEAD/OPTIONS requests (#2234).
+
+`admin`
+
+* Fix metadata-viewer to output a valid PHP array
+* Fix text-overflow of the metadata-converter output-box
+
+Chores:
+
+* Solved deprecation notices in CI regarding the use of the Twig spaceless-filter (#2229)
+
 ## Version 2.3.0
 
 Released 2024-08-20
@@ -16,6 +50,7 @@ Released 2024-08-20
 * Session ID's are now hashed when stored in a database (#2106)
 * Improved HTML 5 compatibility (#2162)
 * Fix: preloaded resource not used (#2207)
+* BC-break (unintentional): plain-text admin-password are no longer allowed (#2113)
 
 `authorize`
 

@@ -18,7 +18,6 @@ use function array_key_exists;
 use function array_keys;
 use function dirname;
 use function file_exists;
-use function interface_exists;
 use function is_array;
 use function is_int;
 use function is_null;
@@ -42,7 +41,7 @@ class Configuration implements Utils\ClearableState
     /**
      * The release version of this package
      */
-    public const VERSION = '2.3.0';
+    public const VERSION = '2.3.2';
 
     /**
      * A default value which means that the given option is required.
@@ -154,20 +153,16 @@ class Configuration implements Utils\ClearableState
             $config = 'UNINITIALIZED';
 
             // the file initializes a variable named '$config'
-            ob_start();
-            if (interface_exists('Throwable', false)) {
-                try {
-                    $returnedConfig = require($filename);
-                } catch (ParseError $e) {
-                    self::$loadedConfigs[$filename] = self::loadFromArray([], '[ARRAY]', 'simplesaml');
-                    throw new Error\ConfigurationError($e->getMessage(), $filename, []);
-                }
-            } else {
+            try {
+                ob_start();
                 $returnedConfig = require($filename);
+                $spurious_output = ob_get_length() > 0;
+            } catch (ParseError $e) {
+                self::$loadedConfigs[$filename] = self::loadFromArray([], '[ARRAY]', 'simplesaml');
+                throw new Error\ConfigurationError($e->getMessage(), $filename, []);
+            } finally {
+                ob_end_clean();
             }
-
-            $spurious_output = ob_get_length() > 0;
-            ob_end_clean();
 
             // Check if the config file actually returned an array instead of defining $config variable.
             if (is_array($returnedConfig)) {
@@ -1214,9 +1209,7 @@ class Configuration implements Utils\ClearableState
 
 
         $eps = $this->configuration[$endpointType];
-        if (!is_array($eps)) {
-            throw new Exception($loc . ': Expected array or string.');
-        }
+        Assert::isArray($eps, Error\CriticalConfigurationError::class);
 
         $eps_count = count($eps);
 

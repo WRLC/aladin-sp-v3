@@ -16,8 +16,8 @@ use Gettext\Loader\MoLoader;
 use Gettext\Loader\PoLoader;
 use Gettext\{Translations, Translator, TranslatorFunctions};
 use SimpleSAML\{Configuration, Logger};
-use Symfony\Component\HttpFoundation\File\File;
 use SimpleSAML\Locale\Translate;
+use Symfony\Component\HttpFoundation\File\File;
 
 class Localization
 {
@@ -168,9 +168,16 @@ class Localization
      */
     public function getLangPath(string $domain = self::DEFAULT_DOMAIN): string
     {
+        $localeDir = $this->localeDomainMap[$domain];
+        $langcode = $this->langcode;
+        $langPath = $localeDir . '/' . $langcode . '/LC_MESSAGES/';
+        Logger::debug("Trying langpath for '$langcode' as '$langPath'");
+        if (is_dir($langPath) && is_readable($langPath)) {
+            return $langPath;
+        }
+
         $langcode = explode('_', $this->langcode);
         $langcode = $langcode[0];
-        $localeDir = $this->localeDomainMap[$domain];
         $langPath = $localeDir . '/' . $langcode . '/LC_MESSAGES/';
         Logger::debug("Trying langpath for '$langcode' as '$langPath'");
         if (is_dir($langPath) && is_readable($langPath)) {
