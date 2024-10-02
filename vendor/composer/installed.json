@@ -11309,17 +11309,17 @@
         },
         {
             "name": "symfony/ux-turbo",
-            "version": "v2.19.3",
-            "version_normalized": "2.19.3.0",
+            "version": "v2.20.0",
+            "version_normalized": "2.20.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-turbo.git",
-                "reference": "4a38f267193017958d487171c0a86e64f36164a3"
+                "reference": "5eaa803dea9f954aa124963f2c872b414d97cc97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/4a38f267193017958d487171c0a86e64f36164a3",
-                "reference": "4a38f267193017958d487171c0a86e64f36164a3",
+                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/5eaa803dea9f954aa124963f2c872b414d97cc97",
+                "reference": "5eaa803dea9f954aa124963f2c872b414d97cc97",
                 "shasum": ""
             },
             "require": {
@@ -11350,7 +11350,7 @@
                 "symfony/web-profiler-bundle": "^5.4|^6.0|^7.0",
                 "symfony/webpack-encore-bundle": "^2.1.1"
             },
-            "time": "2024-08-14T04:55:38+00:00",
+            "time": "2024-09-10T12:38:04+00:00",
             "type": "symfony-bundle",
             "extra": {
                 "thanks": {
@@ -11389,7 +11389,7 @@
                 "turbo-stream"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo/tree/v2.19.3"
+                "source": "https://github.com/symfony/ux-turbo/tree/v2.20.0"
             },
             "funding": [
                 {
