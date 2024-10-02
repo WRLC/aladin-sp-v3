@@ -8942,17 +8942,17 @@
         },
         {
             "name": "symfony/notifier",
-            "version": "v6.4.11",
-            "version_normalized": "6.4.11.0",
+            "version": "v6.4.12",
+            "version_normalized": "6.4.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/notifier.git",
-                "reference": "7aa8efede83a138b6b3157eaf9351c9de38774be"
+                "reference": "3db8454f16470d752ff46c6e5d87400c9f7423ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/notifier/zipball/7aa8efede83a138b6b3157eaf9351c9de38774be",
-                "reference": "7aa8efede83a138b6b3157eaf9351c9de38774be",
+                "url": "https://api.github.com/repos/symfony/notifier/zipball/3db8454f16470d752ff46c6e5d87400c9f7423ab",
+                "reference": "3db8454f16470d752ff46c6e5d87400c9f7423ab",
                 "shasum": ""
             },
             "require": {
@@ -8971,7 +8971,7 @@
                 "symfony/http-foundation": "^5.4|^6.0|^7.0",
                 "symfony/messenger": "^5.4|^6.0|^7.0"
             },
-            "time": "2024-08-06T19:59:56+00:00",
+            "time": "2024-09-08T12:30:05+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -9003,7 +9003,7 @@
                 "notifier"
             ],
             "support": {
-                "source": "https://github.com/symfony/notifier/tree/v6.4.11"
+                "source": "https://github.com/symfony/notifier/tree/v6.4.12"
             },
             "funding": [
                 {
