@@ -35,6 +35,7 @@ aladin-config/simplesamlphp/config/module_metarefresh.php
 
 ###> simplesamlphp logs ###
 vendor/simplesamlphp/simplesamlphp/log/*.log
+vendor/simplesamlphp/simplesamlphp/public/log/*.log
 
 ###> SSH keys (for pushing to/pulling from git origin) ###
 aladin-config/ssh/id_rsa
