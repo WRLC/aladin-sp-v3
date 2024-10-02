@@ -1,8 +1,0 @@
-msgid "These checks failed:"
-msgstr "Disse sjekkene har feila:"
-
-msgid "These checks succeeded:"
-msgstr "Disse sjekkene var suksessfulle:"
-
-msgid "Sanity check of your SimpleSAMLphp setup"
-msgstr "Sjekk din installasjon"

@@ -29,3 +29,10 @@ The following methods were marked `deprecated` and will be removed in a next maj
 The following properties were marked `deprecated` and will be removed in a next major release.
 
 - SimpleSAML\Locale\Language::$language_names - Use \Symfony\Component\Intl\Languages::getNames() instead
+
+The use of plain-text admin-passwords has been deprecated. Generate a secure hash using the `bin/pwgen.php` script instead.
+
+## BC break
+
+- The language codes `pt-br` and `zh-tw` have been renamed to `pt_BR` and `zh_TW`.
+  Please update your configuration to match the new names.
