@@ -3421,16 +3421,16 @@
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-ldap",
-            "version": "v2.3.6",
+            "version": "v2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/simplesamlphp-module-ldap.git",
-                "reference": "e60f0e5637743274bf8c1e1a9788b709b5eff77e"
+                "reference": "a2512a5de5a05afdafc38ee85484721a663e8bf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-module-ldap/zipball/e60f0e5637743274bf8c1e1a9788b709b5eff77e",
-                "reference": "e60f0e5637743274bf8c1e1a9788b709b5eff77e",
+                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-module-ldap/zipball/a2512a5de5a05afdafc38ee85484721a663e8bf5",
+                "reference": "a2512a5de5a05afdafc38ee85484721a663e8bf5",
                 "shasum": ""
             },
             "require": {
@@ -3473,7 +3473,7 @@
                 "issues": "https://github.com/simplesamlphp/simplesamlphp-module-ldap/issues",
                 "source": "https://github.com/simplesamlphp/simplesamlphp-module-ldap"
             },
-            "time": "2024-05-21T07:52:54+00:00"
+            "time": "2024-09-27T09:27:33+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-metarefresh",
@@ -5875,16 +5875,16 @@
         },
         {
             "name": "symfony/ldap",
-            "version": "v6.4.8",
+            "version": "v6.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ldap.git",
-                "reference": "f189474bfc52094c6169460b19c9e0c235f1b257"
+                "reference": "ca09d9899ca9a6cf359956a04cfdc60c7462d8c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ldap/zipball/f189474bfc52094c6169460b19c9e0c235f1b257",
-                "reference": "f189474bfc52094c6169460b19c9e0c235f1b257",
+                "url": "https://api.github.com/repos/symfony/ldap/zipball/ca09d9899ca9a6cf359956a04cfdc60c7462d8c5",
+                "reference": "ca09d9899ca9a6cf359956a04cfdc60c7462d8c5",
                 "shasum": ""
             },
             "require": {
@@ -5931,7 +5931,7 @@
                 "ldap"
             ],
             "support": {
-                "source": "https://github.com/symfony/ldap/tree/v6.4.8"
+                "source": "https://github.com/symfony/ldap/tree/v6.4.12"
             },
             "funding": [
                 {
@@ -5947,7 +5947,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:49:08+00:00"
+            "time": "2024-09-15T06:35:36+00:00"
         },
         {
             "name": "symfony/mailer",
