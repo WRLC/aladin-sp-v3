@@ -202,7 +202,7 @@ class LoginController extends AbstractController
                 $institution->getName() . ' user '. $user_id .' not authorized for '. $service->getName()
             );
             $error->setErrors($result['match']);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match']);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
