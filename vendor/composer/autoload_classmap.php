@@ -445,7 +445,7 @@ return array(
     'PHPUnit\\Framework\\MockObject\\Stub\\ReturnValueMap' => $vendorDir . '/phpunit/phpunit/src/Framework/MockObject/Runtime/Stub/ReturnValueMap.php',
     'PHPUnit\\Framework\\MockObject\\Stub\\Stub' => $vendorDir . '/phpunit/phpunit/src/Framework/MockObject/Runtime/Stub/Stub.php',
     'PHPUnit\\Framework\\NoChildTestSuiteException' => $vendorDir . '/phpunit/phpunit/src/Framework/Exception/NoChildTestSuiteException.php',
-    'PHPUnit\\Framework\\PhptAssertionFailedError' => $vendorDir . '/phpunit/phpunit/src/Framework/Exception/PhptAssertionFailedError.php',
+    'PHPUnit\\Framework\\PhptAssertionFailedError' => $vendorDir . '/phpunit/phpunit/src/Framework/Exception/PHPTAssertionFailedError.php',
     'PHPUnit\\Framework\\ProcessIsolationException' => $vendorDir . '/phpunit/phpunit/src/Framework/Exception/ProcessIsolationException.php',
     'PHPUnit\\Framework\\Reorderable' => $vendorDir . '/phpunit/phpunit/src/Framework/Reorderable.php',
     'PHPUnit\\Framework\\SelfDescribing' => $vendorDir . '/phpunit/phpunit/src/Framework/SelfDescribing.php',

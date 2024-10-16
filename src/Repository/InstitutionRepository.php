@@ -3,15 +3,17 @@
 namespace App\Repository;
 
 use App\Entity\Institution;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Sortable\Entity\Repository\SortableRepository;
 
 /**
- * @extends ServiceEntityRepository<Institution>
+ * Repository for the Institution entity
  */
 class InstitutionRepository extends SortableRepository
 {
+    /**
+     * @param EntityManagerInterface $em
+     */
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, $em->getClassMetadata(Institution::class));

@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '75db962bf7667e9e70b6fc391ab7665d6c58a460',
+        'reference' => '931ae2e90e49bd20edd30c5f0eeb4312ffde2578',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '75db962bf7667e9e70b6fc391ab7665d6c58a460',
+            'reference' => '931ae2e90e49bd20edd30c5f0eeb4312ffde2578',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -372,6 +372,15 @@
             'install_path' => __DIR__ . '/../phpstan/phpdoc-parser',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '1.12.6',
+            'version' => '1.12.6.0',
+            'reference' => 'dc4d2f145a88ea7141ae698effd64d9df46527ae',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'phpunit/php-code-coverage' => array(
             'pretty_version' => '10.1.16',
