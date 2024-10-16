@@ -222,7 +222,7 @@ class ServiceController extends AbstractController
      *
      * @param array<InstitutionService> $institutionServices
      *
-     * @return array<int, InstitutionService>
+     * @return array<int|string, InstitutionService>
      */
     public function alpha_institution_services(array $institutionServices): array
     {

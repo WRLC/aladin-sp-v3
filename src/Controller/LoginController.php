@@ -263,7 +263,7 @@ class LoginController extends AbstractController
                     $fmdata[$tmp[0]] = $tmp[1];
                 }
             }
-            $jdata = preg_replace('/\s+/mu', ' ',json_encode($fmdata, JSON_PRETTY_PRINT));  // Encode the session data
+            $jdata = preg_replace('/\s+/mu', ' ', (string) json_encode($fmdata, JSON_PRETTY_PRINT));  // Encode the session data
 
             $this->aladinLogger->debug('Memcached Session Data: ' . $jdata);
 

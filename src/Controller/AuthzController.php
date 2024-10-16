@@ -32,7 +32,7 @@ class AuthzController extends AbstractController
      *
      * @return array{
      *     authorized: bool,
-     *     authzType: string,
+     *     authzType: string|null,
      *     authzMembers: Collection<int, AuthzMember>,
      *     match: array<string>,
      *     errors: bool
@@ -221,7 +221,7 @@ class AuthzController extends AbstractController
      *
      * @param Authz $authz
      *
-     * @return array{authorized: bool, authzType: string, authzMembers: Collection<int, AuthzMember>, match: array<string>, errors: bool}
+     * @return array{authorized: bool, authzType: string|null, authzMembers: Collection<int, AuthzMember>, match: array<string>, errors: bool}
      */
     private function returnAuthz(Authz $authz): array
     {
