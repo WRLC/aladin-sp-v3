@@ -151,6 +151,7 @@ class IdpController extends AbstractController
     #[Route('/idps/flatfile', name: 'convert_flatfile')]
     public function convertFlatfile(Request $request): Response
     {
+        global $metadata;
         $auth = new Auth();  // Create a new Auth object
         $auth->requireAdmin();  // Require authentication
 
@@ -175,7 +176,6 @@ class IdpController extends AbstractController
                     $metadataStorageHandler->initDatabase();
 
                     $filename = $metadataDir . '/saml20-idp-remote.php';  // Get the metadata file
-                    $metadata = [];
                     require_once $filename;  // Require the saml20-idp-remote.php file
                     $set = basename($filename, ".php");  // Get the set name
                     foreach ($metadata as $key => $value) {
