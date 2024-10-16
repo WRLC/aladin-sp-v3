@@ -8,6 +8,7 @@ use App\Entity\InstitutionService;
 use App\Entity\Service;
 use App\Form\Type\WayfType;
 use App\Form\Type\WaygType;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Memcached;
@@ -20,12 +21,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * Class LoginController
+ */
 class LoginController extends AbstractController
 {
 
     private LoggerInterface $aladinLogger;
     private LoggerInterface $aladinErrorLogger;
 
+    /**
+     * @param LoggerInterface $aladinLogger
+     * @param LoggerInterface $aladinErrorLogger
+     */
     public function __construct(LoggerInterface $aladinLogger, LoggerInterface $aladinErrorLogger)
     {
         $this->aladinLogger = $aladinLogger;
@@ -347,6 +355,7 @@ class LoginController extends AbstractController
      */
     private function set_data_string(InstitutionService $institutionService, array $user_attributes): string | Exception
     {
+        $expire = strval(time() + (86400*14));
         $instSvcIdAttr = $institutionService->getIdAttribute();  // Get the institution service ID attribute
 
         // Get the method to call
@@ -377,7 +386,7 @@ class LoginController extends AbstractController
         $data .= 'GivenName=' . $first_name . "\r\n";
         $data .= 'Name=' . $last_name . "\r\n";
         $data .= 'RemoteIP=' . $_SERVER['REMOTE_ADDR'] . "\r\n";
-        $data .= 'Expiration=' . time()+(86400*14) . "\r\n";
+        $data .= 'Expiration=' . $expire . "\r\n";
 
         return $data;
     }

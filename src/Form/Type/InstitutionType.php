@@ -23,7 +23,9 @@ class InstitutionType extends AbstractType
      *
      * @param FormBuilderInterface $builder
      * @param array $options
+     *
      * @throws Exception
+     *
      * @return void
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection ALL */
+
 namespace App\Entity;
 
 use App\Repository\InstitutionRepository;
@@ -143,7 +145,7 @@ class Institution
      * @param string $index The Institution index.
      * @return Institution The Institution entity.
      */
-    public function setIndex(string $index): static
+    public function setIndex(string $index): Institution
     {
         $this->inst_index = $index;
 
@@ -166,7 +168,7 @@ class Institution
      * @param string $name The Institution name.
      * @return Institution The Institution entity.
      */
-    public function setName(string $name): static
+    public function setName(string $name): Institution
     {
         $this->name = $name;
 
@@ -189,7 +191,7 @@ class Institution
      * @param string|null $wayf_label The Institution WAYF label.
      * @return Institution The Institution entity.
      */
-    public function setWayfLabel(?string $wayf_label): static
+    public function setWayfLabel(?string $wayf_label): Institution
     {
         $this->wayf_label = $wayf_label;
 
@@ -212,7 +214,7 @@ class Institution
      * @param int $position The Institution position.
      * @return Institution The Institution entity.
      */
-    public function setPosition(int $position): static
+    public function setPosition(int $position): Institution
     {
         $this->position = $position;
 
@@ -235,7 +237,7 @@ class Institution
      * @param string $entity_id The Institution entity ID.
      * @return Institution The Institution entity.
      */
-    public function setEntityId(string $entity_id): static
+    public function setEntityId(string $entity_id): Institution
     {
         $this->entity_id = $entity_id;
 
@@ -258,7 +260,7 @@ class Institution
      * @param string|null $alma_location_code The Institution Alma location code.
      * @return Institution The Institution entity.
      */
-    public function setAlmaLocationCode(?string $alma_location_code): static
+    public function setAlmaLocationCode(?string $alma_location_code): Institution
     {
         $this->alma_location_code = $alma_location_code;
 
@@ -281,7 +283,7 @@ class Institution
      * @param string $mail_attribute The Institution mail attribute.
      * @return Institution The Institution entity.
      */
-    public function setMailAttribute(string $mail_attribute): static
+    public function setMailAttribute(string $mail_attribute): Institution
     {
         $this->mail_attribute = $mail_attribute;
 
@@ -304,7 +306,7 @@ class Institution
      * @param string|null $name_attribute The Institution name attribute.
      * @return Institution The Institution entity.
      */
-    public function setNameAttribute(?string $name_attribute): static
+    public function setNameAttribute(?string $name_attribute): Institution
     {
         $this->name_attribute = $name_attribute;
 
@@ -327,7 +329,7 @@ class Institution
      * @param string|null $first_name_attribute The Institution first name attribute.
      * @return Institution The Institution entity.
      */
-    public function setFirstNameAttribute(?string $first_name_attribute): static
+    public function setFirstNameAttribute(?string $first_name_attribute): Institution
     {
         $this->first_name_attribute = $first_name_attribute;
 
@@ -350,7 +352,7 @@ class Institution
      * @param string|null $id_attribute The Institution ID attribute.
      * @return Institution The Institution entity.
      */
-    public function setIdAttribute(?string $id_attribute): static
+    public function setIdAttribute(?string $id_attribute): Institution
     {
         $this->id_attribute = $id_attribute;
 
@@ -368,7 +370,7 @@ class Institution
     /**
      * Set the Special Transform toggler state
      */
-    public function setSpecialTransform(?bool $special_transform): static
+    public function setSpecialTransform(?bool $special_transform): Institution
     {
         $this->special_transform = $special_transform;
 
@@ -391,7 +393,7 @@ class Institution
      * @param InstitutionService $InstitutionService The Institution service to add.
      * @return Institution The Institution entity.
      */
-    public function addInstitutionService(InstitutionService $InstitutionService): static
+    public function addInstitutionService(InstitutionService $InstitutionService): Institution
     {
         if (!$this->InstitutionServices->contains($InstitutionService)) {
             $this->InstitutionServices->add($InstitutionService);
@@ -407,7 +409,7 @@ class Institution
      * @param InstitutionService $InstitutionService The Institution service to remove.
      * @return Institution The Institution entity.
      */
-    public function removeInstitutionService(InstitutionService $InstitutionService): static
+    public function removeInstitutionService(InstitutionService $InstitutionService): Institution
     {
         if ($this->InstitutionServices->removeElement($InstitutionService)) {
             // set the owning side to null (unless already changed)
