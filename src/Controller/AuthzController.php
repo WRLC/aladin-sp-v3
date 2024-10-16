@@ -12,6 +12,12 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * Class AuthzController
+ *
+ * Handles the authorization of users for specific institutional services
+ *
+ */
 class AuthzController extends AbstractController
 {
     /**
@@ -55,17 +61,22 @@ class AuthzController extends AbstractController
         }
 
         // Get the alma user attributes, because everything else depends on them
-        $attributes = $this->get_alma_attributes($user, $institutionService->getInstitution()->getAlmaLocationCode());  // Alma user attributes
+        $attributes = $this->get_alma_attributes($user, $institutionService->getInstitution()->getAlmaLocationCode());
 
         // If there's an error in the Alma attributes...
         if (key_exists('error', $attributes)) {
-            // First retry the call with all lowercase user ID
-            $attributes = $this->get_alma_attributes(strtolower($user), $institutionService->getInstitution()->getAlmaLocationCode());
+
+            // Go ahead and set the error message based on user ID sent by SSO
+            $authz->setMatch(['Alma user not found', $attributes['error']]);
+
+            // But first retry the call with all lowercase user ID
+            $attributes = $this->get_alma_attributes(
+                strtolower($user), $institutionService->getInstitution()->getAlmaLocationCode()
+            );
         }
 
-        // If there's still an error, we did all we could...
+        // If there's still an error, then return the error
         if (key_exists('error', $attributes)) {
-            $authz->setMatch(['Alma user not found', $attributes['error']]);  // Set the error message
             $authz->setErrors(true);  // Set the error flag
             return $this->returnAuthz($authz);  // Return an error
         }
@@ -84,8 +95,12 @@ class AuthzController extends AbstractController
             // Iterate through the user roles to check for a match
             foreach ($userRoles as $userRole) {  // For each user role...
                 if ($userRole['status']['value'] == 'ACTIVE') {  // Only look at active roles
-                    if (in_array($userRole['role_type']['value'], $authzMembers)) {  // If the user role is in the authorized members list...
-                        $matchingRoles[] = $userRole['role_type']['value'];  // ...add the role to the matching roles list
+
+                    // If the user role is in the authorized members list...
+                    if (in_array($userRole['role_type']['value'], $authzMembers)) {
+
+                        // ...add the role to the matching roles list
+                        $matchingRoles[] = $userRole['role_type']['value'];
                     }
                 }
             }
@@ -155,7 +170,13 @@ class AuthzController extends AbstractController
         try {
             return $response->toArray();  // Return the response as an array
         }
-        catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+        catch (
+            ClientExceptionInterface|
+            DecodingExceptionInterface|
+            RedirectionExceptionInterface|
+            ServerExceptionInterface|
+            TransportExceptionInterface $e
+        ) {
             return ['error' => $e->getMessage()];
         }  // Return the error message
     }
