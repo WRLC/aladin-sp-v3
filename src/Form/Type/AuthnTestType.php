@@ -30,5 +30,4 @@ class AuthnTestType extends AbstractType
             'institutions' => [],
         ]);
     }
-
 }

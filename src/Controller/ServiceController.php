@@ -37,7 +37,7 @@ class ServiceController extends AbstractController
         $auth->requireAdmin();  // Require admin access
 
         $services = $entityManager->getRepository(Service::class)->findAll();  // Get all Service entities
-        $services = $this->alpha_services_slug($services);  // Sort the Service entities by slug
+        $services = $this->alphaServicesSlug($services);  // Sort the Service entities by slug
 
         return $this->render('service/index.html.twig', [
             'services' => $services,  // Pass the Service
@@ -207,7 +207,7 @@ class ServiceController extends AbstractController
      *
      * @return array<string, Service>
      */
-    public function alpha_services_slug(array $services): array
+    public function alphaServicesSlug(array $services): array
     {
         $alpha_services = [];
         foreach ($services as $service) {
@@ -224,7 +224,7 @@ class ServiceController extends AbstractController
      *
      * @return array<int|string, InstitutionService>
      */
-    public function alpha_institution_services(array $institutionServices): array
+    public function alphaInstitutionServices(array $institutionServices): array
     {
         $alpha_institution_services = [];
         foreach ($institutionServices as $institutionService) {

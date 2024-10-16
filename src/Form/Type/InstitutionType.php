@@ -160,8 +160,7 @@ class InstitutionType extends AbstractType
                 $entity_id = $idp['entityid'];
                 if (array_key_exists('name', $idp)) {
                     $name = $idp['name']['en'] . ' - ' . $idp['entityid'];
-                }
-                else {
+                } else {
                     $name = $idp['entityid'];
                 }
                 $items[$name] = $entity_id;
@@ -169,6 +168,5 @@ class InstitutionType extends AbstractType
         }
         ksort($items);  // Sort the items array
         return $items;  // Return the items array
-
     }
 }

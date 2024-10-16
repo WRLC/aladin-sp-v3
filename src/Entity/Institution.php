@@ -2,7 +2,6 @@
 
 /** @noinspection PhpUnused */
 
-
 namespace App\Entity;
 
 use App\Repository\InstitutionRepository;

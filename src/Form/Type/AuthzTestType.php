@@ -11,8 +11,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class authzTestType extends AbstractType
+/**
+ * Class AuthzTestType
+ *
+ * This class defines a form for testing authorization
+ */
+class AuthzTestType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array<string> $options
+     *
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -38,7 +49,6 @@ class authzTestType extends AbstractType
             ])
             ->add('submit', SubmitType::class, ['label' => 'Test', 'attr' => ['class' => 'btn btn-primary']])
         ;
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -48,5 +58,4 @@ class authzTestType extends AbstractType
             'service' => [],
         ]);
     }
-
 }

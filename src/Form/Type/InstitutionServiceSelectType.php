@@ -13,7 +13,7 @@ class InstitutionServiceSelectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $services = [];
-        foreach($options['services'] as $service) {
+        foreach ($options['services'] as $service) {
             $services[$service->getName()] = $service;
         }
         ksort($services);
@@ -37,5 +37,4 @@ class InstitutionServiceSelectType extends AbstractType
             'services' => [],
         ]);
     }
-
 }

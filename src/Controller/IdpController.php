@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnused */
+<?php
+
+/** @noinspection PhpUnused */
 
 /** @noinspection PhpUnusedParameterInspection */
 
@@ -212,7 +214,6 @@ class IdpController extends AbstractController
         $form->handleRequest($request);  // Handle the request
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             return $this->redirectToRoute('metarefresh_results');
         }
         return $this->render('idps/metarefresh.html.twig', [
@@ -244,5 +245,4 @@ class IdpController extends AbstractController
             'logentries' => $logentries,
         ]);
     }
-
 }

@@ -12,7 +12,6 @@ namespace App\Entity;
  */
 class AladinError
 {
-
     /** @var string The type of error */
     private string $type;
 
@@ -35,7 +34,8 @@ class AladinError
      * @param array<string> $errors
      * @param bool $log
      */
-    public function __construct(string $type, string $intro, array $errors = [], bool $log = false) {
+    public function __construct(string $type, string $intro, array $errors = [], bool $log = false)
+    {
         $this->type = $type;
         $this->intro = $intro;
         $this->errors = $errors;
@@ -133,5 +133,4 @@ class AladinError
 
         return $this;
     }
-
 }

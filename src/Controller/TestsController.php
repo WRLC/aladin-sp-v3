@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 namespace App\Controller;
 
 use App\Entity\AladinError;
@@ -7,7 +9,7 @@ use App\Entity\Institution;
 use App\Entity\InstitutionService;
 use App\Entity\Service;
 use App\Form\Type\AuthnTestType;
-use App\Form\Type\authzTestType;
+use App\Form\Type\AuthzTestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -20,10 +22,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * Class TestsController
+ */
 class TestsController extends AbstractController
 {
     private LoggerInterface $aladinErrorLogger;
 
+    /**
+     * @param LoggerInterface $aladinErrorLogger
+     */
     public function __construct(LoggerInterface $aladinErrorLogger)
     {
         $this->aladinErrorLogger = $aladinErrorLogger;
@@ -96,7 +104,7 @@ class TestsController extends AbstractController
 
         // AUTHENTICATION
         $authnController = new AuthnController();  // Create a new LoginController
-        $attributes = $authnController->authn_user($institution);  // Authenticate the user and get the attributes
+        $attributes = $authnController->authnUser($institution);  // Authenticate the user and get the attributes
         if ($attributes instanceof Exception) {  // If the attributes are an Exception
             $error->setErrors([$attributes->getMessage()]);  // Set the error
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $attributes->getMessage());
@@ -119,12 +127,12 @@ class TestsController extends AbstractController
      * @return Response|null
      */
     #[Route('/authN/clear', name: 'auth_n_test_clear')]
-    public function authN_clear(EntityManagerInterface $entityManager, Request $request): Response|null
+    public function authnClear(EntityManagerInterface $entityManager, Request $request): Response|null
     {
         $index = $request->get('institution');  // Get the institution index
 
         if (!$index) {  // If the institution is not provided
-            $this->addFlash('error', 'No institution specified' );  // Add a flash message
+            $this->addFlash('error', 'No institution specified');  // Add a flash message
             return $this->redirectToRoute('auth_n_test');  // Redirect to the authentication test
         }
 
@@ -218,11 +226,9 @@ class TestsController extends AbstractController
             if ($result['match'][0] == 'Alma user not found') {
                 $error->setErrors(['User "' . $user . '" not found for ' . $institution->getName()]);  // Set the error
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . 'User "' . $user . '" not found for ' . $institution->getName());
-            }
-            else {
+            } else {
                 $error->setErrors($result['match']);
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
-
             }
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }

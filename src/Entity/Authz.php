@@ -31,7 +31,8 @@ class Authz
      *
      * @return void
      */
-    public function __construct(InstitutionService $institutionService, bool $authorized = false, array $match = [], bool $errors = false) {
+    public function __construct(InstitutionService $institutionService, bool $authorized = false, array $match = [], bool $errors = false)
+    {
         $this->institutionService = $institutionService;
         $this->authorized = $authorized;
         $this->match = $match;
