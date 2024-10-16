@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\AladinError;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * Class AladinErrorController
+ */
 class AladinErrorController extends AbstractController
 {
     /**
@@ -12,7 +15,7 @@ class AladinErrorController extends AbstractController
      *
      * @param AladinError $error
      *
-     * @return array
+     * @return array{type: string, intro: string, errors: array<string>}
      */
     public function renderError(AladinError $error): array
     {

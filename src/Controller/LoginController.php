@@ -8,7 +8,6 @@ use App\Entity\InstitutionService;
 use App\Entity\Service;
 use App\Form\Type\WayfType;
 use App\Form\Type\WaygType;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Memcached;
@@ -27,10 +26,15 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class LoginController extends AbstractController
 {
 
+    /** @var LoggerInterface */
     private LoggerInterface $aladinLogger;
+
+    /** @var LoggerInterface */
     private LoggerInterface $aladinErrorLogger;
 
     /**
+     * LoginController constructor.
+     *
      * @param LoggerInterface $aladinLogger
      * @param LoggerInterface $aladinErrorLogger
      */
@@ -41,7 +45,9 @@ class LoginController extends AbstractController
     }
 
     /**
-     * SAML SP Login script
+     * SAML SP Login route
+     *
+     * Attempt to authenticate the user and redirect to the service
      *
      * @param EntityManagerInterface $entityManager
      * @param Request $request
@@ -280,7 +286,7 @@ class LoginController extends AbstractController
     /**
      * Generate the WAYG form
      *
-     * @param array $institutionServices
+     * @param array<InstitutionService> $institutionServices
      *
      * @return FormInterface
      */
@@ -305,7 +311,7 @@ class LoginController extends AbstractController
     /**
      * Generate the WAYF form
      *
-     * @param array $institutionServices
+     * @param array<InstitutionService> $institutionServices
      *
      * @return FormInterface
      */
@@ -329,7 +335,7 @@ class LoginController extends AbstractController
      * Get the institution user ID
      *
      * @param InstitutionService $institutionService
-     * @param array $user_attributes
+     * @param array<string, mixed> $user_attributes
      *
      * @return string|Exception|null
      */
@@ -349,7 +355,7 @@ class LoginController extends AbstractController
      * Create data string with session information
      *
      * @param InstitutionService $institutionService
-     * @param array $user_attributes
+     * @param array<string, mixed> $user_attributes
      *
      * @return string|Exception
      */

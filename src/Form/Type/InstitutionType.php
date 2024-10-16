@@ -22,7 +22,7 @@ class InstitutionType extends AbstractType
      * Builds Idp entity form
      *
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array<string, string> $options
      *
      * @throws Exception
      *
@@ -148,7 +148,7 @@ class InstitutionType extends AbstractType
      * SSP stores IdP metadata in PHP files in the metadata directory. This method reads the metadata files and returns the entity IDs as choices for the form.
      *
      * @throws Exception
-     * @return array
+     * @return array<string, string>
      */
     private function getIdpChoices(): array
     {

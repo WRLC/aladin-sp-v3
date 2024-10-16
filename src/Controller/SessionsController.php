@@ -1,8 +1,9 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Memcached;
 use SimpleSAML\Error\Exception;
 use SimpleSAML\Utils\Auth;
@@ -142,7 +143,7 @@ class SessionsController extends AbstractController
      *
      * @param Memcached $m
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws Exception
      */
@@ -161,7 +162,7 @@ class SessionsController extends AbstractController
      *
      * @param Memcached $m
      *
-     * @return array
+     * @return array<string>
      *
      * @throws Exception
      */
@@ -222,9 +223,9 @@ class SessionsController extends AbstractController
      * Get all memcached data for the given keys
      *
      * @param Memcached $m
-     * @param array $keys
+     * @param array<string> $keys
      *
-     * @return array
+     * @return array<string, array<string, string>>
      */
     private function getAllMemcached(Memcached $m, Array $keys): array
     {
@@ -248,9 +249,9 @@ class SessionsController extends AbstractController
     /**
      * Order memcached data by expiration date
      *
-     * @param array $memcached
+     * @param array<string, mixed> $memcached
      *
-     * @return array
+     * @return array<string>
      */
     private function orderMemcachedData(array $memcached): array
     {
@@ -266,9 +267,9 @@ class SessionsController extends AbstractController
     /**
      * Filter out non-Aladin-SP sessions
      *
-     * @param array $memcached
+     * @param array<string, mixed> $memcached
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function filterAladin(array $memcached): array
     {

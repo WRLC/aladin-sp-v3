@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Authz;
+use App\Entity\AuthzMember;
 use App\Entity\InstitutionService;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -21,12 +23,20 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class AuthzController extends AbstractController
 {
     /**
-     * Authorize the user
+     * Authorize  user
+     *
+     * Perform the authorization of the user based on the institutional service
      *
      * @param InstitutionService $institutionService
      * @param string $user
      *
-     * @return array
+     * @return array{
+     *     authorized: bool,
+     *     authzType: string,
+     *     authzMembers: Collection<int, AuthzMember>,
+     *     match: array<string>,
+     *     errors: bool
+     * }
      *
      * @throws TransportExceptionInterface
      */
@@ -135,12 +145,14 @@ class AuthzController extends AbstractController
     }
 
     /**
-     * Get the Alma user attributes
+     * Get Alma user attributes
+     *
+     * Get the Alma user attributes based on the user ID and Alma location code
      *
      * @param string $user
      * @param string $almaCode
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
      */
@@ -154,11 +166,13 @@ class AuthzController extends AbstractController
     }
 
     /**
-     * Make the API call
+     * Make Alma API call
+     *
+     * Make the call to the Alma Users API to get the user attributes
      *
      * @param string $endpoint
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
      */
@@ -182,11 +196,13 @@ class AuthzController extends AbstractController
     }
 
     /**
-     * Get the authorized members
+     * Get authorized members
+     *
+     * Get the list of authorized members for the institutional service
      *
      * @param InstitutionService $institutionService
      *
-     * @return array
+     * @return array<string>
      */
     private function getAuthzMembers(InstitutionService $institutionService): array
     {
@@ -199,11 +215,13 @@ class AuthzController extends AbstractController
     }
 
     /**
-     * Return the authorization results
+     * Return authorization results
+     *
+     * Return the authorization results as an array that can be used in the response
      *
      * @param Authz $authz
      *
-     * @return array
+     * @return array{authorized: bool, authzType: string, authzMembers: Collection<int, AuthzMember>, match: array<string>, errors: bool}
      */
     private function returnAuthz(Authz $authz): array
     {

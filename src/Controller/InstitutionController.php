@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 namespace App\Controller;
 
 use App\Entity\Institution;
@@ -17,13 +19,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
+ * Class Institution
+ *
  * This class defines a controller for Institution entity
  */
 
 class InstitutionController extends AbstractController
 {
     /**
+     * Home page route
+     *
      * Redirect / to the Institution list page
+     *
+     * @return Response
      */
     #[Route('/', name: 'home')]
     public function index(): Response
@@ -32,10 +40,14 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Institution list route
+     *
      * Lists all Institution entities
      *
      * @param EntityManagerInterface $entityManager
+     *
      * @return Response
+     *
      * @throws Exception
      */
     #[Route('/institution', name: 'list_institutions')]
@@ -54,6 +66,8 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Create Institution route
+     *
      * Creates a new Institution entity
      *
      * @param EntityManagerInterface $entityManager
@@ -94,6 +108,8 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Institution route
+     *
      * Shows a single Institution entity
      *
      * @param EntityManagerInterface $entityManager
@@ -160,6 +176,8 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Edit Institution route
+     *
      * Edit a single Institution entity
      *
      * @param EntityManagerInterface $entityManager
@@ -203,6 +221,8 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Delete Institution route
+     *
      * Delete a single Institution entity
      *
      * @throws \SimpleSAML\Error\Exception
@@ -245,7 +265,16 @@ class InstitutionController extends AbstractController
     }
 
     /**
-     * Sort the Institution entities by position
+     * Sort Institutions route
+     *
+     * Sort the Institution entities by position via drag and drop
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param int $id
+     * @param int $thing
+     *
+     * @return Response
+     *
      * @throws \SimpleSAML\Error\Exception
      */
     #[Route('/institution/sort/{id}/{thing}', name: 'sort_institutions')]
@@ -264,9 +293,17 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Get IdP details method
+     *
+     * Get the details of an IdP by entity ID
+     *
+     * @param string $entityid
+     *
+     * @return array<string, mixed>
+     *
      * @throws Exception
      */
-    public function getIdpDetails($entityid): array
+    public function getIdpDetails(string $entityid): array
     {
         $metadata = $this->getIdps();  // Get IdPs from the IdP controller
         $details = [];  // Initialize the details array
@@ -281,6 +318,11 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Get IdPs method
+     *
+     * Get the list of IdPs from the metadata handler
+     *
+     * @return array<string, mixed>
      * @throws Exception
      */
     public function getIdps(): array
@@ -291,6 +333,15 @@ class InstitutionController extends AbstractController
         return $federationControllor->getList('saml20-idp-remote', true);
     }
 
+    /**
+     * Sort Institutions Position method
+     *
+     * Sort the Institution entities by position
+     *
+     * @param array<Institution> $institutions
+     *
+     * @return array<Institution>
+     */
     public function sort_institutions_position(array $institutions): array
     {
         $ordered_institutions = [];
@@ -301,6 +352,15 @@ class InstitutionController extends AbstractController
         return $ordered_institutions;
     }
 
+    /**
+     * Get Highest Position method
+     *
+     * Get the highest position of the Institution entities
+     *
+     * @param array<Institution> $institutions
+     *
+     * @return int
+     */
     public function get_highest_position(array $institutions): int
     {
         if (empty($institutions)) {  // If the Institution array is empty

@@ -19,7 +19,7 @@ class AuthnController extends AbstractController
      *
      * @param Institution $institution
      *
-     * @return array|Exception
+     * @return array<string, array<string>>|Exception
      *
      * @throws Exception
      */
