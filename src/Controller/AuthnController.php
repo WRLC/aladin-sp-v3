@@ -22,7 +22,7 @@ class AuthnController extends AbstractController
      *
      * @throws Exception
      */
-    public function authn_user(Institution $institution): array | Exception
+    public function authnUser(Institution $institution): array | Exception
     {
         // Get the service provider name
         $sp = $_ENV['SERVICE_PROVIDER_NAME'];  // Get the service provider name

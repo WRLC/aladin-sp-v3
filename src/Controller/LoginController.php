@@ -154,7 +154,7 @@ class LoginController extends AbstractController
 
         // Authentication
         $authnController = new AuthnController();  // Create a new AuthnController
-        $user_attributes = $authnController->authn_user($institution);  // Authenticate the user
+        $user_attributes = $authnController->authnUser($institution);  // Authenticate the user
 
         // If authentication fails, return an error page
         if ($user_attributes instanceof Exception) {

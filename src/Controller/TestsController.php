@@ -104,7 +104,7 @@ class TestsController extends AbstractController
 
         // AUTHENTICATION
         $authnController = new AuthnController();  // Create a new LoginController
-        $attributes = $authnController->authn_user($institution);  // Authenticate the user and get the attributes
+        $attributes = $authnController->authnUser($institution);  // Authenticate the user and get the attributes
         if (is_subclass_of($attributes, Exception::class)) {  // If the attributes are an Exception
             $error->setErrors([$attributes->getMessage()]);  // Set the error
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $attributes->getMessage());
