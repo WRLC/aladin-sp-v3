@@ -143,7 +143,7 @@ class SessionsController extends AbstractController
      *
      * @param Memcached $m
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws Exception
      */
@@ -162,11 +162,11 @@ class SessionsController extends AbstractController
      *
      * @param Memcached $m
      *
-     * @return array
+     * @return array<string>|Exception
      *
      * @throws Exception
      */
-    private function getAllKeys(Memcached $m): array
+    private function getAllKeys(Memcached $m): array | Exception
     {
         $host = $m->getServerList()[0]['host'];
         $port = $m->getServerList()[0]['port'];
@@ -213,7 +213,7 @@ class SessionsController extends AbstractController
         }
 
         if (fclose($sock) === false) {
-            throw new Exception('Error closing socket');
+            return new Exception('Error closing socket');
         }
 
         return $allKeys;
@@ -223,9 +223,9 @@ class SessionsController extends AbstractController
      * Get all memcached data for the given keys
      *
      * @param Memcached $m
-     * @param array $keys
+     * @param array<string> $keys
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function getAllMemcached(Memcached $m, Array $keys): array
     {
@@ -249,9 +249,9 @@ class SessionsController extends AbstractController
     /**
      * Order memcached data by expiration date
      *
-     * @param array $memcached
+     * @param array<string, mixed> $memcached
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function orderMemcachedData(array $memcached): array
     {
@@ -267,9 +267,9 @@ class SessionsController extends AbstractController
     /**
      * Filter out non-Aladin-SP sessions
      *
-     * @param array $memcached
+     * @param array<string, mixed> $memcached
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function filterAladin(array $memcached): array
     {
