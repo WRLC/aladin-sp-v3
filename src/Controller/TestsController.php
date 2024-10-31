@@ -127,7 +127,7 @@ class TestsController extends AbstractController
      * @return Response|null
      */
     #[Route('/authN/clear', name: 'auth_n_test_clear')]
-    public function authN_clear(EntityManagerInterface $entityManager, Request $request): Response|null
+    public function authnClear(EntityManagerInterface $entityManager, Request $request): Response|null
     {
         $index = $request->get('institution');  // Get the institution index
 
