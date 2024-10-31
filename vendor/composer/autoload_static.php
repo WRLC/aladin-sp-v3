@@ -154,6 +154,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'PhpOption\\' => 10,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPMailer\\PHPMailer\\' => 20,
+            'PDepend\\' => 8,
         ),
         'M' => 
         array (
@@ -198,7 +199,9 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'C' => 
         array (
+            'Composer\\XdebugHandler\\' => 23,
             'Composer\\Semver\\' => 16,
+            'Composer\\Pcre\\' => 14,
         ),
         'B' => 
         array (
@@ -643,6 +646,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
+        'PDepend\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pdepend/pdepend/src/main/php/PDepend',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
@@ -749,9 +756,17 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
         ),
+        'Composer\\XdebugHandler\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/xdebug-handler/src',
+        ),
         'Composer\\Semver\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
+        ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
         ),
         'Behat\\Transliterator\\' => 
         array (
@@ -764,6 +779,16 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PHPMD\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpmd/phpmd/src/main/php',
+            ),
         ),
     );
 
@@ -1958,6 +1983,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInite298426247c538df39c754429f92ade5::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInite298426247c538df39c754429f92ade5::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite298426247c538df39c754429f92ade5::$prefixesPsr0;
             $loader->classMap = ComposerStaticInite298426247c538df39c754429f92ade5::$classMap;
 
         }, null, ClassLoader::class);
