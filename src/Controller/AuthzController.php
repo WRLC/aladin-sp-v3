@@ -159,6 +159,8 @@ class AuthzController extends AbstractController
      * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     private function sessionApiCall(string $endpoint): array
     {
