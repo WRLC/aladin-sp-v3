@@ -61,7 +61,7 @@ class AuthzController extends AbstractController
         }
 
         // Get the alma user attributes, because everything else depends on them
-        $attributes = $this->get_alma_attributes($user, $institutionService->getInstitution()->getAlmaLocationCode());
+        $attributes = $this->getAlmaAttributes($user, $institutionService->getInstitution()->getAlmaLocationCode());
 
         // If there's an error in the Alma attributes...
         if (key_exists('error', $attributes)) {
@@ -69,7 +69,7 @@ class AuthzController extends AbstractController
             $authz->setMatch(['Alma user not found', $attributes['error']]);
 
             // But first retry the call with all lowercase user ID
-            $attributes = $this->get_alma_attributes(
+            $attributes = $this->getAlmaAttributes(
                 strtolower($user),
                 $institutionService->getInstitution()->getAlmaLocationCode()
             );
@@ -142,13 +142,13 @@ class AuthzController extends AbstractController
      *
      * @throws TransportExceptionInterface
      */
-    private function get_alma_attributes(string $user, string $almaCode): array
+    private function getAlmaAttributes(string $user, string $almaCode): array
     {
         // Get Patron Authorization URL
         $patronAuthorizationUrl = $_ENV['PATRON_AUTHORIZATION_URL'];
         $userApiCall = $patronAuthorizationUrl . '?uid=' . $user . '&inst=' . $almaCode;  // Set the Alma API call
 
-        return $this->session_api_call($userApiCall);  // Return the response
+        return $this->sessionApiCall($userApiCall);  // Return the response
     }
 
     /**
@@ -160,7 +160,7 @@ class AuthzController extends AbstractController
      *
      * @throws TransportExceptionInterface
      */
-    private function session_api_call(string $endpoint): array
+    private function sessionApiCall(string $endpoint): array
     {
         $client = HttpClient::create();  // Create a new HTTP client
         $response = $client->request('GET', $endpoint);  // Make the API call
