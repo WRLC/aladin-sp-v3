@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 namespace App\Entity;
 
 use App\Repository\InstitutionServiceRepository;
@@ -8,6 +10,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+/**
+ * Class InstitutionService
+ */
 #[ORM\Entity(repositoryClass: InstitutionServiceRepository::class)]
 #[UniqueEntity(
     fields: ['Institution', 'Service'],
@@ -45,53 +50,106 @@ class InstitutionService
         $this->authzMembers = new ArrayCollection();
     }
 
+    /**
+     * Get the value of id
+     *
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * Get the value of Institution
+     *
+     * @return Institution|null
+     */
     public function getInstitution(): ?Institution
     {
         return $this->Institution;
     }
 
-    public function setInstitution(?Institution $Institution): static
+    /**
+     * Set the value of Institution
+     *
+     * @param Institution|null $Institution
+     *
+     * @return $this
+     */
+    public function setInstitution(?Institution $Institution): InstitutionService
     {
         $this->Institution = $Institution;
 
         return $this;
     }
 
+    /**
+     * Get the value of Service
+     *
+     * @return Service|null
+     */
     public function getService(): ?Service
     {
         return $this->Service;
     }
 
-    public function setService(?Service $Service): static
+    /**
+     * Set the value of Service
+     *
+     * @param Service|null $Service
+     *
+     * @return $this
+     */
+    public function setService(?Service $Service): InstitutionService
     {
         $this->Service = $Service;
 
         return $this;
     }
 
+    /**
+     * Get the value of AuthzType
+     *
+     * @return string|null
+     */
     public function getAuthzType(): ?string
     {
         return $this->AuthzType;
     }
 
-    public function setAuthzType(?string $AuthzType): static
+    /**
+     * Set the value of AuthzType
+     *
+     * @param string|null $AuthzType
+     *
+     * @return $this
+     */
+    public function setAuthzType(?string $AuthzType): InstitutionService
     {
         $this->AuthzType = $AuthzType;
 
         return $this;
     }
 
+    /**
+     * Get the value of id_attribute
+     *
+     * @return string|null
+     */
     public function getIdAttribute(): ?string
     {
         return $this->id_attribute;
     }
 
-    public function setIdAttribute(string $id_attribute): static
+    /**
+     * Set the value of id_attribute
+     *
+     * @param string $id_attribute
+     *
+     * @return $this
+     */
+    public function setIdAttribute(string $id_attribute): InstitutionService
     {
         $this->id_attribute = $id_attribute;
 
@@ -99,6 +157,8 @@ class InstitutionService
     }
 
     /**
+     * Get the value of authzMembers
+     *
      * @return Collection<int, AuthzMember>
      */
     public function getAuthzMembers(): Collection
@@ -106,7 +166,14 @@ class InstitutionService
         return $this->authzMembers;
     }
 
-    public function addAuthzMember(AuthzMember $authzMember): static
+    /**
+     * Add an AuthzMember to the collection
+     *
+     * @param AuthzMember $authzMember
+     *
+     * @return $this
+     */
+    public function addAuthzMember(AuthzMember $authzMember): InstitutionService
     {
         if (!$this->authzMembers->contains($authzMember)) {
             $this->authzMembers->add($authzMember);
@@ -116,7 +183,14 @@ class InstitutionService
         return $this;
     }
 
-    public function removeAuthzMember(AuthzMember $authzMember): static
+    /**
+     * Remove an AuthzMember from the collection
+     *
+     * @param AuthzMember $authzMember
+     *
+     * @return $this
+     */
+    public function removeAuthzMember(AuthzMember $authzMember): InstitutionService
     {
         if ($this->authzMembers->removeElement($authzMember)) {
             // set the owning side to null (unless already changed)
