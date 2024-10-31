@@ -307,6 +307,8 @@ class InstitutionController extends AbstractController
      * @return array<string, mixed>
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getIdps(): array
     {
