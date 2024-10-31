@@ -57,6 +57,8 @@ class IdpController extends AbstractController
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/delete', name: 'delete_idp')]
     public function deleteIdp(Request $request): Response
@@ -105,6 +107,8 @@ class IdpController extends AbstractController
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/pdo', name: 'generate_pdo_tables')]
     public function generatePdoTables(Request $request): Response
@@ -130,7 +134,8 @@ class IdpController extends AbstractController
 
                     if ($result === false) {
                         $this->addFlash('error', 'Failed to initialize metadata database.');  // Add an error flash message
-                    } else {
+                    }
+                    if ($result !== false) {
                         $this->addFlash('success', 'Successfully initialized metadata database.');  // Add a success flash message
                     }
                 }
@@ -152,6 +157,8 @@ class IdpController extends AbstractController
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/flatfile', name: 'convert_flatfile')]
     public function convertFlatfile(Request $request): Response
@@ -200,6 +207,12 @@ class IdpController extends AbstractController
     }
 
     /**
+     * Refresh metadata.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/idps/metarefresh', name: 'metarefresh')]
@@ -225,9 +238,16 @@ class IdpController extends AbstractController
     }
 
     /**
+     * Show the results of the metadata refresh.
+     *
+     * @param Request $request
+     *
+     * @return Response
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/metarefresh/results', name: 'metarefresh_results')]
     public function metarefreshResults(Request $request): Response
@@ -238,13 +258,14 @@ class IdpController extends AbstractController
         $metarefreshConfig = Configuration::getConfig('module_metarefresh.php');  // Get the metarefresh configuration
         $metarefresh = new MetaRefresh($metarefreshConfig);  // Create a new MetaRefresh object
 
-        Logger::setCaptureLog();
+        $logger = new (Logger::class);  // Create a new Logger object
+        $logger->setCaptureLog();  // Set the log capture
 
-        $metarefresh->main();
+        $metarefresh->main();  // Run the main function
 
-        $logentries = Logger::getCapturedLog();
+        $logentries = $logger->getCapturedLog();  // Get the captured log
 
-        return $this->render('idps/metarefresh_results.html.twig', [
+        return $this->render('idps/metarefresh_results.html.twig', [  // Render the results
             'logentries' => $logentries,
         ]);
     }
