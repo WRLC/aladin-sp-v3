@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
+ * Class Institution
+ *
  * This class defines a controller for Institution entity
  */
 
@@ -24,6 +26,9 @@ class InstitutionController extends AbstractController
 {
     /**
      * Redirect / to the Institution list page
+     *
+     * @return Response
+     *
      */
     #[Route('/', name: 'home')]
     public function index(): Response
@@ -35,7 +40,9 @@ class InstitutionController extends AbstractController
      * Lists all Institution entities
      *
      * @param EntityManagerInterface $entityManager
+     *
      * @return Response
+     *
      * @throws Exception
      */
     #[Route('/institution', name: 'list_institutions')]
@@ -246,6 +253,13 @@ class InstitutionController extends AbstractController
 
     /**
      * Sort the Institution entities by position
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param int $id
+     * @param int $thing
+     *
+     * @return Response
+     *
      * @throws \SimpleSAML\Error\Exception
      */
     #[Route('/institution/sort/{id}/{thing}', name: 'sort_institutions')]
@@ -258,15 +272,21 @@ class InstitutionController extends AbstractController
         $institution->setPosition($thing);  // Set the Institution position
         $entityManager->persist($institution);  // Persist the Institution entity
         $entityManager->flush();  // Flush the entity manager
-        dump($thing);  // Dump the Institution entity
 
         return $this->redirectToRoute('list_institutions');  // Return a JSON response
     }
 
     /**
+     * Add a Service to an Institution
+     *
+     * @param string $entityid
+     *
+     * @return array<string, mixed>
+     *
+     * @throws \SimpleSAML\Error\Exception
      * @throws Exception
      */
-    public function getIdpDetails($entityid): array
+    public function getIdpDetails(string $entityid): array
     {
         $metadata = $this->getIdps();  // Get IdPs from the IdP controller
         $details = [];  // Initialize the details array
@@ -281,6 +301,10 @@ class InstitutionController extends AbstractController
     }
 
     /**
+     * Get the IdPs
+     *
+     * @return array<string, mixed>
+     *
      * @throws Exception
      */
     public function getIdps(): array
@@ -291,6 +315,11 @@ class InstitutionController extends AbstractController
         return $federationControllor->getList('saml20-idp-remote', true);
     }
 
+    /**
+     * @param array<Institution> $institutions
+     *
+     * @return array<int, Institution>
+     */
     public function sort_institutions_position(array $institutions): array
     {
         $ordered_institutions = [];
@@ -301,6 +330,11 @@ class InstitutionController extends AbstractController
         return $ordered_institutions;
     }
 
+    /**
+     * @param array<Institution> $institutions
+     *
+     * @return int
+     */
     public function get_highest_position(array $institutions): int
     {
         if (empty($institutions)) {  // If the Institution array is empty
