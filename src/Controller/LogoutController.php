@@ -59,8 +59,8 @@ class LogoutController extends AbstractController
         $cookieName = $cookiePrefix . $service->getSlug();
         $cookieDomain = $_ENV['COOKIE_DOMAIN'];
 
-        if (isset($_COOKIE[$cookieName])) {  # Get the cookie value from the cookie
-            $cookieValue = $_COOKIE[$cookieName];  # Get the cookie value from the cookie
+        if (isset($_COOKIE[$cookieName])) {  # If the cookie is set...
+            $cookieValue = $_COOKIE[$cookieName];  # Get the cookie value
             # Delete the cookie value from memcache
             $m = new Memcached();  # create memcache object
             $mServer = $_ENV['MEMCACHED_HOST'];  # Get the memcache server
