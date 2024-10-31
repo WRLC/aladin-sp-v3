@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnused */
+<?php
+
+/** @noinspection PhpUnused */
 
 namespace App\Entity;
 
@@ -7,7 +9,6 @@ namespace App\Entity;
  */
 class AladinError
 {
-
     private string $type;
 
     private string $intro;
@@ -25,7 +26,8 @@ class AladinError
      * @param array<string> $errors
      * @param bool $log
      */
-    public function __construct(string $type, string $intro, array $errors = [], bool $log = false) {
+    public function __construct(string $type, string $intro, array $errors = [], bool $log = false)
+    {
         $this->type = $type;
         $this->intro = $intro;
         $this->errors = $errors;
@@ -125,5 +127,4 @@ class AladinError
 
         return $this;
     }
-
 }

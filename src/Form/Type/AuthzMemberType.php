@@ -44,5 +44,4 @@ class AuthzMemberType extends AbstractType
             'data_class' => AuthzMember::class,
         ]);
     }
-
 }

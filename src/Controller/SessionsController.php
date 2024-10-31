@@ -66,7 +66,6 @@ class SessionsController extends AbstractController
         $form->handleRequest($request);  // Handle form request
 
         if ($form->isSubmitted() && $form->isValid()) {  // If form is submitted and valid
-
             $m = $this->createMemcachedConnection();  // Create memcached connection
             $memcached = $this->getOrderedAladin($m);  // Filter out non-Aladin-SP sessions
 
@@ -154,7 +153,6 @@ class SessionsController extends AbstractController
         $memcached = $this->filterAladin($memcached);  // Filter out non-Aladin-SP sessions
 
         return $this->orderMemcachedData($memcached);  // Order memcached data by expiration date
-
     }
 
     /**
@@ -227,7 +225,7 @@ class SessionsController extends AbstractController
      *
      * @return array<string, mixed>
      */
-    private function getAllMemcached(Memcached $m, Array $keys): array
+    private function getAllMemcached(Memcached $m, array $keys): array
     {
         $memcached = [];
         foreach ($keys as $item) {

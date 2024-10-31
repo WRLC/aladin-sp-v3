@@ -25,7 +25,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 class LoginController extends AbstractController
 {
-
     private LoggerInterface $aladinLogger;
     private LoggerInterface $aladinErrorLogger;
 
@@ -72,15 +71,13 @@ class LoginController extends AbstractController
             if (!$index) {  // ...and no institution is provided, show an error
                 $error->setIntro('Missing service parameter');
                 return $this->render('error.html.twig', $errorController->renderError($error));
-            }
-            else {  // ...but an institution is provided
-
+            } else {  // ...but an institution is provided
                 // Get the institution
                 $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
 
                 // If the institution is not found, return an error page
                 if (!$institution) {
-                    $error->setErrors(['Invalid institution parameter: '. $index]);
+                    $error->setErrors(['Invalid institution parameter: ' . $index]);
                     return $this->render('error.html.twig', $errorController->renderError($error));
                 }
 
@@ -90,11 +87,11 @@ class LoginController extends AbstractController
 
                 // If no institutional services found, show an error
                 if (count($institutionServices) == 0) {
-                    $error->setIntro($institution->getName() .' authorization is not available at this time.');
+                    $error->setIntro($institution->getName() . ' authorization is not available at this time.');
                     return $this->render('error.html.twig', $errorController->renderError($error));
                 }
 
-                $form = $this->generate_wayg($institutionServices);  // Generate the WAYG form
+                $form = $this->generateWayg($institutionServices);  // Generate the WAYG form
                 $form->handleRequest($request);  // Handle the form request
 
                 // Render the WAYG form
@@ -110,7 +107,7 @@ class LoginController extends AbstractController
 
         // If the service is not found, show an error
         if (!$service) {
-            $error->setIntro('Invalid service parameter: '. $slug);
+            $error->setIntro('Invalid service parameter: ' . $slug);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
@@ -122,11 +119,11 @@ class LoginController extends AbstractController
 
             // If no institutional services found, show an error
             if (count($institutionServices) == 0) {
-                $error->setIntro($service->getName() .' authorization is not available at this time.');
+                $error->setIntro($service->getName() . ' authorization is not available at this time.');
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
 
-            $form = $this->generate_wayf($institutionServices);  // Generate the WAYF form
+            $form = $this->generateWayf($institutionServices);  // Generate the WAYF form
             $form->handleRequest($request);  // Handle the form request
 
             // Render the WAYF form
@@ -141,7 +138,7 @@ class LoginController extends AbstractController
 
         // If the institution is not found, return an error page
         if (!$institution) {
-            $error->setErrors(['Invalid institution parameter: '. $index]);
+            $error->setErrors(['Invalid institution parameter: ' . $index]);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
@@ -157,7 +154,7 @@ class LoginController extends AbstractController
 
         // Authentication
         $authnController = new AuthnController();  // Create a new AuthnController
-        $user_attributes = $authnController->authn_user($institution);  // Authenticate the user
+        $user_attributes = $authnController->authnUser($institution);  // Authenticate the user
 
         // If authentication fails, return an error page
         if ($user_attributes instanceof Exception) {
@@ -168,7 +165,7 @@ class LoginController extends AbstractController
         }
 
         // Get the user ID attribute
-        $user_id = $this->get_institution_user_id($institutionService, $user_attributes);
+        $user_id = $this->getInstUid($institutionService, $user_attributes);
 
         // If user id is null, there's a problem with attribute names
         if ($user_id == null) {
@@ -193,7 +190,7 @@ class LoginController extends AbstractController
         // If the ID attribute is not found, show an error
         if ($user_id instanceof Exception) {
             $error->setIntro(
-                'Invalid User ID attribute <pre>'. $institutionService->getIdAttribute() . '</pre> for ' .
+                'Invalid User ID attribute <pre>' . $institutionService->getIdAttribute() . '</pre> for ' .
                 $institution->getName()
             );
             $error->setErrors([$user_id->getMessage()]);
@@ -208,7 +205,7 @@ class LoginController extends AbstractController
         // If the user is not authorized, show an error
         if (!$result['authorized']) {
             $error->setIntro(
-                $institution->getName() . ' user '. $user_id .' not authorized for '. $service->getName()
+                $institution->getName() . ' user ' . $user_id . ' not authorized for ' . $service->getName()
             );
             $error->setErrors($result['match']);
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
@@ -226,18 +223,19 @@ class LoginController extends AbstractController
         $cookie_name = $cookie_prefix . $service->getSlug();  // Create the cookie name
 
         // Set the cookie
-        if (setcookie($cookie_name, $sessionID, [
-            'expires' => time()+(86400*14),
-            'path' =>'/',
+        if (
+            setcookie($cookie_name, $sessionID, [
+            'expires' => time() + (86400 * 14),
+            'path' => '/',
             'domain' => $_ENV['COOKIE_DOMAIN'],
-        ])) {
-
+            ])
+        ) {
             // Set the session data
             $m = new Memcached();  // Create a new Memcached object
             $mServer = $_ENV['MEMCACHED_HOST'];  // Get the Memcached host
             $mPort = $_ENV['MEMCACHED_PORT'];  // Get the Memcached port
             $m->addServer($mServer, intval($mPort));  // Add the server
-            $data = $this->set_data_string($institutionService, $user_attributes);  // Create the data string
+            $data = $this->setDataString($institutionService, $user_attributes);  // Create the data string
 
             // If the data string is an error, show an error page
             if ($data instanceof Exception) {
@@ -247,7 +245,7 @@ class LoginController extends AbstractController
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
 
-            $m->set($sessionID, $data, time()+86400*14);  // Set the session data
+            $m->set($sessionID, $data, time() + 86400 * 14);  // Set the session data
 
             $mdata = $m->get($sessionID);  // Get the session data
             $mdata = explode("\r\n", $mdata);  // Explode the session data
@@ -258,7 +256,7 @@ class LoginController extends AbstractController
                     $fmdata[$tmp[0]] = $tmp[1];
                 }
             }
-            $jdata = preg_replace('/\s+/mu', ' ',json_encode($fmdata, JSON_PRETTY_PRINT));  // Encode the session data
+            $jdata = preg_replace('/\s+/mu', ' ', json_encode($fmdata, JSON_PRETTY_PRINT));  // Encode the session data
 
             $this->aladinLogger->debug('Memcached Session Data: ' . $jdata);
 
@@ -270,12 +268,10 @@ class LoginController extends AbstractController
         }
 
         // If the cookie is not set, show an error page
-        else {
-            $error->setIntro('Failed to set cookie');
-            $error->setErrors(['Cookie name: '. $cookie_name]);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: '. $cookie_name);
-            return $this->render('error.html.twig', $errorController->renderError($error));
-        }
+        $error->setIntro('Failed to set cookie');
+        $error->setErrors(['Cookie name: ' . $cookie_name]);
+        $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookie_name);
+        return $this->render('error.html.twig', $errorController->renderError($error));
     }
 
     /**
@@ -285,7 +281,7 @@ class LoginController extends AbstractController
      *
      * @return FormInterface
      */
-    private function generate_wayg(array $institutionServices): FormInterface
+    private function generateWayg(array $institutionServices): FormInterface
     {
         // Get the services
         $services = [];  // Initialize the services array
@@ -310,7 +306,7 @@ class LoginController extends AbstractController
      *
      * @return FormInterface
      */
-    private function generate_wayf(array $institutionServices): FormInterface
+    private function generateWayf(array $institutionServices): FormInterface
     {
         // Get the institutions
         $institutions = [];  // Initialize the institutions array
@@ -320,7 +316,7 @@ class LoginController extends AbstractController
 
         // Sort institutions
         $institutionController = new InstitutionController();
-        $sorted_institutions = $institutionController->sort_institutions_position($institutions);
+        $sorted_institutions = $institutionController->sortInstPosition($institutions);
 
         // Create the WAYF form w/ institutions
         return $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions, 'service' => $institutionServices[0]->getService()->getName()]);
@@ -334,13 +330,12 @@ class LoginController extends AbstractController
      *
      * @return string|Exception|null
      */
-    private function get_institution_user_id(InstitutionService $institutionService, array $user_attributes): string | Exception | null
+    private function getInstUid(InstitutionService $institutionService, array $user_attributes): string | Exception | null
     {
         try {
             // Get the user ID attribute
             $user_id = $user_attributes[$institutionService->getInstitution()->getIdAttribute()][0];
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return $e;  // Errors
         }
         return $user_id;
@@ -354,14 +349,16 @@ class LoginController extends AbstractController
      *
      * @return string|Exception
      */
-    private function set_data_string(InstitutionService $institutionService, array $user_attributes): string | Exception
+    private function setDataString(InstitutionService $institutionService, array $user_attributes): string | Exception
     {
         $instSvcIdAttr = $institutionService->getIdAttribute();  // Get the institution service ID attribute
 
         // Get the method to call
         $method = 'get' . str_replace(' ', '', ucwords(str_replace(
-            '_', ' ', $instSvcIdAttr
-            )));
+            '_',
+            ' ',
+            $instSvcIdAttr
+        )));
 
         $uid = $user_attributes[$institutionService->getInstitution()->$method()][0] ?? '';
 
@@ -379,7 +376,7 @@ class LoginController extends AbstractController
         $last_name = $user_attributes[$institutionService->getInstitution()->getNameAttribute()][0] ?? '';
         $first_name = $user_attributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
 
-        $expTime = (string) (time()+(86400*14));  // Set the expiration time
+        $expTime = (string) (time() + (86400 * 14));  // Set the expiration time
 
         $data = 'UserName=' . strtolower($uid) . "\r\n";
         $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";

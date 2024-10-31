@@ -31,16 +31,13 @@ class InstitutionServiceType extends AbstractType
         if ($builder->getData()->getAuthzType() == 'user_id') {
             $authzType = 'User IDs';
             $authzTypeHelp = 'The specific IdP User IDs that are authorized to access this service. (Each value should be added separately.)';
-        }
-        elseif ($builder->getData()->getAuthzType() == 'user_role') {
+        } elseif ($builder->getData()->getAuthzType() == 'user_role') {
             $authzType = 'Roles';
             $authzTypeHelp = 'The specific Alma Roles (by ID number, not label) that are authorized to access this service. (Each value should be added separately.)';
-        }
-        elseif ($builder->getData()->getAuthzType() == 'user_group') {
+        } elseif ($builder->getData()->getAuthzType() == 'user_group') {
             $authzType = 'Groups';
             $authzTypeHelp = 'The specific Alma Groups (by name, not label) that are authorized to access this service. (Each value should be added separately.)';
-        }
-        else {
+        } else {
             $authzType = '';
             $authzTypeHelp = '';
         }
@@ -54,8 +51,7 @@ class InstitutionServiceType extends AbstractType
 
         if ($type == 'add') {
             $label = 'Add Institutional Service';
-        }
-        else {
+        } else {
             $label = 'Update Institutional Service';
         }
         $builder
