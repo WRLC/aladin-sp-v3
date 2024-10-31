@@ -71,35 +71,34 @@ class LoginController extends AbstractController
             if (!$index) {  // ...and no institution is provided, show an error
                 $error->setIntro('Missing service parameter');
                 return $this->render('error.html.twig', $errorController->renderError($error));
-            } else {  // ...but an institution is provided
-                // Get the institution
-                $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
-
-                // If the institution is not found, return an error page
-                if (!$institution) {
-                    $error->setErrors(['Invalid institution parameter: ' . $index]);
-                    return $this->render('error.html.twig', $errorController->renderError($error));
-                }
-
-                // Get all institutional services for the institution
-                $institutionServices = $entityManager->getRepository(InstitutionService::class)
-                    ->findBy(['Institution' => $institution->getId()]);
-
-                // If no institutional services found, show an error
-                if (count($institutionServices) == 0) {
-                    $error->setIntro($institution->getName() . ' authorization is not available at this time.');
-                    return $this->render('error.html.twig', $errorController->renderError($error));
-                }
-
-                $form = $this->generateWayg($institutionServices);  // Generate the WAYG form
-                $form->handleRequest($request);  // Handle the form request
-
-                // Render the WAYG form
-                return $this->render('login/wayg.html.twig', [
-                    'institution' => $institution,
-                    'form' => $form,
-                ]);
             }
+            // Get the institution
+            $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+
+            // If the institution is not found, return an error page
+            if (!$institution) {
+                $error->setErrors(['Invalid institution parameter: ' . $index]);
+                return $this->render('error.html.twig', $errorController->renderError($error));
+            }
+
+            // Get all institutional services for the institution
+            $institutionServices = $entityManager->getRepository(InstitutionService::class)
+                ->findBy(['Institution' => $institution->getId()]);
+
+            // If no institutional services found, show an error
+            if (count($institutionServices) == 0) {
+                $error->setIntro($institution->getName() . ' authorization is not available at this time.');
+                return $this->render('error.html.twig', $errorController->renderError($error));
+            }
+
+            $form = $this->generateWayg($institutionServices);  // Generate the WAYG form
+            $form->handleRequest($request);  // Handle the form request
+
+            // Render the WAYG form
+            return $this->render('login/wayg.html.twig', [
+                'institution' => $institution,
+                'form' => $form,
+            ]);
         }
 
         // Get the service
