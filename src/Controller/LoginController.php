@@ -91,7 +91,7 @@ class LoginController extends AbstractController
                     return $this->render('error.html.twig', $errorController->renderError($error));
                 }
 
-                $form = $this->generate_wayg($institutionServices);  // Generate the WAYG form
+                $form = $this->generateWayg($institutionServices);  // Generate the WAYG form
                 $form->handleRequest($request);  // Handle the form request
 
                 // Render the WAYG form
@@ -123,7 +123,7 @@ class LoginController extends AbstractController
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
 
-            $form = $this->generate_wayf($institutionServices);  // Generate the WAYF form
+            $form = $this->generateWayf($institutionServices);  // Generate the WAYF form
             $form->handleRequest($request);  // Handle the form request
 
             // Render the WAYF form
@@ -165,7 +165,7 @@ class LoginController extends AbstractController
         }
 
         // Get the user ID attribute
-        $user_id = $this->get_institution_user_id($institutionService, $user_attributes);
+        $user_id = $this->getInstUid($institutionService, $user_attributes);
 
         // If user id is null, there's a problem with attribute names
         if ($user_id == null) {
@@ -235,7 +235,7 @@ class LoginController extends AbstractController
             $mServer = $_ENV['MEMCACHED_HOST'];  // Get the Memcached host
             $mPort = $_ENV['MEMCACHED_PORT'];  // Get the Memcached port
             $m->addServer($mServer, intval($mPort));  // Add the server
-            $data = $this->set_data_string($institutionService, $user_attributes);  // Create the data string
+            $data = $this->setDataString($institutionService, $user_attributes);  // Create the data string
 
             // If the data string is an error, show an error page
             if ($data instanceof Exception) {
@@ -268,12 +268,10 @@ class LoginController extends AbstractController
         }
 
         // If the cookie is not set, show an error page
-        else {
-            $error->setIntro('Failed to set cookie');
-            $error->setErrors(['Cookie name: ' . $cookie_name]);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookie_name);
-            return $this->render('error.html.twig', $errorController->renderError($error));
-        }
+        $error->setIntro('Failed to set cookie');
+        $error->setErrors(['Cookie name: ' . $cookie_name]);
+        $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookie_name);
+        return $this->render('error.html.twig', $errorController->renderError($error));
     }
 
     /**
@@ -283,7 +281,7 @@ class LoginController extends AbstractController
      *
      * @return FormInterface
      */
-    private function generate_wayg(array $institutionServices): FormInterface
+    private function generateWayg(array $institutionServices): FormInterface
     {
         // Get the services
         $services = [];  // Initialize the services array
@@ -308,7 +306,7 @@ class LoginController extends AbstractController
      *
      * @return FormInterface
      */
-    private function generate_wayf(array $institutionServices): FormInterface
+    private function generateWayf(array $institutionServices): FormInterface
     {
         // Get the institutions
         $institutions = [];  // Initialize the institutions array
@@ -332,7 +330,7 @@ class LoginController extends AbstractController
      *
      * @return string|Exception|null
      */
-    private function get_institution_user_id(InstitutionService $institutionService, array $user_attributes): string | Exception | null
+    private function getInstUid(InstitutionService $institutionService, array $user_attributes): string | Exception | null
     {
         try {
             // Get the user ID attribute
@@ -351,7 +349,7 @@ class LoginController extends AbstractController
      *
      * @return string|Exception
      */
-    private function set_data_string(InstitutionService $institutionService, array $user_attributes): string | Exception
+    private function setDataString(InstitutionService $institutionService, array $user_attributes): string | Exception
     {
         $instSvcIdAttr = $institutionService->getIdAttribute();  // Get the institution service ID attribute
 
