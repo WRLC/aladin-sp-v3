@@ -7,7 +7,7 @@ use App\Entity\Institution;
 use App\Entity\InstitutionService;
 use App\Entity\Service;
 use App\Form\Type\AuthnTestType;
-use App\Form\Type\authzTestType;
+use App\Form\Type\AuthzTestType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;

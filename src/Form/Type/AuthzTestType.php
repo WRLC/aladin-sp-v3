@@ -12,9 +12,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class authzTestType
+ * Class AuthzTestType
  */
-class authzTestType extends AbstractType
+class AuthzTestType extends AbstractType
 {
     /**
      * Build the form
