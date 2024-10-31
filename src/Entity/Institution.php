@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUnused */
+<?php
+
+/** @noinspection PhpUnused */
 
 namespace App\Entity;
 
@@ -11,9 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * This class defines an Institution entity.
+ * Class Institution
  *
- * An Institution (Identity Provider) is a service that provides authentication to users. SSP stores information about Institutions in PHP files in the metadata directory. This class represents an Institution entity in the database linked to one of SSP's Institutions.
  */
 
 #[ORM\Entity(repositoryClass: InstitutionRepository::class)]
