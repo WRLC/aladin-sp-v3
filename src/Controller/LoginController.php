@@ -318,7 +318,7 @@ class LoginController extends AbstractController
 
         // Sort institutions
         $institutionController = new InstitutionController();
-        $sorted_institutions = $institutionController->sort_institutions_position($institutions);
+        $sorted_institutions = $institutionController->sortInstPosition($institutions);
 
         // Create the WAYF form w/ institutions
         return $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions, 'service' => $institutionServices[0]->getService()->getName()]);

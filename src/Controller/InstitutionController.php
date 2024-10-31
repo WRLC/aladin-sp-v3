@@ -52,7 +52,7 @@ class InstitutionController extends AbstractController
         $auth->requireAdmin();  // Require admin access
 
         $institutions = $entityManager->getRepository(Institution::class)->findAll();  // Get all Institution entities
-        $institutions = $this->sort_institutions_position($institutions);  // Sort the Institution entities by index
+        $institutions = $this->sortInstPosition($institutions);  // Sort the Institution entities by index
 
         return $this->render('institution/index.html.twig', [  // Render the Institution list page
             'institutions' => $institutions,  // Pass the Institution entities to the template
@@ -84,7 +84,7 @@ class InstitutionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
             $institution = $form->getData();  // Get the form data
             $all_inst = $entityManager->getRepository(Institution::class)->findAll();  // Get all Institution entities
-            $max_position = $this->get_highest_position($all_inst);  // Get the highest position
+            $max_position = $this->getHighestPos($all_inst);  // Get the highest position
             $institution->setPosition($max_position + 1);  // Set the Institution position to the highest position + 1
             $entityManager->persist($institution);  // Persist the Institution entity
             $entityManager->flush();  // Flush the entity manager
@@ -321,7 +321,7 @@ class InstitutionController extends AbstractController
      *
      * @return array<int, Institution>
      */
-    public function sort_institutions_position(array $institutions): array
+    public function sortInstPosition(array $institutions): array
     {
         $ordered_institutions = [];
         foreach ($institutions as $institution) {
@@ -336,7 +336,7 @@ class InstitutionController extends AbstractController
      *
      * @return int
      */
-    public function get_highest_position(array $institutions): int
+    public function getHighestPos(array $institutions): int
     {
         if (empty($institutions)) {  // If the Institution array is empty
             return 0;  // Return 0
