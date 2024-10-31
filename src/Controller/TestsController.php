@@ -46,6 +46,8 @@ class TestsController extends AbstractController
      * @return Response
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/authN', name: 'auth_n_test')]
     public function authN(EntityManagerInterface $entityManager, Request $request): Response
@@ -64,7 +66,7 @@ class TestsController extends AbstractController
         $index = $request->get('institution');  // Get the institution index
 
         if (!$index) {  // If the institution is not provided..
-            if ($isAuth) {
+            if ($isAuth) {  // If the user is an admin
                 $form = $this->createForm(AuthnTestType::class, null, [
                     'institutions' => $entityManager->getRepository(Institution::class)->findAll(),
                 ]);  // Create the authentication form
@@ -79,10 +81,10 @@ class TestsController extends AbstractController
                 return $this->render('tests/authNForm.html.twig', [  // Render the authentication form
                     'form' => $form->createView(),  // Set the form
                 ]);
-            } else {
-                $error->setErrors(['No institution provided.']);  // Set the error
-                return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
             }
+            // If the user is not an admin
+            $error->setErrors(['No institution provided.']);  // Set the error
+            return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
         // INSTITUTION
@@ -212,10 +214,9 @@ class TestsController extends AbstractController
                     'institution' => $institutionService->getInstitution(),
                     'service' => $institutionService->getService(),
                 ]);
-            } else {
-                $error->setErrors(['No user provided.']);  // Set the error
-                return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
             }
+            $error->setErrors(['No user provided.']);  // Set the error
+            return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
         // AUTHORIZATION
@@ -226,10 +227,9 @@ class TestsController extends AbstractController
             if ($result['match'][0] == 'Alma user not found') {
                 $error->setErrors(['User "' . $user . '" not found for ' . $institution->getName()]);  // Set the error
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . 'User "' . $user . '" not found for ' . $institution->getName());
-            } else {
-                $error->setErrors($result['match']);
-                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
             }
+            $error->setErrors($result['match']);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
