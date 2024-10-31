@@ -25,6 +25,8 @@ class LogoutController extends AbstractController
      * @param Request $request
      *
      * @return Response
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/logout', name: 'logout')]
     public function logout(EntityManagerInterface $entityManager, Request $request): Response
@@ -57,7 +59,8 @@ class LogoutController extends AbstractController
         $cookieName = $cookiePrefix . $service->getSlug();
         $cookieDomain = $_ENV['COOKIE_DOMAIN'];
 
-        if ($cookieValue = $_COOKIE[$cookieName]) {  # Get the cookie value from the cookie
+        if (isset($_COOKIE[$cookieName])) {  # Get the cookie value from the cookie
+            $cookieValue = $_COOKIE[$cookieName];  # Get the cookie value from the cookie
             # Delete the cookie value from memcache
             $m = new Memcached();  # create memcache object
             $mServer = $_ENV['MEMCACHED_HOST'];  # Get the memcache server
