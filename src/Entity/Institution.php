@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace App\Entity;
 
@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,90 +21,50 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: 'name', message: 'This Institution name is already in use.')]
 class Institution
 {
-    /**
-     * The Institution ID (primary key).
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * The Institution index (the short form for use in the wayf menu).
-     */
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
     private ?string $inst_index = null;
 
-    /**
-     * The Institution name.
-     */
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
     private ?string $name = null;
 
-    /**
-     * WAYF label.
-     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $wayf_label = null;
 
-    /**
-     * The sorting order of the Institution in the wayf menu and other lists.
-     */
     #[Gedmo\SortablePosition]
     #[ORM\Column]
     private ?int $position = null;
 
-    /**
-     * The Institution entity ID, which must match an Institution entity ID in the metadata directory.
-     */
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
     private ?string $entity_id = null;
 
-    /**
-     * The Institution Alma location code.
-     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $alma_location_code = null;
 
-    /**
-     * The Institution user email attribute.
-     */
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
     private ?string $mail_attribute = null;
 
-    /**
-     * The Institution user (last) name attribute.
-     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name_attribute = null;
 
-    /**
-     * The Institution user first name attribute.
-     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $first_name_attribute = null;
 
-    /**
-     * The Institution user ID attribute.
-     */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $id_attribute = null;
 
-    /**
-     * The Institution special transform toggler
-     */
     #[ORM\Column(nullable: true)]
     private ?bool $special_transform = false;
 
-    /**
-     * The Institution services linked to this Institution.
-     *
-     * @var Collection<int, InstitutionService>
-     */
+    /** @var Collection<int, InstitutionService> */
     #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'Institution')]
     private Collection $InstitutionServices;
 
@@ -141,9 +100,10 @@ class Institution
      * Set the Institution index.
      *
      * @param string $index The Institution index.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setIndex(string $index): static
+    public function setIndex(string $index): Institution
     {
         $this->inst_index = $index;
 
@@ -164,9 +124,10 @@ class Institution
      * Set the Institution name.
      *
      * @param string $name The Institution name.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setName(string $name): static
+    public function setName(string $name): Institution
     {
         $this->name = $name;
 
@@ -187,9 +148,10 @@ class Institution
      * Set the Institution WAYF label.
      *
      * @param string|null $wayf_label The Institution WAYF label.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setWayfLabel(?string $wayf_label): static
+    public function setWayfLabel(?string $wayf_label): Institution
     {
         $this->wayf_label = $wayf_label;
 
@@ -210,9 +172,10 @@ class Institution
      * Set the Institution position.
      *
      * @param int $position The Institution position.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setPosition(int $position): static
+    public function setPosition(int $position): Institution
     {
         $this->position = $position;
 
@@ -233,9 +196,10 @@ class Institution
      * Set the Institution entity ID.
      *
      * @param string $entity_id The Institution entity ID.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setEntityId(string $entity_id): static
+    public function setEntityId(string $entity_id): Institution
     {
         $this->entity_id = $entity_id;
 
@@ -256,9 +220,10 @@ class Institution
      * Set the Institution Alma location code.
      *
      * @param string|null $alma_location_code The Institution Alma location code.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setAlmaLocationCode(?string $alma_location_code): static
+    public function setAlmaLocationCode(?string $alma_location_code): Institution
     {
         $this->alma_location_code = $alma_location_code;
 
@@ -279,9 +244,10 @@ class Institution
      * Set the Institution mail attribute.
      *
      * @param string $mail_attribute The Institution mail attribute.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setMailAttribute(string $mail_attribute): static
+    public function setMailAttribute(string $mail_attribute): Institution
     {
         $this->mail_attribute = $mail_attribute;
 
@@ -302,9 +268,10 @@ class Institution
      * Set the Institution name attribute.
      *
      * @param string|null $name_attribute The Institution name attribute.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setNameAttribute(?string $name_attribute): static
+    public function setNameAttribute(?string $name_attribute): Institution
     {
         $this->name_attribute = $name_attribute;
 
@@ -325,9 +292,10 @@ class Institution
      * Set the Institution first name attribute.
      *
      * @param string|null $first_name_attribute The Institution first name attribute.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setFirstNameAttribute(?string $first_name_attribute): static
+    public function setFirstNameAttribute(?string $first_name_attribute): Institution
     {
         $this->first_name_attribute = $first_name_attribute;
 
@@ -348,9 +316,10 @@ class Institution
      * Set the Institution user ID attribute.
      *
      * @param string|null $id_attribute The Institution ID attribute.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function setIdAttribute(?string $id_attribute): static
+    public function setIdAttribute(?string $id_attribute): Institution
     {
         $this->id_attribute = $id_attribute;
 
@@ -359,6 +328,8 @@ class Institution
 
     /**
      * Get the Special Transform toggler state
+     *
+     * @return bool|null The Special Transform toggler state
      */
     public function getSpecialTransform(): ?bool
     {
@@ -367,8 +338,12 @@ class Institution
 
     /**
      * Set the Special Transform toggler state
+     *
+     * @param bool|null $special_transform The Special Transform toggler state
+     *
+     * @return $this The Institution entity
      */
-    public function setSpecialTransform(?bool $special_transform): static
+    public function setSpecialTransform(?bool $special_transform): Institution
     {
         $this->special_transform = $special_transform;
 
@@ -389,9 +364,10 @@ class Institution
      * Add an Institution service to this Institution.
      *
      * @param InstitutionService $InstitutionService The Institution service to add.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function addInstitutionService(InstitutionService $InstitutionService): static
+    public function addInstitutionService(InstitutionService $InstitutionService): Institution
     {
         if (!$this->InstitutionServices->contains($InstitutionService)) {
             $this->InstitutionServices->add($InstitutionService);
@@ -405,9 +381,10 @@ class Institution
      * Remove an Institution service from this Institution.
      *
      * @param InstitutionService $InstitutionService The Institution service to remove.
-     * @return Institution The Institution entity.
+     *
+     * @return $this The Institution entity.
      */
-    public function removeInstitutionService(InstitutionService $InstitutionService): static
+    public function removeInstitutionService(InstitutionService $InstitutionService): Institution
     {
         if ($this->InstitutionServices->removeElement($InstitutionService)) {
             // set the owning side to null (unless already changed)
