@@ -21,6 +21,8 @@ class AuthnController extends AbstractController
      * @return array<string, mixed>|Exception
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function authnUser(Institution $institution): array | Exception
     {
