@@ -26,7 +26,7 @@ class AuthzController extends AbstractController
      * @param InstitutionService $institutionService
      * @param string $user
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
      */
@@ -140,7 +140,7 @@ class AuthzController extends AbstractController
      * @param string $user
      * @param string $almaCode
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
      */
@@ -158,7 +158,7 @@ class AuthzController extends AbstractController
      *
      * @param string $endpoint
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
      */
@@ -186,7 +186,7 @@ class AuthzController extends AbstractController
      *
      * @param InstitutionService $institutionService
      *
-     * @return array
+     * @return array<string>
      */
     private function getAuthzMembers(InstitutionService $institutionService): array
     {
@@ -203,7 +203,7 @@ class AuthzController extends AbstractController
      *
      * @param Authz $authz
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function returnAuthz(Authz $authz): array
     {
