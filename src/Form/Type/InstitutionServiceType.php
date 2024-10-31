@@ -13,8 +13,19 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class Institution
+ */
 class InstitutionServiceType extends AbstractType
 {
+    /**
+     * Build the form
+     *
+     * @param FormBuilderInterface $builder
+     * @param array<string, mixed> $options
+     *
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($builder->getData()->getAuthzType() == 'user_id') {
@@ -110,6 +121,14 @@ class InstitutionServiceType extends AbstractType
             ->add('save', SubmitType::class, ['label' => $label, 'attr' => ['class' => 'btn btn-primary']])
         ;
     }
+
+    /**
+     * Configure the form options
+     *
+     * @param OptionsResolver $resolver
+     *
+     * @return void
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
