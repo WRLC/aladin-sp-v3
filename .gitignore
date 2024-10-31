@@ -1,6 +1,5 @@
 
 ###> symfony/framework-bundle ###
-.env
 /.env.test
 /.env.local
 /.env.local.php
@@ -45,3 +44,7 @@ aladin-config/ssh/id_rsa.pub
 ###> PhpStorm IDE ###
 .idea/
 ###< PhpStorm IDE ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

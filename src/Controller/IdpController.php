@@ -1,5 +1,6 @@
-<?php /** @noinspection PhpUnused */
+<?php
 
+/** @noinspection PhpUnused */
 /** @noinspection PhpUnusedParameterInspection */
 
 namespace App\Controller;
@@ -18,6 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Class IdpController
+ */
 class IdpController extends AbstractController
 {
     /**
@@ -63,7 +67,7 @@ class IdpController extends AbstractController
 
         if (!$entityid) {  // If the entity ID is not set
             $error = new AladinError('Idp Error', 'Entity ID is missing');  // Throw an exception
-            return $this->render('error/error.html.twig', [
+            return $this->render('error.html.twig', [
                 'error' => $error,
             ]);
         }
@@ -178,7 +182,7 @@ class IdpController extends AbstractController
                     $metadata = [];
                     require_once $filename;  // Require the saml20-idp-remote.php file
                     $set = basename($filename, ".php");  // Get the set name
-                    foreach ($metadata as $key => $value) {
+                    foreach ($metadata as $key => $value) {  /** @phpstan-ignore foreach.emptyArray */
                         $metadataStorageHandler->addEntry($key, $set, $value);  // Add the metadata entry
                     }
                 }

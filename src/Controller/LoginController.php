@@ -20,12 +20,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * Class LoginController
+ */
 class LoginController extends AbstractController
 {
 
     private LoggerInterface $aladinLogger;
     private LoggerInterface $aladinErrorLogger;
 
+    /**
+     * LoginController constructor.
+     *
+     * @param LoggerInterface $aladinLogger
+     * @param LoggerInterface $aladinErrorLogger
+     */
     public function __construct(LoggerInterface $aladinLogger, LoggerInterface $aladinErrorLogger)
     {
         $this->aladinLogger = $aladinLogger;
@@ -272,7 +281,7 @@ class LoginController extends AbstractController
     /**
      * Generate the WAYG form
      *
-     * @param array $institutionServices
+     * @param array<InstitutionService> $institutionServices
      *
      * @return FormInterface
      */
@@ -297,7 +306,7 @@ class LoginController extends AbstractController
     /**
      * Generate the WAYF form
      *
-     * @param array $institutionServices
+     * @param array<InstitutionService> $institutionServices
      *
      * @return FormInterface
      */
@@ -321,7 +330,7 @@ class LoginController extends AbstractController
      * Get the institution user ID
      *
      * @param InstitutionService $institutionService
-     * @param array $user_attributes
+     * @param array<string, mixed> $user_attributes
      *
      * @return string|Exception|null
      */
@@ -341,7 +350,7 @@ class LoginController extends AbstractController
      * Create data string with session information
      *
      * @param InstitutionService $institutionService
-     * @param array $user_attributes
+     * @param array<string, mixed> $user_attributes
      *
      * @return string|Exception
      */
@@ -370,6 +379,8 @@ class LoginController extends AbstractController
         $last_name = $user_attributes[$institutionService->getInstitution()->getNameAttribute()][0] ?? '';
         $first_name = $user_attributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
 
+        $expTime = (string) (time()+(86400*14));  // Set the expiration time
+
         $data = 'UserName=' . strtolower($uid) . "\r\n";
         $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";
         $data .= 'University=' . $institutionService->getInstitution()->getIndex() . "\r\n";
@@ -377,7 +388,7 @@ class LoginController extends AbstractController
         $data .= 'GivenName=' . $first_name . "\r\n";
         $data .= 'Name=' . $last_name . "\r\n";
         $data .= 'RemoteIP=' . $_SERVER['REMOTE_ADDR'] . "\r\n";
-        $data .= 'Expiration=' . time()+(86400*14) . "\r\n";
+        $data .= 'Expiration=' . $expTime . "\r\n";
 
         return $data;
     }

@@ -1,8 +1,9 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Memcached;
 use SimpleSAML\Error\Exception;
 use SimpleSAML\Utils\Auth;
@@ -12,25 +13,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Class SessionsController
+ */
 class SessionsController extends AbstractController
 {
     /**
      * Display all Aladin-SP sessions
-     *
-     * @param EntityManagerInterface $entityManager
      *
      * @return Response
      *
      * @throws Exception
      */
     #[Route('/sessions', name: 'sessions')]
-    public function memcached(EntityManagerInterface $entityManager): Response
+    public function memcached(): Response
     {
         // Check if user is admin
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $m = $this->createMemcachedConnection($entityManager);  // Create memcached connection
+        $m = $this->createMemcachedConnection();  // Create memcached connection
         $memcached = $this->getOrderedAladin($m);  // Order memcached data by expiration date
 
         // Render the sessions page
@@ -40,7 +42,6 @@ class SessionsController extends AbstractController
     /**
      * Clear all Aladin-SP sessions
      *
-     * @param EntityManagerInterface $entityManager
      * @param Request $request
      *
      * @return Response
@@ -48,7 +49,7 @@ class SessionsController extends AbstractController
      * @throws Exception
      */
     #[Route('/sessions/clear', name: 'sessions_clear')]
-    public function memcachedClear(EntityManagerInterface $entityManager, Request $request): Response
+    public function memcachedClear(Request $request): Response
     {
         // Check if user is admin
         $auth = new Auth();
@@ -66,7 +67,7 @@ class SessionsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {  // If form is submitted and valid
 
-            $m = $this->createMemcachedConnection($entityManager);  // Create memcached connection
+            $m = $this->createMemcachedConnection();  // Create memcached connection
             $memcached = $this->getOrderedAladin($m);  // Filter out non-Aladin-SP sessions
 
             foreach ($memcached as $key => $item) {  // Loop through all items
@@ -85,7 +86,6 @@ class SessionsController extends AbstractController
     /**
      * Clear a specific Aladin-SP session
      *
-     * @param EntityManagerInterface $entityManager
      * @param Request $request
      * @param string $key
      * @param string|null $index
@@ -97,13 +97,13 @@ class SessionsController extends AbstractController
     #[Route('/sessions/clear/{key}', name: 'session_clear')]
     #[Route('/institution/{index}/sessions/clear/{key}/', name: 'institution_session_clear')]
     #[Route('/service/{slug}/sessions/clear/{key}/', name: 'service_session_clear')]
-    public function sessionClear(EntityManagerInterface $entityManager, Request $request, string $key, string $index = null, string $slug = null): Response
+    public function sessionClear(Request $request, string $key, string $index = null, string $slug = null): Response
     {
         // Check if user is admin
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $m = $this->createMemcachedConnection($entityManager); // Create memcached connection
+        $m = $this->createMemcachedConnection(); // Create memcached connection
         $m->delete($key);  // Delete the session
 
         $this->addFlash('success', 'Session ' . $key . ' cleared');  // Add success message
@@ -143,7 +143,7 @@ class SessionsController extends AbstractController
      *
      * @param Memcached $m
      *
-     * @return array
+     * @return array<string, mixed>
      *
      * @throws Exception
      */
@@ -162,11 +162,11 @@ class SessionsController extends AbstractController
      *
      * @param Memcached $m
      *
-     * @return array
+     * @return array<string>|Exception
      *
      * @throws Exception
      */
-    private function getAllKeys(Memcached $m): array
+    private function getAllKeys(Memcached $m): array | Exception
     {
         $host = $m->getServerList()[0]['host'];
         $port = $m->getServerList()[0]['port'];
@@ -213,7 +213,7 @@ class SessionsController extends AbstractController
         }
 
         if (fclose($sock) === false) {
-            throw new Exception('Error closing socket');
+            return new Exception('Error closing socket');
         }
 
         return $allKeys;
@@ -223,9 +223,9 @@ class SessionsController extends AbstractController
      * Get all memcached data for the given keys
      *
      * @param Memcached $m
-     * @param array $keys
+     * @param array<string> $keys
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function getAllMemcached(Memcached $m, Array $keys): array
     {
@@ -249,9 +249,9 @@ class SessionsController extends AbstractController
     /**
      * Order memcached data by expiration date
      *
-     * @param array $memcached
+     * @param array<string, mixed> $memcached
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function orderMemcachedData(array $memcached): array
     {
@@ -267,9 +267,9 @@ class SessionsController extends AbstractController
     /**
      * Filter out non-Aladin-SP sessions
      *
-     * @param array $memcached
+     * @param array<string, mixed> $memcached
      *
-     * @return array
+     * @return array<string, mixed>
      */
     private function filterAladin(array $memcached): array
     {

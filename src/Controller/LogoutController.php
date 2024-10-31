@@ -13,8 +13,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Class LogoutController
+ */
 class LogoutController extends AbstractController
 {
+    /**
+     * Logout
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return Response
+     */
     #[Route('/logout', name: 'logout')]
     public function logout(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -58,8 +69,8 @@ class LogoutController extends AbstractController
 
         try {
             $session = Session::getSessionFromRequest();
-        } /** @noinspection PhpUnusedLocalVariableInspection */
-        catch (Exception $e) {  # If there's an exception, there's no session to destroy...
+        }
+        catch (Exception) {  # If there's an exception, there's no session to destroy...
             return $this->redirect($serviceUrl);  # ...so just redirect to the service URL
         }
         $session->cleanup();  # Cleanup the session

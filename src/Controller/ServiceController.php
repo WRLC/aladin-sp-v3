@@ -1,7 +1,10 @@
 <?php
 
+/** @noinspection PhpUnused */
+
 namespace App\Controller;
 
+use App\Entity\InstitutionService;
 use App\Entity\Service;
 use App\Form\Type\EntityDeleteType;
 use App\Form\Type\ServiceType;
@@ -13,6 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Class ServiceController
+ */
 class ServiceController extends AbstractController
 {
     /**
@@ -97,7 +103,7 @@ class ServiceController extends AbstractController
         $institutionServices = $service->getServiceInstitutions();  // Get the InstitutionServices for the Service
 
         $sessionController = new SessionsController();  // Create a new SessionsController
-        $m = $sessionController->createMemcachedConnection($entityManager);  // Create a memcached connection
+        $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
         $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
 
         $filteredSessions = [];  // Initialize the filtered sessions array
@@ -197,9 +203,9 @@ class ServiceController extends AbstractController
     /**
      * Sort Service entities by slug
      *
-     * @param array $services
+     * @param array<Service> $services
      *
-     * @return array
+     * @return array<string, Service>
      */
     public function alpha_services_slug(array $services): array
     {
@@ -214,10 +220,9 @@ class ServiceController extends AbstractController
     /**
      * Sort InstitutionServices by institution sort order
      *
-     * @param array $institutionServices
+     * @param array<InstitutionService> $institutionServices
      *
-     * @return array
-     * @noinspection PhpUnused
+     * @return array <int, InstitutionService>
      */
     public function alpha_institution_services(array $institutionServices): array
     {

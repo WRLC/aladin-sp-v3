@@ -7,8 +7,10 @@ use Exception;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class AuthnController
+ */
 class AuthnController extends AbstractController
 {
     /**
@@ -16,7 +18,7 @@ class AuthnController extends AbstractController
      *
      * @param Institution $institution
      *
-     * @return array|Response
+     * @return array<string, mixed>|Exception
      *
      * @throws Exception
      */

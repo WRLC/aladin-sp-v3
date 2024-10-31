@@ -20,10 +20,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ *
+ */
 class TestsController extends AbstractController
 {
     private LoggerInterface $aladinErrorLogger;
 
+    /**
+     * TestsController constructor.
+     *
+     * @param LoggerInterface $aladinErrorLogger
+     */
     public function __construct(LoggerInterface $aladinErrorLogger)
     {
         $this->aladinErrorLogger = $aladinErrorLogger;
