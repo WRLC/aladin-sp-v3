@@ -116,9 +116,10 @@ class AladinError
      * Set the log
      *
      * @param bool $log
+     *
      * @return $this
      */
-    public function setLog(bool $log): static
+    public function setLog(bool $log): AladinError
     {
         $this->log = $log;
 
