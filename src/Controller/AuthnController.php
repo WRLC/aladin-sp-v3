@@ -35,5 +35,4 @@ class AuthnController extends AbstractController
         }
         return $auth_source->getAttributes();  // Return the user attributes
     }
-
 }

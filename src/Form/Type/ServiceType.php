@@ -43,7 +43,7 @@ class ServiceType extends AbstractType
                 'required' => true,
                 ])
             ->add('url', UrlType::class, [
-                'attr' =>['class' => 'form-control'],
+                'attr' => ['class' => 'form-control'],
                 'label' => 'URL',
                 'label_attr' => ['class' => 'form-label'],
                 'help' => 'Base URL of the service (e.g., "https://service.example.com"). On login, the user will be redirected to this URL (plus any callback path set below).',

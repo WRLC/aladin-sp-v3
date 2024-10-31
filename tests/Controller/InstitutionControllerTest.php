@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class InstitutionControllerTest extends WebTestCase
 {
-
     public function testSomething(): void
     {
         Configuration::setConfigDir(getenv('ROOT_DIR') . getenv('CONFIG_DIR'));

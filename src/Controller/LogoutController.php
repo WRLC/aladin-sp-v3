@@ -69,8 +69,7 @@ class LogoutController extends AbstractController
 
         try {
             $session = Session::getSessionFromRequest();
-        }
-        catch (Exception) {  # If there's an exception, there's no session to destroy...
+        } catch (Exception) {  # If there's an exception, there's no session to destroy...
             return $this->redirect($serviceUrl);  # ...so just redirect to the service URL
         }
         $session->cleanup();  # Cleanup the session

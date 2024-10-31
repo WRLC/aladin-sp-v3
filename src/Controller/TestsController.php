@@ -132,7 +132,7 @@ class TestsController extends AbstractController
         $index = $request->get('institution');  // Get the institution index
 
         if (!$index) {  // If the institution is not provided
-            $this->addFlash('error', 'No institution specified' );  // Add a flash message
+            $this->addFlash('error', 'No institution specified');  // Add a flash message
             return $this->redirectToRoute('auth_n_test');  // Redirect to the authentication test
         }
 
@@ -226,11 +226,9 @@ class TestsController extends AbstractController
             if ($result['match'][0] == 'Alma user not found') {
                 $error->setErrors(['User "' . $user . '" not found for ' . $institution->getName()]);  // Set the error
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . 'User "' . $user . '" not found for ' . $institution->getName());
-            }
-            else {
+            } else {
                 $error->setErrors($result['match']);
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
-
             }
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }

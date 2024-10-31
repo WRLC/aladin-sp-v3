@@ -49,7 +49,6 @@ class authzTestType extends AbstractType
             ])
             ->add('submit', SubmitType::class, ['label' => 'Test', 'attr' => ['class' => 'btn btn-primary']])
         ;
-
     }
 
     /**
@@ -66,5 +65,4 @@ class authzTestType extends AbstractType
             'service' => [],
         ]);
     }
-
 }

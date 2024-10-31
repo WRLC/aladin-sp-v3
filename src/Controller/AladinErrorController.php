@@ -25,5 +25,4 @@ class AladinErrorController extends AbstractController
             'errors' => $error->getErrors(),
         ];
     }
-
 }

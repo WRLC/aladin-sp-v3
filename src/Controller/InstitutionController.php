@@ -134,7 +134,8 @@ class InstitutionController extends AbstractController
         foreach ($institutionServices as $institutionService) {  // For each Institution service
             $serviceSlugs[] = $institutionService->getService()->getSlug();  // Add the service slug to the service slugs array
         }
-        $services = array_filter($services, function ($service) use ($serviceSlugs) {  // Filter the services
+        $services = array_filter($services, function ($service) use ($serviceSlugs) {
+  // Filter the services
             return !in_array($service->getSlug(), $serviceSlugs);  // Return the services not in the service slugs array
         });
 

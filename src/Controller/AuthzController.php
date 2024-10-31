@@ -65,13 +65,13 @@ class AuthzController extends AbstractController
 
         // If there's an error in the Alma attributes...
         if (key_exists('error', $attributes)) {
-
             // Go ahead and set the error message based on user ID sent by SSO
             $authz->setMatch(['Alma user not found', $attributes['error']]);
 
             // But first retry the call with all lowercase user ID
             $attributes = $this->get_alma_attributes(
-                strtolower($user), $institutionService->getInstitution()->getAlmaLocationCode()
+                strtolower($user),
+                $institutionService->getInstitution()->getAlmaLocationCode()
             );
         }
 
@@ -95,10 +95,8 @@ class AuthzController extends AbstractController
             // Iterate through the user roles to check for a match
             foreach ($userRoles as $userRole) {  // For each user role...
                 if ($userRole['status']['value'] == 'ACTIVE') {  // Only look at active roles
-
                     // If the user role is in the authorized members list...
                     if (in_array($userRole['role_type']['value'], $authzMembers)) {
-
                         // ...add the role to the matching roles list
                         $matchingRoles[] = $userRole['role_type']['value'];
                     }
@@ -169,12 +167,11 @@ class AuthzController extends AbstractController
 
         try {
             return $response->toArray();  // Return the response as an array
-        }
-        catch (
-            ClientExceptionInterface|
-            DecodingExceptionInterface|
-            RedirectionExceptionInterface|
-            ServerExceptionInterface|
+        } catch (
+            ClientExceptionInterface |
+            DecodingExceptionInterface |
+            RedirectionExceptionInterface |
+            ServerExceptionInterface |
             TransportExceptionInterface $e
         ) {
             return ['error' => $e->getMessage()];
