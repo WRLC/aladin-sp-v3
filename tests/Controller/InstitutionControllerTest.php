@@ -5,8 +5,16 @@ namespace App\Tests\Controller;
 use SimpleSAML\Configuration;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class InstitutionControllerTest
+ */
 class InstitutionControllerTest extends WebTestCase
 {
+    /**
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
     public function testSomething(): void
     {
         Configuration::setConfigDir(getenv('ROOT_DIR') . getenv('CONFIG_DIR'));
