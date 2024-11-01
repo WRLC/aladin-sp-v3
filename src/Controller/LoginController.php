@@ -32,6 +32,14 @@ class LoginController extends AbstractController
 
     private string $authzUrl;
 
+    private string $cookiePrefix;
+
+    private string $cookieDomain;
+
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
     /**
      * LoginController constructor.
      *
@@ -39,17 +47,29 @@ class LoginController extends AbstractController
      * @param LoggerInterface $aladinErrorLogger
      * @param string $svcProvider
      * @param string $authzUrl
+     * @param string $cookiePrefix
+     * @param string $cookieDomain
+     * @param string $memcachedHost
+     * @param string $memcachedPort
      */
     public function __construct(
         LoggerInterface $aladinLogger,
         LoggerInterface $aladinErrorLogger,
         string $svcProvider,
-        string $authzUrl
+        string $authzUrl,
+        string $cookiePrefix,
+        string $cookieDomain,
+        string $memcachedHost,
+        string $memcachedPort
     ) {
         $this->aladinLogger = $aladinLogger;
         $this->aladinErrorLogger = $aladinErrorLogger;
         $this->svcProvider = $svcProvider;
         $this->authzUrl = $authzUrl;
+        $this->cookiePrefix = $cookiePrefix;
+        $this->cookieDomain = $cookieDomain;
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
     }
 
     /**
@@ -67,9 +87,9 @@ class LoginController extends AbstractController
     public function login(EntityManagerInterface $entityManager, Request $request): Response
     {
         // Error handling
-        $error_intro = 'Login Error:';
+        $errorIntro = 'Login Error:';
         $errorController = new AladinErrorController();
-        $error = new AladinError('authorization', $error_intro);
+        $error = new AladinError('authorization', $errorIntro);
 
 
         // Service slug is a required parameter
@@ -165,21 +185,21 @@ class LoginController extends AbstractController
 
         // Authentication
         $authnController = new AuthnController($this->svcProvider);  // Create a new AuthnController
-        $user_attributes = $authnController->authnUser($institution);  // Authenticate the user
+        $userAttributes = $authnController->authnUser($institution);  // Authenticate the user
 
         // If authentication fails, return an error page
-        if ($user_attributes instanceof Exception) {
+        if ($userAttributes instanceof Exception) {
             $error->setIntro('Authentication failed');
-            $error->setErrors([$user_attributes->getMessage()]);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $user_attributes->getMessage());
+            $error->setErrors([$userAttributes->getMessage()]);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $userAttributes->getMessage());
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
         // Get the user ID attribute
-        $user_id = $this->getInstUid($institutionService, $user_attributes);
+        $userId = $this->getInstUid($institutionService, $userAttributes);
 
         // If user id is null, there's a problem with attribute names
-        if ($user_id == null) {
+        if ($userId == null) {
             $error->setIntro('No user ID attribute found');
             $error->setErrors(['The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.']);
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.');
@@ -191,62 +211,58 @@ class LoginController extends AbstractController
 
         // If the inst requires a special transform...
         if ($transform) {
-            $split_email = explode('@', $user_id);  // split the user id at the '@'
-            $user_id = $split_email[0];  // set the user id to the first part
+            $splitEmail = explode('@', $userId);  // split the user id at the '@'
+            $userId = $splitEmail[0];  // set the user id to the first part
         }
 
         // Log the authentication result
-        $this->aladinLogger->debug('Authenticated User: ' . $user_id . ' for ' . $institution->getName());
+        $this->aladinLogger->debug('Authenticated User: ' . $userId . ' for ' . $institution->getName());
 
         // If the ID attribute is not found, show an error
-        if ($user_id instanceof Exception) {
+        if ($userId instanceof Exception) {
             $error->setIntro(
                 'Invalid User ID attribute <pre>' . $institutionService->getIdAttribute() . '</pre> for ' .
                 $institution->getName()
             );
-            $error->setErrors([$user_id->getMessage()]);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $user_id->getMessage());
+            $error->setErrors([$userId->getMessage()]);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $userId->getMessage());
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
         // Authorization
         $authzController = new AuthzController($this->authzUrl);  // Create a new AuthzController
-        $result = $authzController->authz($institutionService, $user_id);  // Authorize the user
+        $result = $authzController->authz($institutionService, $userId);  // Authorize the user
 
         // If the user is not authorized, show an error
         if (!$result['authorized']) {
             $error->setIntro(
-                $institution->getName() . ' user ' . $user_id . ' not authorized for ' . $service->getName()
+                $institution->getName() . ' user ' . $userId . ' not authorized for ' . $service->getName()
             );
             $error->setErrors($result['match']);
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
             return $this->render('error.html.twig', $errorController->renderError($error));
         }
 
-        $this->aladinLogger->info('Authorized User: ' . $user_id . '@' . $index . ' for ' . $service->getName());
+        $this->aladinLogger->info('Authorized User: ' . $userId . '@' . $index . ' for ' . $service->getName());
 
         # generate random session id for memcached key
         $randomUtils = new Random();
         $sessionID = $randomUtils->generateID();
 
-        $cookie_prefix = $_ENV['COOKIE_PREFIX'];  // Get the cookie prefix
-
-        $cookie_name = $cookie_prefix . $service->getSlug();  // Create the cookie name
+        $cookieName = $this->cookiePrefix . $service->getSlug();  // Create the cookie name
 
         // Set the cookie
         if (
-            setcookie($cookie_name, $sessionID, [
+            setcookie($cookieName, $sessionID, [
             'expires' => time() + (86400 * 14),
             'path' => '/',
-            'domain' => $_ENV['COOKIE_DOMAIN'],
+            'domain' => $this->cookieDomain,
             ])
         ) {
             // Set the session data
             $m = new Memcached();  // Create a new Memcached object
-            $mServer = $_ENV['MEMCACHED_HOST'];  // Get the Memcached host
-            $mPort = $_ENV['MEMCACHED_PORT'];  // Get the Memcached port
-            $m->addServer($mServer, intval($mPort));  // Add the server
-            $data = $this->setDataString($institutionService, $user_attributes);  // Create the data string
+            $m->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the server
+            $data = $this->setDataString($institutionService, $userAttributes, $request);  // Create the data string
 
             // If the data string is an error, show an error page
             if ($data instanceof Exception) {
@@ -271,17 +287,17 @@ class LoginController extends AbstractController
 
             $this->aladinLogger->debug('Memcached Session Data: ' . $jdata);
 
-            $this->aladinLogger->debug('Set cookie ' . $cookie_name . ': ' . $sessionID . ' for ' . $user_id . '@' . $index);
+            $this->aladinLogger->debug('Set cookie ' . $cookieName . ': ' . $sessionID . ' for ' . $userId . '@' . $index);
 
             // Redirect to the service
-            $this->aladinLogger->info('Redirecting ' . $user_id . '@' . $index . ' to ' . $service->getUrl() . $service->getCallbackPath());
+            $this->aladinLogger->info('Redirecting ' . $userId . '@' . $index . ' to ' . $service->getUrl() . $service->getCallbackPath());
             return $this->redirect($service->getUrl() . $service->getCallbackPath());
         }
 
         // If the cookie is not set, show an error page
         $error->setIntro('Failed to set cookie');
-        $error->setErrors(['Cookie name: ' . $cookie_name]);
-        $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookie_name);
+        $error->setErrors(['Cookie name: ' . $cookieName]);
+        $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookieName);
         return $this->render('error.html.twig', $errorController->renderError($error));
     }
 
@@ -296,18 +312,18 @@ class LoginController extends AbstractController
     {
         // Get the services
         $services = [];  // Initialize the services array
-        foreach ($institutionServices as $inst_service) {  // For each institutional service...
-            $services[] = $inst_service->getService();  // ...add the service to the services array
+        foreach ($institutionServices as $instSvc) {  // For each institutional service...
+            $services[] = $instSvc->getService();  // ...add the service to the services array
         }
 
         // Sort services
-        $alpha_services = [];
+        $alphaSvcs = [];
         foreach ($services as $service) {
-            $alpha_services[$service->getName()] = $service;
+            $alphaSvcs[$service->getName()] = $service;
         }
-        ksort($alpha_services);
+        ksort($alphaSvcs);
 
-        return $this->createForm(WaygType::class, null, ['services' => $alpha_services, 'institution' => $institutionServices[0]->getInstitution()->getName()]);
+        return $this->createForm(WaygType::class, null, ['services' => $alphaSvcs, 'institution' => $institutionServices[0]->getInstitution()->getName()]);
     }
 
     /**
@@ -321,47 +337,51 @@ class LoginController extends AbstractController
     {
         // Get the institutions
         $institutions = [];  // Initialize the institutions array
-        foreach ($institutionServices as $inst_service) {  // For each institutional service...
-            $institutions[] = $inst_service->getInstitution();  // ...add the institution to the institutions array
+        foreach ($institutionServices as $instSvc) {  // For each institutional service...
+            $institutions[] = $instSvc->getInstitution();  // ...add the institution to the institutions array
         }
 
         // Sort institutions
         $institutionController = new InstitutionController();
-        $sorted_institutions = $institutionController->sortInstPosition($institutions);
+        $sortedInsts = $institutionController->sortInstPosition($institutions);
 
         // Create the WAYF form w/ institutions
-        return $this->createForm(WayfType::class, null, ['institutions' => $sorted_institutions, 'service' => $institutionServices[0]->getService()->getName()]);
+        return $this->createForm(WayfType::class, null, ['institutions' => $sortedInsts, 'service' => $institutionServices[0]->getService()->getName()]);
     }
 
     /**
      * Get the institution user ID
      *
      * @param InstitutionService $institutionService
-     * @param array<string, mixed> $user_attributes
+     * @param array<string, mixed> $userAttributes
      *
      * @return string|Exception|null
      */
-    private function getInstUid(InstitutionService $institutionService, array $user_attributes): string | Exception | null
+    private function getInstUid(InstitutionService $institutionService, array $userAttributes): string | Exception | null
     {
         try {
             // Get the user ID attribute
-            $user_id = $user_attributes[$institutionService->getInstitution()->getIdAttribute()][0];
+            $userId = $userAttributes[$institutionService->getInstitution()->getIdAttribute()][0];
         } catch (Exception $e) {
             return $e;  // Errors
         }
-        return $user_id;
+        return $userId;
     }
 
     /**
      * Create data string with session information
      *
      * @param InstitutionService $institutionService
-     * @param array<string, mixed> $user_attributes
+     * @param array<string, mixed> $userAttributes
+     * @param Request $request
      *
      * @return string|Exception
      */
-    private function setDataString(InstitutionService $institutionService, array $user_attributes): string | Exception
-    {
+    private function setDataString(
+        InstitutionService $institutionService,
+        array $userAttributes,
+        Request $request
+    ): string | Exception {
         $instSvcIdAttr = $institutionService->getIdAttribute();  // Get the institution service ID attribute
 
         // Get the method to call
@@ -371,21 +391,21 @@ class LoginController extends AbstractController
             $instSvcIdAttr
         )));
 
-        $uid = $user_attributes[$institutionService->getInstitution()->$method()][0] ?? '';
+        $uid = $userAttributes[$institutionService->getInstitution()->$method()][0] ?? '';
 
         if ($uid == '') {
             return new Exception('User ID for ' . $institutionService->getService()->getName() . ' not found');
         }
 
-        $email = $user_attributes[$institutionService->getInstitution()->getMailAttribute()][0] ?? '';
+        $email = $userAttributes[$institutionService->getInstitution()->getMailAttribute()][0] ?? '';
 
         if ($email == '') {
             return new Exception('Email address for ' . $institutionService->getService()->getName() . ' not found');
         }
 
         // Set optional name attributes
-        $last_name = $user_attributes[$institutionService->getInstitution()->getNameAttribute()][0] ?? '';
-        $first_name = $user_attributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
+        $lastName = $userAttributes[$institutionService->getInstitution()->getNameAttribute()][0] ?? '';
+        $firstName = $userAttributes[$institutionService->getInstitution()->getFirstNameAttribute()][0] ?? '';
 
         $expTime = (string) (time() + (86400 * 14));  // Set the expiration time
 
@@ -393,9 +413,9 @@ class LoginController extends AbstractController
         $data .= 'Service=' . $institutionService->getService()->getSlug() . "\r\n";
         $data .= 'University=' . $institutionService->getInstitution()->getIndex() . "\r\n";
         $data .= 'Email=' . strtolower($email) . "\r\n";
-        $data .= 'GivenName=' . $first_name . "\r\n";
-        $data .= 'Name=' . $last_name . "\r\n";
-        $data .= 'RemoteIP=' . $_SERVER['REMOTE_ADDR'] . "\r\n";
+        $data .= 'GivenName=' . $firstName . "\r\n";
+        $data .= 'Name=' . $lastName . "\r\n";
+        $data .= 'RemoteIP=' . $request->getClientIp() . "\r\n";
         $data .= 'Expiration=' . $expTime . "\r\n";
 
         return $data;

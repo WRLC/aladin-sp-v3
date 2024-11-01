@@ -5,7 +5,11 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.svc_provider: '%env(SERVICE_PROVIDER_NAME)%'
-    app.authz_url: '%env(PATRON_AUTHORIZATION_URL')%'
+    app.authz_url: '%env(PATRON_AUTHORIZATION_URL)%'
+    app.cookie_prefix: '%env(COOKIE_PREFIX)%'
+    app.cookie_domain: '%env(COOKIE_DOMAIN)%'
+    app.memcached_host: '%env(MEMCACHED_HOST)%'
+    app.memcached_port: '%env(MEMCACHED_PORT)%'
 
 services:
     # default configuration for services in *this* file
@@ -15,6 +19,10 @@ services:
         bind:
             $svcProvider: '%app.svc_provider%'
             $authzUrl: '%app.authz_url%'
+            $cookiePrefix: '%app.cookie_prefix%'
+            $cookieDomain: '%app.cookie_domain%'
+            $memcachedHost: '%app.memcached_host%'
+            $memcachedPort: '%app.memcached_port%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
