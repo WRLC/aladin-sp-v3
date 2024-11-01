@@ -39,7 +39,7 @@ class AuthzController extends AbstractController
 
         // NONE $authzType (Just make sure they're authenticated, which they already are)
         if ($authzType == 'none') {  // If the authorization field type is 'none'...
-            $authz->setAuthorized(true);  // ...grant access
+            $authz->setAuthorized();  // ...grant access
             return $this->returnAuthz($authz);
         }
 
@@ -55,7 +55,7 @@ class AuthzController extends AbstractController
         // IDP USER ID $authzType (only users with matching User ID)
         if ($authzType == 'user_id') {
             if (in_array($user, $authzMembers)) {  // If the user is in the authorized members list...
-                $authz->setAuthorized(true);  // ...grant access
+                $authz->setAuthorized();  // ...grant access
             }
             return $this->returnAuthz($authz);
         }
@@ -77,13 +77,13 @@ class AuthzController extends AbstractController
 
         // If there's still an error, then return the error
         if (key_exists('error', $attributes)) {
-            $authz->setErrors(true);  // Set the error flag
+            $authz->setErrors();  // Set the error flag
             return $this->returnAuthz($authz);  // Return an error
         }
 
         // ANY ALMA $authz_type (just make sure there's a matching Alma user)
         if ($authzType == 'any_alma') {  // If the authorization field type is 'none'...
-            $authz->setAuthorized(true);
+            $authz->setAuthorized();
             return $this->returnAuthz($authz);
         }
 
@@ -109,7 +109,7 @@ class AuthzController extends AbstractController
             }
 
             // If we're still here (phew!), we had at least one matching role...
-            $authz->setAuthorized(true);  // ...so grant access
+            $authz->setAuthorized();  // ...so grant access
             $authz->setMatch($matchingRoles);  // ...set the matching roles
             return $this->returnAuthz($authz);  // ...and return the authorization
         }
@@ -117,7 +117,7 @@ class AuthzController extends AbstractController
         // ALMA GROUP $authz_type (only users with matching user_group)
         if ($authzType == 'user_group') {
             if (in_array($attributes['user_group']['value'], $authzMembers)) {
-                $authz->setAuthorized(true);
+                $authz->setAuthorized();
                 $authz->setMatch([$attributes['user_group']['value']]);
                 return $this->returnAuthz($authz);
             }
@@ -127,7 +127,7 @@ class AuthzController extends AbstractController
 
         // And if we got this far, something ain't right...
         $authz->setMatch(['Unknown authorization type: ' . $authzType,]);
-        $authz->setErrors(true);
+        $authz->setErrors();
 
         return $this->returnAuthz($authz);
     }
@@ -207,11 +207,11 @@ class AuthzController extends AbstractController
     private function returnAuthz(Authz $authz): array
     {
         return [
-            'authorized' => $authz->getAuthorized(),
+            'authorized' => $authz->isAuthorized(),
             'authzType' => $authz->getInstitutionService()->getAuthzType(),
             'authzMembers' => $authz->getInstitutionService()->getAuthzMembers(),
             'match' => $authz->getMatch(),
-            'errors' => $authz->getErrors(),
+            'errors' => $authz->isErrors(),
         ];
     }
 }

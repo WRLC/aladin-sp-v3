@@ -20,16 +20,12 @@ class Authz
      * Authz constructor
      *
      * @param InstitutionService $institutionService
-     * @param bool $authorized
      * @param array<string> $match
-     * @param bool $errors
      */
-    public function __construct(InstitutionService $institutionService, bool $authorized = false, array $match = [], bool $errors = false)
+    public function __construct(InstitutionService $institutionService, array $match = [])
     {
         $this->institutionService = $institutionService;
-        $this->authorized = $authorized;
         $this->match = $match;
-        $this->errors = $errors;
     }
 
     /**
@@ -59,21 +55,34 @@ class Authz
     /**
      * @return bool
      */
-    public function getAuthorized(): bool
+    public function isAuthorized(): bool
     {
-        return $this->authorized;
+        if ($this->authorized) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Set the authorized value
      *
-     * @param bool $authorized
+     * @return $this
+     */
+    public function setAuthorized(): Authz
+    {
+        $this->authorized = true;
+
+        return $this;
+    }
+
+    /**
+     * Unset the authorized value
      *
      * @return $this
      */
-    public function setAuthorized(bool $authorized): Authz
+    public function unsetAuthorized(): Authz
     {
-        $this->authorized = $authorized;
+        $this->authorized = false;
 
         return $this;
     }
@@ -107,20 +116,34 @@ class Authz
      *
      * @return bool
      */
-    public function getErrors(): bool
+    public function isErrors(): bool
     {
-        return $this->errors;
+        if ($this->errors) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Set the errors
-     * @param bool $errors
      *
      * @return $this
      */
-    public function setErrors(bool $errors): Authz
+    public function setErrors(): Authz
     {
-        $this->errors = $errors;
+        $this->errors = true;
+
+        return $this;
+    }
+
+    /**
+     * Unset the errors
+     *
+     * @return $this
+     */
+    public function unsetErrors(): Authz
+    {
+        $this->errors = false;
 
         return $this;
     }
