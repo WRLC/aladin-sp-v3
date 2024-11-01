@@ -20,6 +20,17 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  */
 class AuthzController extends AbstractController
 {
+    private string $authzUrl;
+
+    /**
+     * AuthzController constructor
+     *
+     * @param string $authzUrl
+     */
+    public function __construct(string $authzUrl)
+    {
+        $this->authzUrl = $authzUrl;
+    }
     /**
      * Authorize the user
      *
@@ -145,7 +156,7 @@ class AuthzController extends AbstractController
     private function getAlmaAttributes(string $user, string $almaCode): array
     {
         // Get Patron Authorization URL
-        $patronAuthorizationUrl = $_ENV['PATRON_AUTHORIZATION_URL'];
+        $patronAuthorizationUrl = $this->authzUrl;  // Get the Alma API URL
         $userApiCall = $patronAuthorizationUrl . '?uid=' . $user . '&inst=' . $almaCode;  // Set the Alma API call
 
         return $this->sessionApiCall($userApiCall);  // Return the response

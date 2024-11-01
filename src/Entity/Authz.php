@@ -10,11 +10,11 @@ namespace App\Entity;
 class Authz
 {
     private InstitutionService $institutionService;
-    private bool $authorized;
+    private bool $authorized = false;
 
     /** @var array<string> */
     private array $match;
-    private bool $errors;
+    private bool $errors = false;
 
     /**
      * Authz constructor

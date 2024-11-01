@@ -16,7 +16,7 @@ class AladinError
     /** @var array<string>  */
     private array $errors;
 
-    private bool $log;
+    private bool $log = false;
 
     /**
      * AladinError constructor.

@@ -28,16 +28,28 @@ class LoginController extends AbstractController
     private LoggerInterface $aladinLogger;
     private LoggerInterface $aladinErrorLogger;
 
+    private string $svcProvider;
+
+    private string $authzUrl;
+
     /**
      * LoginController constructor.
      *
      * @param LoggerInterface $aladinLogger
      * @param LoggerInterface $aladinErrorLogger
+     * @param string $svcProvider
+     * @param string $authzUrl
      */
-    public function __construct(LoggerInterface $aladinLogger, LoggerInterface $aladinErrorLogger)
-    {
+    public function __construct(
+        LoggerInterface $aladinLogger,
+        LoggerInterface $aladinErrorLogger,
+        string $svcProvider,
+        string $authzUrl
+    ) {
         $this->aladinLogger = $aladinLogger;
         $this->aladinErrorLogger = $aladinErrorLogger;
+        $this->svcProvider = $svcProvider;
+        $this->authzUrl = $authzUrl;
     }
 
     /**
@@ -152,7 +164,7 @@ class LoginController extends AbstractController
         }
 
         // Authentication
-        $authnController = new AuthnController();  // Create a new AuthnController
+        $authnController = new AuthnController($this->svcProvider);  // Create a new AuthnController
         $user_attributes = $authnController->authnUser($institution);  // Authenticate the user
 
         // If authentication fails, return an error page
@@ -198,7 +210,7 @@ class LoginController extends AbstractController
         }
 
         // Authorization
-        $authzController = new AuthzController();  // Create a new AuthzController
+        $authzController = new AuthzController($this->authzUrl);  // Create a new AuthzController
         $result = $authzController->authz($institutionService, $user_id);  // Authorize the user
 
         // If the user is not authorized, show an error

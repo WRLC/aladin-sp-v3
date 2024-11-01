@@ -27,14 +27,22 @@ class TestsController extends AbstractController
 {
     private LoggerInterface $aladinErrorLogger;
 
+    private string $svcProvider;
+
+    private string $authzUrl;
+
     /**
      * TestsController constructor.
      *
      * @param LoggerInterface $aladinErrorLogger
+     * @param string $svcProvider
+     * @param string $authzUrl
      */
-    public function __construct(LoggerInterface $aladinErrorLogger)
+    public function __construct(LoggerInterface $aladinErrorLogger, string $svcProvider, string $authzUrl)
     {
         $this->aladinErrorLogger = $aladinErrorLogger;
+        $this->svcProvider = $svcProvider;
+        $this->authzUrl = $authzUrl;
     }
 
     /**
@@ -105,7 +113,7 @@ class TestsController extends AbstractController
         }
 
         // AUTHENTICATION
-        $authnController = new AuthnController();  // Create a new LoginController
+        $authnController = new AuthnController($this->svcProvider);  // Create a new LoginController
         $attributes = $authnController->authnUser($institution);  // Authenticate the user and get the attributes
         if (is_subclass_of($attributes, Exception::class)) {  // If the attributes are an Exception
             $error->setErrors([$attributes->getMessage()]);  // Set the error
@@ -220,7 +228,7 @@ class TestsController extends AbstractController
         }
 
         // AUTHORIZATION
-        $authzController = new AuthzController();  // Create a new AuthzController
+        $authzController = new AuthzController($this->authzUrl);  // Create a new AuthzController
         $result = $authzController->authz($institutionService, $user);  // Authorize the user
 
         if ($result['errors']) {  // If there's an error in the result
