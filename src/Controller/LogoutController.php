@@ -18,6 +18,33 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class LogoutController extends AbstractController
 {
+    private string $cookiePrefix;
+
+    private string $cookieDomain;
+
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * LogoutController constructor.
+     *
+     * @param string $cookiePrefix
+     * @param string $cookieDomain
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(
+        string $cookiePrefix,
+        string $cookieDomain,
+        string $memcachedHost,
+        string $memcachedPort
+    ) {
+        $this->cookiePrefix = $cookiePrefix;
+        $this->cookieDomain = $cookieDomain;
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Logout
      *
@@ -29,12 +56,14 @@ class LogoutController extends AbstractController
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/logout', name: 'logout')]
-    public function logout(EntityManagerInterface $entityManager, Request $request): Response
-    {
+    public function logout(
+        EntityManagerInterface $entityManager,
+        Request $request
+    ): Response {
         // Error handling
-        $error_intro = 'Login Error:';
+        $errorIntro = 'Login Error:';
         $errorController = new AladinErrorController();
-        $error = new AladinError('authorization', $error_intro);
+        $error = new AladinError('authorization', $errorIntro);
 
         // Service slug is a required parameter
         $slug = $request->query->get('service');
@@ -55,19 +84,12 @@ class LogoutController extends AbstractController
 
         $serviceUrl = $service->getUrl();
 
-        $cookiePrefix = $_ENV['COOKIE_PREFIX'];
-        $cookieName = $cookiePrefix . $service->getSlug();
-        $cookieDomain = $_ENV['COOKIE_DOMAIN'];
-
-        if (isset($_COOKIE[$cookieName])) {  # If the cookie is set...
-            $cookieValue = $_COOKIE[$cookieName];  # Get the cookie value
+        if ($request->cookies->get($this->cookiePrefix . $service->getSlug()) !== null) {  # If the cookie is set...
             # Delete the cookie value from memcache
             $m = new Memcached();  # create memcache object
-            $mServer = $_ENV['MEMCACHED_HOST'];  # Get the memcache server
-            $mServerPort = $_ENV['MEMCACHED_PORT'];  # Get the memcache server port
-            $m->addServer($mServer, $mServerPort);  # Add the memcache server
-            $m->delete($cookieValue);  # Delete the session from memcache
-            setcookie($cookieName, '', time() - 3600, '/', $cookieDomain); # Expire the cookie
+            $m->addServer($this->memcachedHost, intval($this->memcachedPort));  # Add the memcache server
+            $m->delete($request->cookies->get($this->cookiePrefix . $service->getSlug()));  # Delete the session from memcache
+            setcookie($this->cookiePrefix . $service->getSlug(), '', time() - 3600, '/', $this->cookieDomain); # Expire the cookie
         }
 
         try {
