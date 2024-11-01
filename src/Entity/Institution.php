@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Institution
  *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 
 #[ORM\Entity(repositoryClass: InstitutionRepository::class)]

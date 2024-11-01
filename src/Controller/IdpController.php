@@ -146,8 +146,8 @@ class IdpController extends AbstractController
             foreach ($sources as $source) {
                 # If pdo is configured, create the new handler and initialize the DB.
                 if ($source['type'] === "pdo") {
-                    $metadataStorageHandler = new MetaDataStorageHandlerPdo($source);
-                    $result = $metadataStorageHandler->initDatabase();
+                    $metadataStorage = new MetaDataStorageHandlerPdo($source);
+                    $result = $metadataStorage->initDatabase();
 
                     if ($result === false) {
                         $this->addFlash('error', 'Failed to initialize metadata database.');  // Add an error flash message
@@ -200,15 +200,15 @@ class IdpController extends AbstractController
             foreach ($sources as $source) {
                 # If pdo is configured, create the new handler and initialize the DB.
                 if ($source['type'] === "pdo") {
-                    $metadataStorageHandler = new MetaDataStorageHandlerPdo($source);
-                    $metadataStorageHandler->initDatabase();
+                    $metadataStorage = new MetaDataStorageHandlerPdo($source);
+                    $metadataStorage->initDatabase();
 
                     $filename = $metadataDir . '/saml20-idp-remote.php';  // Get the metadata file
                     $metadata = [];
                     require_once $filename;  // Require the saml20-idp-remote.php file
                     $set = basename($filename, ".php");  // Get the set name
                     foreach ($metadata as $key => $value) {  /** @phpstan-ignore foreach.emptyArray */
-                        $metadataStorageHandler->addEntry($key, $set, $value);  // Add the metadata entry
+                        $metadataStorage->addEntry($key, $set, $value);  // Add the metadata entry
                     }
                 }
             }

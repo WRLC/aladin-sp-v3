@@ -160,8 +160,8 @@ class InstitutionController extends AbstractController
         });
 
         $sessionController = new SessionsController($this->memcachedHost, $this->memcachedPort);  // Create a new SessionsController
-        $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
-        $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
+        $memcached = $sessionController->createMemcachedConnection();  // Create a memcached connection
+        $sessions = $sessionController->getOrderedAladin($memcached);  // Get the ordered Aladin sessions
 
         $filteredSessions = [];  // Initialize the filtered sessions array
         foreach ($sessions as $key => $session) {  // For each session
@@ -276,7 +276,7 @@ class InstitutionController extends AbstractController
      * Sort the Institution entities by position
      *
      * @param EntityManagerInterface $entityManager
-     * @param int $id
+     * @param int $instId
      * @param int $thing
      *
      * @return Response
@@ -284,12 +284,12 @@ class InstitutionController extends AbstractController
      * @throws \SimpleSAML\Error\Exception
      */
     #[Route('/institution/sort/{id}/{thing}', name: 'sort_institutions')]
-    public function sortInstitutions(EntityManagerInterface $entityManager, int $id, int $thing): Response
+    public function sortInstitutions(EntityManagerInterface $entityManager, int $instId, int $thing): Response
     {
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->find($id);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->find($instId);  // Find an Institution entity by ID
         $institution->setPosition($thing);  // Set the Institution position
         $entityManager->persist($institution);  // Persist the Institution entity
         $entityManager->flush();  // Flush the entity manager

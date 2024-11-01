@@ -118,8 +118,8 @@ class TestsController extends AbstractController
         }
 
         if ($entityId) {  // If the session data contains 'default-sp'
-            $institutionController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
-            $idp = $institutionController->getIdpDetails($entityId);  // Get the IDP details
+            $instController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
+            $idp = $instController->getIdpDetails($entityId);  // Get the IDP details
             return $this->render('tests/authN.html.twig', [  // Render the authentication page
                 'attributes' => $session->getAuthData('default-sp', 'Attributes'),  // Set the attributes
                 'idp' => $idp,  // Set the IdP

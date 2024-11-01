@@ -40,9 +40,9 @@ class AuthnController extends AbstractController
     {
         dump($this->svcProvider);
         // Get the service provider name
-        $sp = $this->svcProvider;  // Get the service provider name
+        $svcp = $this->svcProvider;  // Get the service provider name
 
-        $authSource = new Simple($sp, Configuration::getConfig());  // Create a new SimpleSAML_Auth_Simple object
+        $authSource = new Simple($svcp, Configuration::getConfig());  // Create a new SimpleSAML_Auth_Simple object
         try {
             $authSource->requireAuth(['saml:idp' => $institution->getEntityId(),]);  // Require authentication
         } catch (Exception $e) {

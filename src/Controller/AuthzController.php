@@ -155,9 +155,7 @@ class AuthzController extends AbstractController
      */
     private function getAlmaAttributes(string $user, string $almaCode): array
     {
-        // Get Patron Authorization URL
-        $patronAuthorizationUrl = $this->authzUrl;  // Get the Alma API URL
-        $userApiCall = $patronAuthorizationUrl . '?uid=' . $user . '&inst=' . $almaCode;  // Set the Alma API call
+        $userApiCall = $this->authzUrl . '?uid=' . $user . '&inst=' . $almaCode;  // Set the Alma API call
 
         return $this->sessionApiCall($userApiCall);  // Return the response
     }

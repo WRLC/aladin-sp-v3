@@ -14,10 +14,10 @@ class InstitutionRepository extends SortableRepository  // @phpstan-ignore-line
     /**
      * InstitutionRepository constructor
      *
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        parent::__construct($em, $em->getClassMetadata(Institution::class));
+        parent::__construct($entityManager, $entityManager->getClassMetadata(Institution::class));
     }
 }

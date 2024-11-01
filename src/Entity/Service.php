@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class Service
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service

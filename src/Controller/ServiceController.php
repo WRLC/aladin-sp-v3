@@ -118,8 +118,8 @@ class ServiceController extends AbstractController
         $institutionServices = $service->getServiceInstitutions();  // Get the InstitutionServices for the Service
 
         $sessionController = new SessionsController($this->memcachedHost, $this->memcachedPort);  // Create a new SessionsController
-        $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
-        $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
+        $memcached = $sessionController->createMemcachedConnection();  // Create a memcached connection
+        $sessions = $sessionController->getOrderedAladin($memcached);  // Get the ordered Aladin sessions
 
         $filteredSessions = [];  // Initialize the filtered sessions array
         foreach ($sessions as $key => $session) {  // For each session

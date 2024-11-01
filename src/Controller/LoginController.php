@@ -262,8 +262,8 @@ class LoginController extends AbstractController
             ])
         ) {
             // Set the session data
-            $m = new Memcached();  // Create a new Memcached object
-            $m->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the server
+            $memcached = new Memcached();  // Create a new Memcached object
+            $memcached->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the server
             $data = $this->setDataString($institutionService, $userAttributes, $request);  // Create the data string
 
             // If the data string is an error, show an error page
@@ -274,9 +274,9 @@ class LoginController extends AbstractController
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
 
-            $m->set($sessionID, $data, time() + 86400 * 14);  // Set the session data
+            $memcached->set($sessionID, $data, time() + 86400 * 14);  // Set the session data
 
-            $mdata = $m->get($sessionID);  // Get the session data
+            $mdata = $memcached->get($sessionID);  // Get the session data
             $mdata = explode("\r\n", $mdata);  // Explode the session data
             $fmdata = [];
             foreach ($mdata as $md) {
@@ -344,8 +344,8 @@ class LoginController extends AbstractController
         }
 
         // Sort institutions
-        $institutionController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
-        $sortedInsts = $institutionController->sortInstPosition($institutions);
+        $instController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
+        $sortedInsts = $instController->sortInstPosition($institutions);
 
         // Create the WAYF form w/ institutions
         return $this->createForm(WayfType::class, null, ['institutions' => $sortedInsts, 'service' => $institutionServices[0]->getService()->getName()]);

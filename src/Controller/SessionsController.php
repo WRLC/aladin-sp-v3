@@ -49,8 +49,8 @@ class SessionsController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $m = $this->createMemcachedConnection();  // Create memcached connection
-        $memcached = $this->getOrderedAladin($m);  // Order memcached data by expiration date
+        $memConn = $this->createMemcachedConnection();  // Create memcached connection
+        $memcached = $this->getOrderedAladin($memConn);  // Order memcached data by expiration date
 
         // Render the sessions page
         return $this->render('sessions/index.html.twig', ['memcached' => $memcached]);
@@ -83,11 +83,11 @@ class SessionsController extends AbstractController
         $form->handleRequest($request);  // Handle form request
 
         if ($form->isSubmitted() && $form->isValid()) {  // If form is submitted and valid
-            $m = $this->createMemcachedConnection();  // Create memcached connection
-            $memcached = $this->getOrderedAladin($m);  // Filter out non-Aladin-SP sessions
+            $memConn = $this->createMemcachedConnection();  // Create memcached connection
+            $memcached = $this->getOrderedAladin($memConn);  // Filter out non-Aladin-SP sessions
 
             foreach ($memcached as $key => $item) {  // Loop through all items
-                $m->delete($key);  // Delete the item
+                $memConn->delete($key);  // Delete the item
             }
 
             // Add success message and redirect to sessions page
@@ -119,8 +119,8 @@ class SessionsController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $m = $this->createMemcachedConnection(); // Create memcached connection
-        $m->delete($key);  // Delete the session
+        $memConn = $this->createMemcachedConnection(); // Create memcached connection
+        $memConn->delete($key);  // Delete the session
 
         $this->addFlash('success', 'Session ' . $key . ' cleared');  // Add success message
 
@@ -143,26 +143,26 @@ class SessionsController extends AbstractController
      */
     public function createMemcachedConnection(): Memcached
     {
-        $m = new Memcached();  // Create a new Memcached object
+        $memcached = new Memcached();  // Create a new Memcached object
 
-        $m->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the memcached server
+        $memcached->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the memcached server
 
-        return $m;  // Return the memcached object
+        return $memcached;  // Return the memcached object
     }
 
     /**
      * Get all Aladin-SP sessions ordered by expiration date
      *
-     * @param Memcached $m
+     * @param Memcached $memConn
      *
      * @return array<string, mixed>
      *
      * @throws Exception
      */
-    public function getOrderedAladin(Memcached $m): array
+    public function getOrderedAladin(Memcached $memConn): array
     {
-        $items = $this->getAllKeys($m);  // Get all keys from memcached
-        $memcached = $this->getAllMemcached($m, $items);  // Get all memcached data for the given keys
+        $items = $this->getAllKeys($memConn);  // Get all keys from memcached
+        $memcached = $this->getAllMemcached($memConn, $items);  // Get all memcached data for the given keys
         $memcached = $this->filterAladin($memcached);  // Filter out non-Aladin-SP sessions
 
         return $this->orderMemcachedData($memcached);  // Order memcached data by expiration date
@@ -171,16 +171,16 @@ class SessionsController extends AbstractController
     /**
      * Get all current keys from memcached
      *
-     * @param Memcached $m
+     * @param Memcached $memcached
      *
      * @return array<string>|Exception
      *
      * @throws Exception
      */
-    private function getAllKeys(Memcached $m): array | Exception
+    private function getAllKeys(Memcached $memcached): array | Exception
     {
-        $host = $m->getServerList()[0]['host'];
-        $port = $m->getServerList()[0]['port'];
+        $host = $memcached->getServerList()[0]['host'];
+        $port = $memcached->getServerList()[0]['port'];
 
         $allKeys = [];
         $sock = fsockopen($host, $port, $errno, $errstr);
@@ -233,17 +233,17 @@ class SessionsController extends AbstractController
     /**
      * Get all memcached data for the given keys
      *
-     * @param Memcached $m
+     * @param Memcached $memConn
      * @param array<string> $keys
      *
      * @return array<string, mixed>
      */
-    private function getAllMemcached(Memcached $m, array $keys): array
+    private function getAllMemcached(Memcached $memConn, array $keys): array
     {
         $memcached = [];
         foreach ($keys as $item) {
             if (str_starts_with($item, '_')) {
-                $raw = $m->get($item);
+                $raw = $memConn->get($item);
                 $lines = explode("\n", $raw);
                 $memcached[$item] = [];
                 foreach ($lines as $line) {

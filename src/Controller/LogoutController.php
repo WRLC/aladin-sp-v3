@@ -86,9 +86,9 @@ class LogoutController extends AbstractController
 
         if ($request->cookies->get($this->cookiePrefix . $service->getSlug()) !== null) {  # If the cookie is set...
             # Delete the cookie value from memcache
-            $m = new Memcached();  # create memcache object
-            $m->addServer($this->memcachedHost, intval($this->memcachedPort));  # Add the memcache server
-            $m->delete($request->cookies->get($this->cookiePrefix . $service->getSlug()));  # Delete the session from memcache
+            $memcached = new Memcached();  # create memcache object
+            $memcached->addServer($this->memcachedHost, intval($this->memcachedPort));  # Add the memcache server
+            $memcached->delete($request->cookies->get($this->cookiePrefix . $service->getSlug()));  # Delete the session from memcache
             setcookie($this->cookiePrefix . $service->getSlug(), '', time() - 3600, '/', $this->cookieDomain); # Expire the cookie
         }
 
