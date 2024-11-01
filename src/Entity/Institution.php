@@ -67,14 +67,14 @@ class Institution
 
     /** @var Collection<int, InstitutionService> */
     #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'Institution')]
-    private Collection $InstitutionServices;
+    private Collection $institutionServices;
 
     /**
      * Constructor for the Institution entity.
      */
     public function __construct()
     {
-        $this->InstitutionServices = new ArrayCollection();
+        $this->institutionServices = new ArrayCollection();
     }
 
     /**
@@ -358,21 +358,21 @@ class Institution
      */
     public function getInstitutionServices(): Collection
     {
-        return $this->InstitutionServices;
+        return $this->institutionServices;
     }
 
     /**
      * Add an Institution service to this Institution.
      *
-     * @param InstitutionService $InstitutionService The Institution service to add.
+     * @param InstitutionService $institutionService The Institution service to add.
      *
      * @return $this The Institution entity.
      */
-    public function addInstitutionService(InstitutionService $InstitutionService): Institution
+    public function addInstitutionService(InstitutionService $institutionService): Institution
     {
-        if (!$this->InstitutionServices->contains($InstitutionService)) {
-            $this->InstitutionServices->add($InstitutionService);
-            $InstitutionService->setInstitution($this);
+        if (!$this->institutionServices->contains($institutionService)) {
+            $this->institutionServices->add($institutionService);
+            $institutionService->setInstitution($this);
         }
 
         return $this;
@@ -381,16 +381,16 @@ class Institution
     /**
      * Remove an Institution service from this Institution.
      *
-     * @param InstitutionService $InstitutionService The Institution service to remove.
+     * @param InstitutionService $institutionService The Institution service to remove.
      *
      * @return $this The Institution entity.
      */
-    public function removeInstitutionService(InstitutionService $InstitutionService): Institution
+    public function removeInstitutionService(InstitutionService $institutionService): Institution
     {
-        if ($this->InstitutionServices->removeElement($InstitutionService)) {
+        if ($this->institutionServices->removeElement($institutionService)) {
             // set the owning side to null (unless already changed)
-            if ($InstitutionService->getInstitution() === $this) {
-                $InstitutionService->setInstitution(null);
+            if ($institutionService->getInstitution() === $this) {
+                $institutionService->setInstitution(null);
             }
         }
 
