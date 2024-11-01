@@ -18,6 +18,8 @@ class EntityDeleteType extends AbstractType
      * @param array<string, mixed> $options
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

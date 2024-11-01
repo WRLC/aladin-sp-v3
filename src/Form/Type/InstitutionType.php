@@ -39,9 +39,9 @@ class InstitutionType extends AbstractType
      * @param FormBuilderInterface $builder
      * @param array<string, mixed> $options
      *
-     * @throws Exception
-     *
      * @return void
+     * @throws Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

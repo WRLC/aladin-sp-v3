@@ -257,8 +257,6 @@ class IdpController extends AbstractController
     /**
      * Show the results of the metadata refresh.
      *
-     * @param Request $request
-     *
      * @return Response
      *
      * @throws Exception
@@ -267,7 +265,7 @@ class IdpController extends AbstractController
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/metarefresh/results', name: 'metarefresh_results')]
-    public function metarefreshResults(Request $request): Response
+    public function metarefreshResults(): Response
     {
         $auth = new Auth();  // Create a new Auth object
         $auth->requireAdmin();  // Require authentication

@@ -64,6 +64,8 @@ class SessionsController extends AbstractController
      * @return Response
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     #[Route('/sessions/clear', name: 'sessions_clear')]
     public function memcachedClear(Request $request): Response
@@ -176,6 +178,8 @@ class SessionsController extends AbstractController
      * @return array<string>|Exception
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function getAllKeys(Memcached $memcached): array | Exception
     {
