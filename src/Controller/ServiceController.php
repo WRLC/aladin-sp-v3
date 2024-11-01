@@ -21,6 +21,21 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class ServiceController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * ServiceController constructor
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(string $memcachedHost, string $memcachedPort)
+    {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * List all Service entities
      *
@@ -102,7 +117,7 @@ class ServiceController extends AbstractController
 
         $institutionServices = $service->getServiceInstitutions();  // Get the InstitutionServices for the Service
 
-        $sessionController = new SessionsController();  // Create a new SessionsController
+        $sessionController = new SessionsController($this->memcachedHost, $this->memcachedPort);  // Create a new SessionsController
         $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
         $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
 

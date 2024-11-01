@@ -53,7 +53,7 @@ class InstitutionServiceController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
         $service = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug]);
 
         if (!$institution) {
@@ -105,9 +105,9 @@ class InstitutionServiceController extends AbstractController
 
         $return = $this->setReturn($request);
 
-        $instId = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
+        $instId = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index])->getId();
         $svcId = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $instId, 'Service' => $svcId]);
+        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['institution' => $instId, 'service' => $svcId]);
 
         if (!$institutionService) {
             throw $this->createNotFoundException('No service "' . $slug . '" found for institution "' . $index . '"');
@@ -160,9 +160,9 @@ class InstitutionServiceController extends AbstractController
 
         $return = $this->setReturn($request);
 
-        $instId = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
+        $instId = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index])->getId();
         $svcId = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $instId, 'Service' => $svcId]);
+        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['institution' => $instId, 'service' => $svcId]);
 
         if (!$institutionService) {
             throw $this->createNotFoundException('No service "' . $slug . '" found for institution "' . $index . '"');

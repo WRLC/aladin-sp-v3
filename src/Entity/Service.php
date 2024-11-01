@@ -30,15 +30,15 @@ class Service
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $callback_path = null;
+    private ?string $callbackPath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $legacy_login_path = null;
+    private ?string $legacyLoginPath = null;
 
     /**
      * @var Collection<int, InstitutionService>
      */
-    #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'Service')]
+    #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'service')]
     private Collection $serviceInstitutions;
 
     public function __construct()
@@ -135,19 +135,19 @@ class Service
      */
     public function getCallbackPath(): ?string
     {
-        return $this->callback_path;
+        return $this->callbackPath;
     }
 
     /**
      * Set the value of callback_path
      *
-     * @param string|null $callback_path
+     * @param string|null $callbackPath
      *
      * @return $this
      */
-    public function setCallbackPath(?string $callback_path): Service
+    public function setCallbackPath(?string $callbackPath): Service
     {
-        $this->callback_path = $callback_path;
+        $this->callbackPath = $callbackPath;
 
         return $this;
     }
@@ -159,19 +159,19 @@ class Service
      */
     public function getLegacyLoginPath(): ?string
     {
-        return $this->legacy_login_path;
+        return $this->legacyLoginPath;
     }
 
     /**
      * Set the value of legacy_login_path
      *
-     * @param string|null $legacy_login_path
+     * @param string|null $legacyLoginPath
      *
      * @return $this
      */
-    public function setLegacyLoginPath(?string $legacy_login_path): Service
+    public function setLegacyLoginPath(?string $legacyLoginPath): Service
     {
-        $this->legacy_login_path = $legacy_login_path;
+        $this->legacyLoginPath = $legacyLoginPath;
 
         return $this;
     }

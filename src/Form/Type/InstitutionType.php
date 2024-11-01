@@ -18,6 +18,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InstitutionType extends AbstractType
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * InstitutionType constructor
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(string $memcachedHost, string $memcachedPort)
+    {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Builds Idp entity form
      *
@@ -153,7 +168,7 @@ class InstitutionType extends AbstractType
      */
     private function getIdpChoices(): array
     {
-        $controller = new InstitutionController();
+        $controller = new InstitutionController($this->memcachedHost, $this->memcachedPort);
         $metadata = $controller->getIdps();  // Get IdPs from the IdP controller
         $items = [];  // Initialize the items array
         foreach ($metadata as $idp) {  // For each IdP

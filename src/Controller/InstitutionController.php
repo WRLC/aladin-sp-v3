@@ -135,7 +135,7 @@ class InstitutionController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find an Institution entity by ID
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception
         }
@@ -146,13 +146,14 @@ class InstitutionController extends AbstractController
         // Get services not yet associated with the institution
         $services = $entityManager->getRepository(Service::class)->findAll();  // Get all Service entities
         $institutionServices = $institution->getInstitutionServices();  // Get the Institution services
+        dump($institutionServices);
 
         $serviceSlugs = [];
         foreach ($institutionServices as $institutionService) {  // For each Institution service
             $serviceSlugs[] = $institutionService->getService()->getSlug();  // Add the service slug to the service slugs array
         }
+        // Filter the services
         $services = array_filter($services, function ($service) use ($serviceSlugs) {
-  // Filter the services
             return !in_array($service->getSlug(), $serviceSlugs);  // Return the services not in the service slugs array
         });
 
@@ -201,7 +202,7 @@ class InstitutionController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find an Institution entity by ID
 
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception
@@ -244,7 +245,7 @@ class InstitutionController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find an Institution entity by ID
 
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception

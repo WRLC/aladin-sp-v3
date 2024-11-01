@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 #[ORM\Entity(repositoryClass: AuthzMemberRepository::class)]
 #[UniqueEntity(
-    fields: ['InstitutionService', 'member'],
+    fields: ['institutionService', 'member'],
     message: 'This member is already authorized for this institutional service.'
 )]
 class AuthzMember

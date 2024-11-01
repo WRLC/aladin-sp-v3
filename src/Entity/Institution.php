@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 
 #[ORM\Entity(repositoryClass: InstitutionRepository::class)]
-#[UniqueEntity(fields: 'inst_index', message: 'This Institution index is already in use.')]
+#[UniqueEntity(fields: 'instIndex', message: 'This Institution index is already in use.')]
 #[UniqueEntity(fields: 'name', message: 'This Institution name is already in use.')]
 class Institution
 {
@@ -66,7 +66,7 @@ class Institution
     private ?bool $specialTransform = false;
 
     /** @var Collection<int, InstitutionService> */
-    #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'Institution')]
+    #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'institution')]
     private Collection $institutionServices;
 
     /**

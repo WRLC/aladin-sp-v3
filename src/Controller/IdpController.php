@@ -25,6 +25,21 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class IdpController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * IdpController constructor
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(string $memcachedHost, string $memcachedPort)
+    {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Show the current IDP metadata.
      *
@@ -39,7 +54,7 @@ class IdpController extends AbstractController
         $auth = new Auth();  // Create a new Auth object
         $auth->requireAdmin();  // Require authentication
 
-        $idpController = new InstitutionController();
+        $idpController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController object
         $metadata = $idpController->getIdps();  // Get the IDPs
         ksort($metadata);  // Sort the IDPs
 

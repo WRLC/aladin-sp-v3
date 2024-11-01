@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 #[ORM\Entity(repositoryClass: InstitutionServiceRepository::class)]
 #[UniqueEntity(
-    fields: ['Institution', 'Service'],
+    fields: ['institution', 'service'],
     message: 'This service is already associated with the institution.'
 )]
 class InstitutionService
@@ -25,7 +25,7 @@ class InstitutionService
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'InstitutionServices')]
+    #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'institutionServices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Institution $institution = null;
 
@@ -42,7 +42,7 @@ class InstitutionService
     /**
      * @var Collection<int, AuthzMember>
      */
-    #[ORM\OneToMany(targetEntity: AuthzMember::class, mappedBy: 'InstitutionService', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AuthzMember::class, mappedBy: 'institutionService', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $authzMembers;
 
     public function __construct()

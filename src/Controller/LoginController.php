@@ -105,7 +105,7 @@ class LoginController extends AbstractController
                 return $this->render('error.html.twig', $errorController->renderError($error));
             }
             // Get the institution
-            $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+            $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
 
             // If the institution is not found, return an error page
             if (!$institution) {
@@ -115,7 +115,7 @@ class LoginController extends AbstractController
 
             // Get all institutional services for the institution
             $institutionServices = $entityManager->getRepository(InstitutionService::class)
-                ->findBy(['Institution' => $institution->getId()]);
+                ->findBy(['institution' => $institution->getId()]);
 
             // If no institutional services found, show an error
             if (count($institutionServices) == 0) {
@@ -165,7 +165,7 @@ class LoginController extends AbstractController
         }
 
         // Get the institution
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
 
         // If the institution is not found, return an error page
         if (!$institution) {
@@ -175,7 +175,7 @@ class LoginController extends AbstractController
 
         // Get the institutional service
         $institutionService = $entityManager->getRepository(InstitutionService::class)
-            ->findOneBy(['Institution' => $institution, 'Service' => $service]);
+            ->findOneBy(['institution' => $institution, 'Service' => $service]);
 
         // If the institutional service is not found, return an error page
         if (!$institutionService) {

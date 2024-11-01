@@ -31,18 +31,31 @@ class TestsController extends AbstractController
 
     private string $authzUrl;
 
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
     /**
      * TestsController constructor.
      *
      * @param LoggerInterface $aladinErrorLogger
      * @param string $svcProvider
      * @param string $authzUrl
+     * @param string $memcachedHost
+     * @param string $memcachedPort
      */
-    public function __construct(LoggerInterface $aladinErrorLogger, string $svcProvider, string $authzUrl)
-    {
+    public function __construct(
+        LoggerInterface $aladinErrorLogger,
+        string $svcProvider,
+        string $authzUrl,
+        string $memcachedHost,
+        string $memcachedPort
+    ) {
         $this->aladinErrorLogger = $aladinErrorLogger;
         $this->svcProvider = $svcProvider;
         $this->authzUrl = $authzUrl;
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
     }
 
     /**
@@ -96,14 +109,14 @@ class TestsController extends AbstractController
         }
 
         // INSTITUTION
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find the institution by index
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find the institution by index
         if (!$institution) {  // If the institution is not found
             $error->setErrors(['Institution "' . $index . '" not found.']);  // Set the error
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
         if ($entityId) {  // If the session data contains 'default-sp'
-            $institutionController = new InstitutionController();  // Create a new InstitutionController
+            $institutionController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
             $idp = $institutionController->getIdpDetails($entityId);  // Get the IDP details
             return $this->render('tests/authN.html.twig', [  // Render the authentication page
                 'attributes' => $session->getAuthData('default-sp', 'Attributes'),  // Set the attributes
@@ -147,7 +160,7 @@ class TestsController extends AbstractController
         }
 
         // INSTITUTION
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
 
         if (!$institution) {  // If the institution is not found
             $this->addFlash('error', 'Institution not found');  // Add a flash message
@@ -194,9 +207,9 @@ class TestsController extends AbstractController
         }
 
         // INSTITUTION SERVICE
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
         $service = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug]);
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $institution->getId(), 'Service' => $service->getId()]);
+        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['institution' => $institution->getId(), 'service' => $service->getId()]);
         if (!$institutionService) {  // If the service is not found
             $error->setErrors([$slug . 'is not a valid service for ' . $index]);  // Set the error
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
