@@ -209,12 +209,12 @@ class ServiceController extends AbstractController
      */
     public function alphaSvcSlug(array $services): array
     {
-        $alpha_services = [];
+        $alphaSvcs = [];
         foreach ($services as $service) {
-            $alpha_services[$service->getSlug()] = $service;
+            $alphaSvcs[$service->getSlug()] = $service;
         }
-        ksort($alpha_services);
-        return $alpha_services;
+        ksort($alphaSvcs);
+        return $alphaSvcs;
     }
 
     /**
