@@ -18,6 +18,23 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class SessionsController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * SessionsController constructor.
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(
+        string $memcachedHost,
+        string $memcachedPort
+    ) {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Display all Aladin-SP sessions
      *
@@ -128,11 +145,7 @@ class SessionsController extends AbstractController
     {
         $m = new Memcached();  // Create a new Memcached object
 
-        // Get memcached server and port from database
-        $mServer = $_ENV['MEMCACHED_HOST'];
-        $mServerPort = $_ENV['MEMCACHED_PORT'];
-
-        $m->addServer($mServer, $mServerPort);  // Add the memcached server
+        $m->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the memcached server
 
         return $m;  // Return the memcached object
     }
