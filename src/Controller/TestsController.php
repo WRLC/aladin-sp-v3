@@ -21,7 +21,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
+ * Class TestsController
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TestsController extends AbstractController
 {

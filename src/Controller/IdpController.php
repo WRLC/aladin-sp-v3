@@ -22,6 +22,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class IdpController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class IdpController extends AbstractController
 {

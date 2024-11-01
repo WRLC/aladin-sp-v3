@@ -20,6 +20,8 @@ use Symfony\Component\Routing\Attribute\Route;
  * Class Institution
  *
  * This class defines a controller for Institution entity
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 
 class InstitutionController extends AbstractController

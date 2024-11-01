@@ -22,6 +22,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
  * Class LoginController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class LoginController extends AbstractController
 {
@@ -342,7 +344,7 @@ class LoginController extends AbstractController
         }
 
         // Sort institutions
-        $institutionController = new InstitutionController();
+        $institutionController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
         $sortedInsts = $institutionController->sortInstPosition($institutions);
 
         // Create the WAYF form w/ institutions
