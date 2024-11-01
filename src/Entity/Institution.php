@@ -29,14 +29,14 @@ class Institution
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
-    private ?string $inst_index = null;
+    private ?string $instIndex = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $wayf_label = null;
+    private ?string $wayfLabel = null;
 
     #[Gedmo\SortablePosition]
     #[ORM\Column]
@@ -44,26 +44,26 @@ class Institution
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
-    private ?string $entity_id = null;
+    private ?string $entityId = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $alma_location_code = null;
+    private ?string $almaLocCode = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull]
-    private ?string $mail_attribute = null;
+    private ?string $mailAttribute = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $name_attribute = null;
+    private ?string $nameAttribute = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $first_name_attribute = null;
+    private ?string $firstNameAttr = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $id_attribute = null;
+    private ?string $idAttribute = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $special_transform = false;
+    private ?bool $specialTransform = false;
 
     /** @var Collection<int, InstitutionService> */
     #[ORM\OneToMany(targetEntity: InstitutionService::class, mappedBy: 'Institution')]
@@ -94,7 +94,7 @@ class Institution
      */
     public function getIndex(): ?string
     {
-        return $this->inst_index;
+        return $this->instIndex;
     }
 
     /**
@@ -106,7 +106,7 @@ class Institution
      */
     public function setIndex(string $index): Institution
     {
-        $this->inst_index = $index;
+        $this->instIndex = $index;
 
         return $this;
     }
@@ -142,19 +142,19 @@ class Institution
      */
     public function getWayfLabel(): ?string
     {
-        return $this->wayf_label;
+        return $this->wayfLabel;
     }
 
     /**
      * Set the Institution WAYF label.
      *
-     * @param string|null $wayf_label The Institution WAYF label.
+     * @param string|null $wayfLabel The Institution WAYF label.
      *
      * @return $this The Institution entity.
      */
-    public function setWayfLabel(?string $wayf_label): Institution
+    public function setWayfLabel(?string $wayfLabel): Institution
     {
-        $this->wayf_label = $wayf_label;
+        $this->wayfLabel = $wayfLabel;
 
         return $this;
     }
@@ -190,19 +190,19 @@ class Institution
      */
     public function getEntityId(): ?string
     {
-        return $this->entity_id;
+        return $this->entityId;
     }
 
     /**
      * Set the Institution entity ID.
      *
-     * @param string $entity_id The Institution entity ID.
+     * @param string $entityId The Institution entity ID.
      *
      * @return $this The Institution entity.
      */
-    public function setEntityId(string $entity_id): Institution
+    public function setEntityId(string $entityId): Institution
     {
-        $this->entity_id = $entity_id;
+        $this->entityId = $entityId;
 
         return $this;
     }
@@ -214,19 +214,19 @@ class Institution
      */
     public function getAlmaLocationCode(): ?string
     {
-        return $this->alma_location_code;
+        return $this->almaLocCode;
     }
 
     /**
      * Set the Institution Alma location code.
      *
-     * @param string|null $alma_location_code The Institution Alma location code.
+     * @param string|null $almaLocCode The Institution Alma location code.
      *
      * @return $this The Institution entity.
      */
-    public function setAlmaLocationCode(?string $alma_location_code): Institution
+    public function setAlmaLocationCode(?string $almaLocCode): Institution
     {
-        $this->alma_location_code = $alma_location_code;
+        $this->almaLocCode = $almaLocCode;
 
         return $this;
     }
@@ -238,19 +238,19 @@ class Institution
      */
     public function getMailAttribute(): ?string
     {
-        return $this->mail_attribute;
+        return $this->mailAttribute;
     }
 
     /**
      * Set the Institution mail attribute.
      *
-     * @param string $mail_attribute The Institution mail attribute.
+     * @param string $mailAttribute The Institution mail attribute.
      *
      * @return $this The Institution entity.
      */
-    public function setMailAttribute(string $mail_attribute): Institution
+    public function setMailAttribute(string $mailAttribute): Institution
     {
-        $this->mail_attribute = $mail_attribute;
+        $this->mailAttribute = $mailAttribute;
 
         return $this;
     }
@@ -262,19 +262,19 @@ class Institution
      */
     public function getNameAttribute(): ?string
     {
-        return $this->name_attribute;
+        return $this->nameAttribute;
     }
 
     /**
      * Set the Institution name attribute.
      *
-     * @param string|null $name_attribute The Institution name attribute.
+     * @param string|null $nameAttribute The Institution name attribute.
      *
      * @return $this The Institution entity.
      */
-    public function setNameAttribute(?string $name_attribute): Institution
+    public function setNameAttribute(?string $nameAttribute): Institution
     {
-        $this->name_attribute = $name_attribute;
+        $this->nameAttribute = $nameAttribute;
 
         return $this;
     }
@@ -286,19 +286,19 @@ class Institution
      */
     public function getFirstNameAttribute(): ?string
     {
-        return $this->first_name_attribute;
+        return $this->firstNameAttr;
     }
 
     /**
      * Set the Institution first name attribute.
      *
-     * @param string|null $first_name_attribute The Institution first name attribute.
+     * @param string|null $firstNameAttr The Institution first name attribute.
      *
      * @return $this The Institution entity.
      */
-    public function setFirstNameAttribute(?string $first_name_attribute): Institution
+    public function setFirstNameAttribute(?string $firstNameAttr): Institution
     {
-        $this->first_name_attribute = $first_name_attribute;
+        $this->firstNameAttr = $firstNameAttr;
 
         return $this;
     }
@@ -310,19 +310,19 @@ class Institution
      */
     public function getIdAttribute(): ?string
     {
-        return $this->id_attribute;
+        return $this->idAttribute;
     }
 
     /**
      * Set the Institution user ID attribute.
      *
-     * @param string|null $id_attribute The Institution ID attribute.
+     * @param string|null $idAttribute The Institution ID attribute.
      *
      * @return $this The Institution entity.
      */
-    public function setIdAttribute(?string $id_attribute): Institution
+    public function setIdAttribute(?string $idAttribute): Institution
     {
-        $this->id_attribute = $id_attribute;
+        $this->idAttribute = $idAttribute;
 
         return $this;
     }
@@ -332,21 +332,35 @@ class Institution
      *
      * @return bool|null The Special Transform toggler state
      */
-    public function getSpecialTransform(): ?bool
+    public function isSpecialTransform(): ?bool
     {
-        return $this->special_transform;
+        if ($this->specialTransform) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Set the Special Transform toggler state
      *
-     * @param bool|null $special_transform The Special Transform toggler state
      *
      * @return $this The Institution entity
      */
-    public function setSpecialTransform(?bool $special_transform): Institution
+    public function setSpecialTransform(): Institution
     {
-        $this->special_transform = $special_transform;
+        $this->specialTransform = true;
+
+        return $this;
+    }
+
+    /**
+     * Unset the Special Transform toggler state
+     *
+     * @return $this The Institution entity
+     */
+    public function unsetSpecialTransform(): Institution
+    {
+        $this->specialTransform = false;
 
         return $this;
     }

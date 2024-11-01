@@ -207,7 +207,7 @@ class LoginController extends AbstractController
         }
 
         // Get the special transform toggler value
-        $transform = $institution->getSpecialTransform();
+        $transform = $institution->isSpecialTransform();
 
         // If the inst requires a special transform...
         if ($transform) {

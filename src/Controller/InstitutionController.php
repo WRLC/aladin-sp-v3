@@ -24,6 +24,23 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class InstitutionController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * InstitutionController constructor.
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(
+        string $memcachedHost,
+        string $memcachedPort
+    ) {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Redirect / to the Institution list page
      *
@@ -139,7 +156,7 @@ class InstitutionController extends AbstractController
             return !in_array($service->getSlug(), $serviceSlugs);  // Return the services not in the service slugs array
         });
 
-        $sessionController = new SessionsController();  // Create a new SessionsController
+        $sessionController = new SessionsController($this->memcachedHost, $this->memcachedPort);  // Create a new SessionsController
         $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
         $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
 
