@@ -60,8 +60,8 @@ class TestsController extends AbstractController
     #[Route('/authN', name: 'auth_n_test')]
     public function authN(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $error_intro = 'Authentication Test Error';  // Set the error intro text
-        $error = new AladinError('authentication', $error_intro);  // Create a new AladinError
+        $errorIntro = 'Authentication Test Error';  // Set the error intro text
+        $error = new AladinError('authentication', $errorIntro);  // Create a new AladinError
         $errorController = new AladinErrorController();  // Create a new ErrorController
 
         $auth = new Auth();  // Create a new Auth object
@@ -172,8 +172,8 @@ class TestsController extends AbstractController
     #[Route('/authZ', name: 'auth_z_test')]
     public function authz(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $error_intro = 'Authorization Test Error';  // Set the error intro text
-        $error = new AladinError('authorization', $error_intro);  // Create a new AladinError
+        $errorIntro = 'Authorization Test Error';  // Set the error intro text
+        $error = new AladinError('authorization', $errorIntro);  // Create a new AladinError
         $errorController = new AladinErrorController();  // Create a new ErrorController
 
         $auth = new Auth();  // Create a new Auth object
