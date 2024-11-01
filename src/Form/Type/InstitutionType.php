@@ -159,10 +159,9 @@ class InstitutionType extends AbstractType
         foreach ($metadata as $idp) {  // For each IdP
             if (is_array($idp)) {  // If the IdP is an array
                 $entity_id = $idp['entityid'];
+                $name = $idp['entityid'];
                 if (array_key_exists('name', $idp)) {
                     $name = $idp['name']['en'] . ' - ' . $idp['entityid'];
-                } else {
-                    $name = $idp['entityid'];
                 }
                 $items[$name] = $entity_id;
             }
