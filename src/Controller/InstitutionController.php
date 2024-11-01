@@ -83,9 +83,9 @@ class InstitutionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
             $institution = $form->getData();  // Get the form data
-            $all_inst = $entityManager->getRepository(Institution::class)->findAll();  // Get all Institution entities
-            $max_position = $this->getHighestPos($all_inst);  // Get the highest position
-            $institution->setPosition($max_position + 1);  // Set the Institution position to the highest position + 1
+            $allInst = $entityManager->getRepository(Institution::class)->findAll();  // Get all Institution entities
+            $maxPosition = $this->getHighestPos($allInst);  // Get the highest position
+            $institution->setPosition($maxPosition + 1);  // Set the Institution position to the highest position + 1
             $entityManager->persist($institution);  // Persist the Institution entity
             $entityManager->flush();  // Flush the entity manager
 
@@ -325,12 +325,12 @@ class InstitutionController extends AbstractController
      */
     public function sortInstPosition(array $institutions): array
     {
-        $ordered_institutions = [];
+        $orderedInsts = [];
         foreach ($institutions as $institution) {
-            $ordered_institutions[$institution->getPosition()] = $institution;
+            $orderedInsts[$institution->getPosition()] = $institution;
         }
-        ksort($ordered_institutions);
-        return $ordered_institutions;
+        ksort($orderedInsts);
+        return $orderedInsts;
     }
 
     /**
