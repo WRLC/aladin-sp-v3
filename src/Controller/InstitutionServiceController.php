@@ -105,9 +105,9 @@ class InstitutionServiceController extends AbstractController
 
         $return = $this->setReturn($request);
 
-        $inst_id = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
-        $serv_id = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $inst_id, 'Service' => $serv_id]);
+        $instId = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
+        $svcId = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
+        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $instId, 'Service' => $svcId]);
 
         if (!$institutionService) {
             throw $this->createNotFoundException('No service "' . $slug . '" found for institution "' . $index . '"');
@@ -160,9 +160,9 @@ class InstitutionServiceController extends AbstractController
 
         $return = $this->setReturn($request);
 
-        $inst_id = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
-        $serv_id = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $inst_id, 'Service' => $serv_id]);
+        $instId = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index])->getId();
+        $svcId = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug])->getId();
+        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $instId, 'Service' => $svcId]);
 
         if (!$institutionService) {
             throw $this->createNotFoundException('No service "' . $slug . '" found for institution "' . $index . '"');
