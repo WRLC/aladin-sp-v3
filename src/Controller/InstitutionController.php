@@ -148,7 +148,6 @@ class InstitutionController extends AbstractController
         // Get services not yet associated with the institution
         $services = $entityManager->getRepository(Service::class)->findAll();  // Get all Service entities
         $institutionServices = $institution->getInstitutionServices();  // Get the Institution services
-        dump($institutionServices);
 
         $serviceSlugs = [];
         foreach ($institutionServices as $institutionService) {  // For each Institution service

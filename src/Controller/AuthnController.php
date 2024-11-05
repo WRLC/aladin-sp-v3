@@ -38,7 +38,6 @@ class AuthnController extends AbstractController
      */
     public function authnUser(Institution $institution): array | Exception | ContainerExceptionInterface
     {
-        dump($this->svcProvider);
         // Get the service provider name
         $svcp = $this->svcProvider;  // Get the service provider name
 
