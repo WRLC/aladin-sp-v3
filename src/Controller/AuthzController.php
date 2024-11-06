@@ -45,119 +45,233 @@ class AuthzController extends AbstractController
     {
         $authz = new Authz($institutionService);  // Create a new Authz object defaulting to unauthorized
 
-        // Get the institutional Service's authorization type
-        $authzType = $institutionService->getAuthzType();
+        return $this->authzStatus($institutionService, $user, $authz);  // Get the authorization status
+    }
 
-        // NONE $authzType (Just make sure they're authenticated, which they already are)
-        if ($authzType == 'none') {  // If the authorization field type is 'none'...
-            $authz->setAuthorized();  // ...grant access
-            return $this->returnAuthz($authz);
-        }
+    /**
+     * Get the authorization status
+     *
+     * @param InstitutionService $institutionService
+     * @param string $user
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function authzStatus(InstitutionService $institutionService, string $user, Authz $authz): array
+    {
+        return match ($institutionService->getAuthzType()) {
+            'none' => $this->authzNone($authz),
+            'user_id' => $this->authzUserId($institutionService, $user, $authz),
+            'any_alma' => $this->authzAnyAlma($institutionService, $user, $authz),
+            'user_role' => $this->authzUserRole($institutionService, $user, $authz),
+            'user_group' => $this->authzUserGroup($institutionService, $user, $authz),
+            default => $this->authzError($institutionService, $user, $authz)
+        };
+    }
 
-        // Get authz members
-        $authzMembers = $this->getAuthzMembers($institutionService);
+    /**
+     * Handle the 'none' authorization type
+     *
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     */
+    private function authzNone(Authz $authz): array
+    {
+        $authz->setAuthorized();  // ...grant access
+        return $this->returnAuthz($authz);
+    }
 
-        if ($authzType != 'any_alma') {  // If the authorization field type is not 'any_alma'...
-            if (count($authzMembers) == 0) {  // ...and institutional service has no authorized members...
-                return $this->returnAuthz($authz);  // ...deny access
-            }
-        }
-
-        // IDP USER ID $authzType (only users with matching User ID)
-        if ($authzType == 'user_id') {
-            if (in_array($user, $authzMembers)) {  // If the user is in the authorized members list...
-                $authz->setAuthorized();  // ...grant access
-            }
-            return $this->returnAuthz($authz);
-        }
-
-        // Get the alma user attributes, because everything else depends on them
-        $attributes = $this->getAlmaAttributes($user, $institutionService->getInstitution()->getAlmaLocationCode());
-
-        // If there's an error in the Alma attributes...
-        if (key_exists('error', $attributes)) {
-            // Go ahead and set the error message based on user ID sent by SSO
-            $authz->setMatch(['Alma user not found', $attributes['error']]);
-
-            // But first retry the call with all lowercase user ID
-            $attributes = $this->getAlmaAttributes(
-                strtolower($user),
-                $institutionService->getInstitution()->getAlmaLocationCode()
+    /**
+     * Handle the 'user_id' authorization type
+     *
+     * @param InstitutionService $institutionService
+     * @param string $user
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     */
+    private function authzUserId(InstitutionService $institutionService, string $user, Authz $authz): array
+    {
+        // If the user is not in the authorized members list...
+        if (!in_array($user, $this->getAuthzMembers($institutionService))) {
+            $authz->setErrors();  // ...set the error flag
+            $authz->setMatch(  // ...set the matching user
+                ['User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName()]
             );
+            return $this->returnAuthz($authz);  // ...return an error
         }
+        $authz->setAuthorized();  // ...grant access
+        return $this->returnAuthz($authz);
+    }
 
-        // If there's still an error, then return the error
+    /**
+     * Handle the 'any_alma' authorization type
+     *
+     * @param InstitutionService $institutionService
+     * @param string $user
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function authzAnyAlma(InstitutionService $institutionService, string $user, Authz $authz): array
+    {
+        $attributes = $this->getAlmaAttributes($user, $institutionService);  // Get the user attributes
+
+        // If the attributes are are an error...
         if (key_exists('error', $attributes)) {
-            $authz->setErrors();  // Set the error flag
-            return $this->returnAuthz($authz);  // Return an error
+            $authz->setErrors();  // ...set the error flag
+            $authz->setMatch(  // ...set the matching user
+                [
+                    'User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName(),
+                    $attributes['error']
+                ]
+            );
+            return $this->returnAuthz($authz);  // ...return an error
+        }
+        // Otherwise...
+        $authz->setAuthorized();  // ...grant access
+        return $this->returnAuthz($authz);  // ...return the authorization
+    }
+
+    /**
+     * Handle the 'user_role' authorization type
+     *
+     * @param InstitutionService $institutionService
+     * @param string $user
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function authzUserRole(InstitutionService $institutionService, string $user, Authz $authz): array
+    {
+        // If there are no approved roles...
+        if (count($this->getAuthzMembers($institutionService)) == 0) {
+            return $this->returnAuthz($authz);  // ...deny access
         }
 
-        // ANY ALMA $authz_type (just make sure there's a matching Alma user)
-        if ($authzType == 'any_alma') {  // If the authorization field type is 'none'...
-            $authz->setAuthorized();
-            return $this->returnAuthz($authz);
+        $attributes = $this->getAlmaAttributes($user, $institutionService);  // Get the user attributes
+
+        // If the attributes are are an error...
+        if (key_exists('error', $attributes)) {
+            $authz->setErrors();  // ...set the error flag
+            $authz->setMatch(  // ...set the matching user
+                [
+                    'User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName(),
+                    $attributes['error'],
+                ]
+            );
+            return $this->returnAuthz($authz);  // ...return an error
         }
 
-        // ALMA ROLE $authz_type (only users with matching user_role)
-        if ($authzType == 'user_role') {  // If the authorization field type is 'user_role'...
-            $userRoles = $attributes['user_role'];  // Get the user roles
-            $matchingRoles = [];  // Initialize a matching roles list
-
-            // Iterate through the user roles to check for a match
-            foreach ($userRoles as $userRole) {  // For each user role...
-                if ($userRole['status']['value'] == 'ACTIVE') {  // Only look at active roles
-                    // If the user role is in the authorized members list...
-                    if (in_array($userRole['role_type']['value'], $authzMembers)) {
-                        // ...add the role to the matching roles list
-                        $matchingRoles[] = $userRole['role_type']['value'];
-                    }
+        $matchingRoles = [];  // Initialize a matching roles list
+        // Iterate through the user roles to check for a match
+        foreach ($attributes['user_role'] as $userRole) {  // For each user role...
+            if ($userRole['status']['value'] == 'ACTIVE') {  // Only look at active roles
+                // If the user role is in the authorized members list...
+                if (in_array($userRole['role_type']['value'], $this->getAuthzMembers($institutionService))) {
+                    // ...add the role to the matching roles list
+                    $matchingRoles[] = $userRole['role_type']['value'];
                 }
             }
-
-            // Now check the matching role list count
-            if (count($matchingRoles) == 0) {  // If there are no matching roles...
-                return $this->returnAuthz($authz);  // ...deny access
-            }
-
-            // If we're still here (phew!), we had at least one matching role...
-            $authz->setAuthorized();  // ...so grant access
-            $authz->setMatch($matchingRoles);  // ...set the matching roles
-            return $this->returnAuthz($authz);  // ...and return the authorization
         }
 
-        // ALMA GROUP $authz_type (only users with matching user_group)
-        if ($authzType == 'user_group') {
-            if (in_array($attributes['user_group']['value'], $authzMembers)) {
-                $authz->setAuthorized();
-                $authz->setMatch([$attributes['user_group']['value']]);
-                return $this->returnAuthz($authz);
-            }
-            // If we're still here, the user group isn't authorized
-            return $this->returnAuthz($authz);  // Deny access
+        // Now check the matching role list count
+        if (count($matchingRoles) == 0) {  // If there are no matching roles...
+            return $this->returnAuthz($authz);  // ...deny access
         }
 
-        // And if we got this far, something ain't right...
-        $authz->setMatch(['Unknown authorization type: ' . $authzType,]);
-        $authz->setErrors();
+        // If we're still here (phew!), we had at least one matching role...
+        $authz->setAuthorized();  // ...so grant access
+        $authz->setMatch($matchingRoles);  // ...set the matching roles
+        return $this->returnAuthz($authz);  // ...and return the authorization
+    }
 
-        return $this->returnAuthz($authz);
+    /**
+     * Handle the 'user_group' authorization type
+     *
+     * @param InstitutionService $institutionService
+     * @param string $user
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function authzUserGroup(InstitutionService $institutionService, string $user, Authz $authz): array
+    {
+        $attributes = $this->getAlmaAttributes($user, $institutionService);  // Get the user attributes
+
+        // If the attributes are are an error...
+        if (key_exists('error', $attributes)) {
+            $authz->setErrors();  // ...set the error flag
+            $authz->setMatch(  // ...set the matching user
+                [
+                    'User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName(),
+                    $attributes['error'],
+                ]
+            );
+            return $this->returnAuthz($authz);  // ...return an error
+        }
+
+        if (in_array($attributes['user_group']['value'], $this->getAuthzMembers($institutionService))) {
+            $authz->setAuthorized();
+            $authz->setMatch([$attributes['user_group']['value']]);
+            return $this->returnAuthz($authz);
+        }
+        // If we're still here, the user group isn't authorized
+        return $this->returnAuthz($authz);  // Deny access
+    }
+
+    /**
+     * Handle the 'error' authorization type
+     *
+     * @param InstitutionService $institutionService
+     * @param string $user
+     * @param Authz $authz
+     *
+     * @return array<string, mixed>
+     */
+    private function authzError(InstitutionService $institutionService, string $user, Authz $authz): array
+    {
+        $authz->setErrors();  // Set the error flag
+        $authz->setMatch(  // Set the matching user
+            ['User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName()]
+        );
+        return $this->returnAuthz($authz);  // Return an error
     }
 
     /**
      * Get the Alma user attributes
      *
      * @param string $user
-     * @param string $almaCode
-     *
+     * @param InstitutionService $institutionService
      * @return array<string, mixed>
      *
      * @throws TransportExceptionInterface
      */
-    private function getAlmaAttributes(string $user, string $almaCode): array
+    private function getAlmaAttributes(string $user, InstitutionService $institutionService): array
     {
-        $userApiCall = $this->authzUrl . '?uid=' . $user . '&inst=' . $almaCode;  // Set the Alma API call
+        // Make the API call
+        $attributes = $this->sessionApiCall($this
+                ->authzUrl . '?uid=' . $user . '&inst=' . $institutionService
+                ->getInstitution()
+                ->getAlmaLocationCode());
 
-        return $this->sessionApiCall($userApiCall);  // Return the response
+        if (key_exists('error', $attributes)) {  // If there's an error in the Alma attributes...
+            $attributes = $this->sessionApiCall(  // ...try again with the user ID in lowercase
+                $this
+                    ->authzUrl . '?uid=' . strtolower($user) . '&inst=' . $institutionService->getInstitution()
+                    ->getAlmaLocationCode()
+            );
+        }
+        return $attributes;
     }
 
     /**
