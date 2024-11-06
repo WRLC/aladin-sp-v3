@@ -65,19 +65,15 @@ use Gedmo\Sluggable\Util\Urlizer;
  *   useObjectClass?: class-string,
  * }
  *
- * @phpstan-method SluggableConfiguration getConfiguration(ObjectManager $objectManager, $class)
- *
- * @method SluggableAdapter getEventAdapter(EventArgs $args)
+ * @phpstan-extends MappedEventSubscriber<SluggableConfiguration, SluggableAdapter>
  */
 class SluggableListener extends MappedEventSubscriber
 {
     /**
      * The power exponent to jump
      * the slug unique number by tens.
-     *
-     * @var int
      */
-    private $exponent = 0;
+    private int $exponent = 0;
 
     /**
      * Transliteration callback for slugs

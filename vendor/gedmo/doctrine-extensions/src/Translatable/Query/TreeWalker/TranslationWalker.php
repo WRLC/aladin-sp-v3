@@ -90,17 +90,13 @@ class TranslationWalker extends SqlWalker
 
     /**
      * DBAL database platform
-     *
-     * @var AbstractPlatform
      */
-    private $platform;
+    private AbstractPlatform $platform;
 
     /**
      * DBAL database connection
-     *
-     * @var Connection
      */
-    private $conn;
+    private Connection $conn;
 
     /**
      * List of aliases to replace with translation
