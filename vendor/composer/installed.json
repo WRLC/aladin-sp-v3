@@ -9180,17 +9180,17 @@
         },
         {
             "name": "symfony/monolog-bridge",
-            "version": "v6.4.8",
-            "version_normalized": "6.4.8.0",
+            "version": "v6.4.13",
+            "version_normalized": "6.4.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bridge.git",
-                "reference": "0fbee64913b1c595e7650a1919ba3edba8d49ea7"
+                "reference": "9d14621e59f22c2b6d030d92d37ffe5ae1e60452"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bridge/zipball/0fbee64913b1c595e7650a1919ba3edba8d49ea7",
-                "reference": "0fbee64913b1c595e7650a1919ba3edba8d49ea7",
+                "url": "https://api.github.com/repos/symfony/monolog-bridge/zipball/9d14621e59f22c2b6d030d92d37ffe5ae1e60452",
+                "reference": "9d14621e59f22c2b6d030d92d37ffe5ae1e60452",
                 "shasum": ""
             },
             "require": {
@@ -9214,7 +9214,7 @@
                 "symfony/security-core": "^5.4|^6.0|^7.0",
                 "symfony/var-dumper": "^5.4|^6.0|^7.0"
             },
-            "time": "2024-05-31T14:49:08+00:00",
+            "time": "2024-10-14T08:49:08+00:00",
             "type": "symfony-bridge",
             "installation-source": "dist",
             "autoload": {
@@ -9242,7 +9242,7 @@
             "description": "Provides integration for Monolog with various Symfony components",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/monolog-bridge/tree/v6.4.8"
+                "source": "https://github.com/symfony/monolog-bridge/tree/v6.4.13"
             },
             "funding": [
                 {
