@@ -29,17 +29,11 @@ class LoginController extends AbstractController
 {
     private LoggerInterface $aladinLogger;
     private LoggerInterface $aladinErrorLogger;
-
     private string $svcProvider;
-
     private string $authzUrl;
-
     private string $cookiePrefix;
-
     private string $cookieDomain;
-
     private string $memcachedHost;
-
     private string $memcachedPort;
 
     /**
@@ -88,219 +82,280 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(EntityManagerInterface $entityManager, Request $request): Response
     {
-        // Error handling
-        $errorIntro = 'Login Error:';
-        $errorController = new AladinErrorController();
-        $error = new AladinError('authorization', $errorIntro);
+        $errorController = new AladinErrorController();  // Create a new AladinErrorController
 
+        $service = $this->getService($entityManager, $request);  // Get the service
+        $institution = $this->getInstitution($entityManager, $request);  // Get the institution
 
-        // Service slug is a required parameter
-        $slug = $request->query->get('service');
+        $institutionService = $this->getInstSvc(  // Get the institutional service
+            $entityManager,
+            $request,
+            $service,
+            $institution
+        );
 
-        // Institution index is a required parameter
-        $index = $request->query->get('institution');
-
-        // If no service is provided...
-        if (!$slug) {
-            if (!$index) {  // ...and no institution is provided, show an error
-                $error->setIntro('Missing service parameter');
-                return $this->render('error.html.twig', $errorController->renderError($error));
-            }
-            // Get the institution
-            $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
-
-            // If the institution is not found, return an error page
-            if (!$institution) {
-                $error->setErrors(['Invalid institution parameter: ' . $index]);
-                return $this->render('error.html.twig', $errorController->renderError($error));
-            }
-
-            // Get all institutional services for the institution
-            $institutionServices = $entityManager->getRepository(InstitutionService::class)
-                ->findBy(['institution' => $institution->getId()]);
-
-            // If no institutional services found, show an error
-            if (count($institutionServices) == 0) {
-                $error->setIntro($institution->getName() . ' authorization is not available at this time.');
-                return $this->render('error.html.twig', $errorController->renderError($error));
-            }
-
-            $form = $this->generateWayg($institutionServices);  // Generate the WAYG form
-            $form->handleRequest($request);  // Handle the form request
-
-            // Render the WAYG form
-            return $this->render('login/wayg.html.twig', [
-                'institution' => $institution,
-                'form' => $form,
-            ]);
+        if ($service instanceof AladinError) {  // If the service is an error, return an error page
+            return $this->render('error.html.twig', $errorController->renderError($service));
+        }
+        if ($institutionService instanceof Response) {  // If the institution service is a response...
+            return $institutionService;  // ...return the response
         }
 
-        // Get the service
-        $service = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug]);
-
-        // If the service is not found, show an error
-        if (!$service) {
-            $error->setIntro('Invalid service parameter: ' . $slug);
-            return $this->render('error.html.twig', $errorController->renderError($error));
-        }
-
-        // If no institution is provided, show the WAYF
-        if (!$index) {
-            // Get all institutional services for the service
-            $institutionServices = $entityManager->getRepository(InstitutionService::class)
-                ->findBy(['Service' => $service->getId()]);
-
-            // If no institutional services found, show an error
-            if (count($institutionServices) == 0) {
-                $error->setIntro($service->getName() . ' authorization is not available at this time.');
-                return $this->render('error.html.twig', $errorController->renderError($error));
-            }
-
-            $form = $this->generateWayf($institutionServices);  // Generate the WAYF form
-            $form->handleRequest($request);  // Handle the form request
-
-            // Render the WAYF form
-            return $this->render('login/wayf.html.twig', [
-                'service' => $service,
-                'form' => $form,
-            ]);
-        }
-
-        // Get the institution
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
-
-        // If the institution is not found, return an error page
-        if (!$institution) {
-            $error->setErrors(['Invalid institution parameter: ' . $index]);
-            return $this->render('error.html.twig', $errorController->renderError($error));
-        }
-
-        // Get the institutional service
-        $institutionService = $entityManager->getRepository(InstitutionService::class)
-            ->findOneBy(['institution' => $institution, 'Service' => $service]);
-
-        // If the institutional service is not found, return an error page
-        if (!$institutionService) {
-            $error->setIntro($institution->getName() . ' is not authorized for ' . $service->getName());
-            return $this->render('error.html.twig', $errorController->renderError($error));
-        }
+        $loginAuthCtrlr = new LoginAuthnController(  // Create a new LoginAuthnController
+            $this->aladinLogger,
+            $this->aladinErrorLogger,
+            $this->svcProvider
+        );
 
         // Authentication
-        $authnController = new AuthnController($this->svcProvider);  // Create a new AuthnController
-        $userAttributes = $authnController->authnUser($institution);  // Authenticate the user
-
-        // If authentication fails, return an error page
-        if ($userAttributes instanceof Exception) {
-            $error->setIntro('Authentication failed');
-            $error->setErrors([$userAttributes->getMessage()]);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $userAttributes->getMessage());
-            return $this->render('error.html.twig', $errorController->renderError($error));
+        $userAttributes = $loginAuthCtrlr->doLoginAuth($institutionService);  // Authenticate the user
+        if ($userAttributes instanceof AladinError) {  // If the user attributes are an error, return an error page
+            return $this->render('error.html.twig', $errorController->renderError($userAttributes));
         }
 
-        // Get the user ID attribute
-        $userId = $this->getInstUid($institutionService, $userAttributes);
-
-        // If user id is null, there's a problem with attribute names
-        if ($userId == null) {
-            $error->setIntro('No user ID attribute found');
-            $error->setErrors(['The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.']);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': The user was authenticated by their institution, but WRLC Aladin-SP didn\'t recognize a user ID attribute.');
-            return $this->render('error.html.twig', $errorController->renderError($error));
-        }
-
-        // Get the special transform toggler value
-        $transform = $institution->isSpecialTransform();
-
-        // If the inst requires a special transform...
-        if ($transform) {
-            $splitEmail = explode('@', $userId);  // split the user id at the '@'
-            $userId = $splitEmail[0];  // set the user id to the first part
-        }
-
-        // Log the authentication result
-        $this->aladinLogger->debug('Authenticated User: ' . $userId . ' for ' . $institution->getName());
-
-        // If the ID attribute is not found, show an error
-        if ($userId instanceof Exception) {
-            $error->setIntro(
-                'Invalid User ID attribute <pre>' . $institutionService->getIdAttribute() . '</pre> for ' .
-                $institution->getName()
-            );
-            $error->setErrors([$userId->getMessage()]);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $userId->getMessage());
-            return $this->render('error.html.twig', $errorController->renderError($error));
+        // Get the user ID
+        $userId = $loginAuthCtrlr->getInstUid($institutionService, $userAttributes);  // Get the institution user ID
+        if ($userId instanceof AladinError) {  // If the user ID is an error, return an error page
+            return $this->render('error.html.twig', $errorController->renderError($userId));
         }
 
         // Authorization
         $authzController = new AuthzController($this->authzUrl);  // Create a new AuthzController
-        $result = $authzController->authz($institutionService, $userId);  // Authorize the user
-
-        // If the user is not authorized, show an error
-        if (!$result['authorized']) {
-            $error->setIntro(
-                $institution->getName() . ' user ' . $userId . ' not authorized for ' . $service->getName()
-            );
-            $error->setErrors($result['match']);
-            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
-            return $this->render('error.html.twig', $errorController->renderError($error));
+        $result = $this->authzUser($authzController, $institutionService, $userId);  // Authorize the user
+        if ($result instanceof AladinError) {  // If the user is not authorized, return an error page
+            return $this->render('error.html.twig', $errorController->renderError($result));
         }
-
-        $this->aladinLogger->info('Authorized User: ' . $userId . '@' . $index . ' for ' . $service->getName());
-
-        # generate random session id for memcached key
-        $randomUtils = new Random();
-        $sessionID = $randomUtils->generateID();
-
-        $cookieName = $this->cookiePrefix . $service->getSlug();  // Create the cookie name
 
         // Set the cookie
-        if (
-            setcookie($cookieName, $sessionID, [
-            'expires' => time() + (86400 * 14),
-            'path' => '/',
-            'domain' => $this->cookieDomain,
-            ])
-        ) {
-            // Set the session data
-            $memcached = new Memcached();  // Create a new Memcached object
-            $memcached->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the server
-            $data = $this->setDataString($institutionService, $userAttributes, $request);  // Create the data string
-
-            // If the data string is an error, show an error page
-            if ($data instanceof Exception) {
-                $error->setIntro('Failed to set user session');
-                $error->setErrors([$data->getMessage()]);
-                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $data->getMessage());
-                return $this->render('error.html.twig', $errorController->renderError($error));
-            }
-
-            $memcached->set($sessionID, $data, time() + 86400 * 14);  // Set the session data
-
-            $mdata = $memcached->get($sessionID);  // Get the session data
-            $mdata = explode("\r\n", $mdata);  // Explode the session data
-            $fmdata = [];
-            foreach ($mdata as $md) {
-                $tmp = explode('=', $md);
-                if (count($tmp) == 2) {
-                    $fmdata[$tmp[0]] = $tmp[1];
-                }
-            }
-            $jdata = preg_replace('/\s+/mu', ' ', json_encode($fmdata, JSON_PRETTY_PRINT));  // Encode the session data
-
-            $this->aladinLogger->debug('Memcached Session Data: ' . $jdata);
-
-            $this->aladinLogger->debug('Set cookie ' . $cookieName . ': ' . $sessionID . ' for ' . $userId . '@' . $index);
-
-            // Redirect to the service
-            $this->aladinLogger->info('Redirecting ' . $userId . '@' . $index . ' to ' . $service->getUrl() . $service->getCallbackPath());
-            return $this->redirect($service->getUrl() . $service->getCallbackPath());
+        $session = $this->setSessionCookie($service);
+        if ($session instanceof AladinError) {  // If the cookie is an error...
+            return $this->render('error.html.twig', $errorController->renderError($session));  // ...return error
+        }
+        // Set the session data
+        $memcachedSession = $this->setMemcachedSession($institutionService, $userAttributes, $request, $session);
+        if ($memcachedSession instanceof AladinError) {  // If the session data is an error...
+            return $this->render(
+                'error.html.twig',
+                $errorController->renderError($memcachedSession)
+            );  // ...return the error page
         }
 
-        // If the cookie is not set, show an error page
-        $error->setIntro('Failed to set cookie');
-        $error->setErrors(['Cookie name: ' . $cookieName]);
-        $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookieName);
-        return $this->render('error.html.twig', $errorController->renderError($error));
+        // Redirect to the service
+        $this->aladinLogger
+            ->info(
+                'Redirecting ' . $userId . '@' . $institution->getIndex() . ' to ' . $service->getUrl() .
+                $service->getCallbackPath()
+            );
+        return $this->redirect($service->getUrl() . $service->getCallbackPath());
+    }
+
+    /**
+     * Get the Institutional Service
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @param Service|AladinError $service
+     * @param Institution|AladinError $institution
+     *
+     * @return InstitutionService|Response|AladinError
+     */
+    private function getInstSvc(
+        EntityManagerInterface $entityManager,
+        Request $request,
+        Service|AladinError $service,
+        Institution|AladinError $institution
+    ): InstitutionService|Response|AladinError {
+        if ($service instanceof AladinError) {  // If the service is an error...
+            if ($institution instanceof AladinError) {  // ...and the institution is an error...
+                $error = new AladinError('authorization', 'Login Error:');
+                $error->setIntro($service->getIntro() . ' ' . $institution->getIntro());
+                $error->setErrors(array_merge($service->getErrors(), $institution->getErrors()));
+                return $error;  // Return an error
+            }
+
+            // Gererate the WAYG form
+            return $this->returnWayg($this->getSvcs($entityManager, $institution), $institution, $request);
+        }
+
+        // If a valid service is provided...
+        if ($institution instanceof AladinError) {  // ...but the institution is an error...
+            // Generate the WAYF form
+            return $this->returnWayf($this->getInsts($entityManager, $service), $service, $request);
+        }
+
+        // Get the institution service
+        $institutionService = $entityManager
+            ->getRepository(InstitutionService::class)
+            ->findOneBy(['institution' => $institution->getId(), 'service' => $service->getId()]);
+
+        if (!$institutionService) {  // If the institution service is not found...
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro('Invalid institution service');
+            return $error;  // ...return an error
+        }
+
+        return $institutionService;
+    }
+
+    /**
+     * Get the service
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return AladinError|Service
+     */
+    private function getService(EntityManagerInterface $entityManager, Request $request): AladinError|Service
+    {
+        $slug = $this->getServiceSlug($request);  // Service slug is a required parameter
+
+        if ($slug instanceof AladinError) {  // If the service slug is an error...
+            return $slug;  // ...return the error
+        }
+
+        $service = $entityManager
+            ->getRepository(Service::class)
+            ->findOneBy(['slug' => $request->query->get('service')]);  // Get the service
+
+        if (!$service) {  // If the service is not found...
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro('Invalid service parameter: ' . $request->query->get('service'));
+            return $error;  // ...return an error
+        }
+
+        return $service;
+    }
+
+    /**
+     * Get the service slug
+     *
+     * @param Request $request
+     *
+     * @return string|AladinError
+     */
+    private function getServiceSlug(Request $request): string|AladinError
+    {
+        $slug = $request->query->get('service');  // Service slug is a required parameter
+
+        if (!$slug) {  // If no service is provided...
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro('Missing service parameter');
+            return $error;  // ...return an error
+        }
+        return $slug;
+    }
+
+    /**
+     * Get the institution
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     *
+     * @return Institution|AladinError
+     */
+    private function getInstitution(EntityManagerInterface $entityManager, Request $request): Institution|AladinError
+    {
+        $index = $this->getInstIndex($request);  // Get the institution index
+        if ($index instanceof AladinError) {  // If no institution is provided...
+            return $index;  // ...return null
+        }
+
+        $institution = $entityManager
+            ->getRepository(Institution::class)
+            ->findOneBy(['instIndex' => $index]);  // Get the institution
+
+        // If the institution is not found, return an error page
+        if (!$institution) {
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setErrors(['Invalid institution parameter: ' . $index]);
+            return $error;
+        }
+
+        return $institution;
+    }
+
+    /**
+     * Get the institution index
+     *
+     * @param Request $request
+     *
+     * @return string|AladinError
+     */
+    private function getInstIndex(Request $request): string|AladinError
+    {
+        $index = $request->query->get('institution');  // Get the institution index
+
+        if (!$index) {  // If no institution is provided...
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro('Missing institution parameter');
+            return $error;  // ...return an error
+        }
+        return $index;
+    }
+
+    /**
+     * Get all institutions for a service
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Service $service
+     *
+     * @return array<InstitutionService>|AladinError
+     */
+    private function getInsts(EntityManagerInterface $entityManager, Service $service): array|AladinError
+    {
+        // Get all institutional services for the institution
+        $institutionServices = $entityManager->getRepository(InstitutionService::class)
+            ->findBy(['service' => $service->getId()]);
+
+        // If no institutional services found, return an error
+        if (count($institutionServices) == 0) {
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro($service->getName() . ' authorization is not available at this time.');
+            $institutionServices = $error;
+        }
+        return $institutionServices;
+    }
+
+    /**
+     * Get all services for an institution
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param Institution $institution
+     *
+     * @return array<InstitutionService>|AladinError
+     */
+    private function getSvcs(EntityManagerInterface $entityManager, Institution $institution): array|AladinError
+    {
+        // Get all institutional services for the institution
+        $institutionServices = $entityManager->getRepository(InstitutionService::class)
+            ->findBy(['institution' => $institution->getId()]);
+
+        // If no institutional services found, return an error
+        if (count($institutionServices) == 0) {
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro($institution->getName() . ' authorization is not available at this time.');
+            $institutionServices = $error;
+        }
+        return $institutionServices;
+    }
+
+    /**
+     * Return the WAYG form
+     *
+     * @param array<InstitutionService> $services
+     * @param Institution $institution
+     * @param Request $request
+     *
+     * @return Response
+     */
+    private function returnWayg(array $services, Institution $institution, Request $request): Response
+    {
+        $form = $this->generateWayg($services);
+        $form->handleRequest($request);
+        return $this->render('login/wayg.html.twig', [
+            'institution' => $institution,
+            'form' => $form
+        ]);
     }
 
     /**
@@ -325,7 +380,29 @@ class LoginController extends AbstractController
         }
         ksort($alphaSvcs);
 
-        return $this->createForm(WaygType::class, null, ['services' => $alphaSvcs, 'institution' => $institutionServices[0]->getInstitution()->getName()]);
+        return $this->createForm(
+            WaygType::class,
+            null,
+            ['services' => $alphaSvcs, 'institution' => $institutionServices[0]->getInstitution()->getName()]
+        );
+    }
+
+    /**
+     * Return the WAYF form
+     * @param array<InstitutionService> $institutions
+     * @param Service $service
+     * @param Request $request
+     *
+     * @return Response
+     */
+    private function returnWayf(array $institutions, Service $service, Request $request): Response
+    {
+        $form = $this->generateWayf($institutions);
+        $form->handleRequest($request);
+        return $this->render('login/wayf.html.twig', [
+            'service' => $service,
+            'form' => $form
+        ]);
     }
 
     /**
@@ -344,30 +421,143 @@ class LoginController extends AbstractController
         }
 
         // Sort institutions
-        $instController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
+        $instController = new InstitutionController(
+            $this->memcachedHost,
+            $this->memcachedPort
+        )
+        ;  // Create a new InstitutionController
         $sortedInsts = $instController->sortInstPosition($institutions);
 
         // Create the WAYF form w/ institutions
-        return $this->createForm(WayfType::class, null, ['institutions' => $sortedInsts, 'service' => $institutionServices[0]->getService()->getName()]);
+        return $this->createForm(
+            WayfType::class,
+            null,
+            ['institutions' => $sortedInsts, 'service' => $institutionServices[0]->getService()->getName()]
+        );
     }
 
     /**
-     * Get the institution user ID
+     * Authorize the user
+     *
+     * @param AuthzController $authzController
+     * @param InstitutionService $institutionService
+     * @param string $userId
+     *
+     * @return bool|AladinError
+     *
+     * @throws TransportExceptionInterface
+     */
+    private function authzUser(
+        AuthzController $authzController,
+        InstitutionService $institutionService,
+        string $userId
+    ): bool | AladinError {
+        $result = $authzController->authz($institutionService, $userId);  // Authorize the user
+
+        // If the user is not authorized, show an error
+        if (!$result['authorized']) {
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro(
+                $institutionService->getInstitution()->getName() . ' user ' . $userId . ' not authorized for ' .
+                $institutionService->getService()->getName()
+            );
+            $error->setErrors($result['match']);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' .
+                $result['match'][0]);
+            return $error;
+        }
+
+        $this->aladinLogger->info(
+            'Authorized User: ' . $userId . '@' . $institutionService->getInstitution()->getIndex() . ' for ' .
+            $institutionService->getService()->getName()
+        );
+        return true;
+    }
+
+    /**
+     * Set the session cookie
+     *
+     * @param Service $service
+     *
+     * @return string|AladinError
+     */
+    private function setSessionCookie(Service $service): string|AladinError
+    {
+        $randomUtils = new Random();
+        $sessionID = $randomUtils->generateID();
+
+        $cookieName = $this->cookiePrefix . $service->getSlug();  // Create the cookie name
+
+        $cookie =  setcookie($cookieName, $sessionID, [
+            'expires' => time() + (86400 * 14),
+            'path' => '/',
+            'domain' => $this->cookieDomain,
+        ]);
+
+        if (!$cookie) {
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro('Failed to set cookie');
+            $error->setErrors(['Cookie name: ' . $cookieName]);
+            $this->aladinErrorLogger->error(
+                '[' . $error->getType() . '] ' . $error->getIntro() . ': Cookie name: ' . $cookieName
+            );
+            return $error;
+        }
+
+        return $sessionID;
+    }
+
+    /**
+     * Set the memcached session
      *
      * @param InstitutionService $institutionService
      * @param array<string, mixed> $userAttributes
+     * @param Request $request
+     * @param string $session
      *
-     * @return string|Exception|null
+     * @return null|AladinError
      */
-    private function getInstUid(InstitutionService $institutionService, array $userAttributes): string | Exception | null
-    {
-        try {
-            // Get the user ID attribute
-            $userId = $userAttributes[$institutionService->getInstitution()->getIdAttribute()][0];
-        } catch (Exception $e) {
-            return $e;  // Errors
+    private function setMemcachedSession(
+        InstitutionService $institutionService,
+        array $userAttributes,
+        Request $request,
+        string $session
+    ): null|AladinError {
+        $memcached = new Memcached();  // Create a new Memcached object
+        $memcached->addServer($this->memcachedHost, intval($this->memcachedPort));  // Add the server
+        $data = $this->setDataString($institutionService, $userAttributes, $request);  // Create the data string
+
+        // If the data string is an error, show an error page
+        if ($data instanceof Exception) {
+            $error = new AladinError('authorization', 'Login Error:');
+            $error->setIntro('Failed to set user session');
+            $error->setErrors([$data->getMessage()]);
+            $this->aladinErrorLogger->error(
+                '[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $data->getMessage()
+            );
+            return $error;
         }
-        return $userId;
+
+        $memcached->set($session, $data, time() + 86400 * 14);  // Set the session data
+
+        $mdata = $memcached->get($session);  // Get the session data
+        $mdata = explode("\r\n", $mdata);  // Explode the session data
+        $fmdata = [];
+        foreach ($mdata as $md) {
+            $tmp = explode('=', $md);
+            if (count($tmp) == 2) {
+                $fmdata[$tmp[0]] = $tmp[1];
+            }
+        }
+        $jdata = preg_replace(
+            '/\s+/mu',
+            ' ',
+            json_encode($fmdata, JSON_PRETTY_PRINT)
+        );  // Encode the session data
+
+        $this->aladinLogger->debug('Memcached Session Data: ' . $jdata);
+
+        return null;
     }
 
     /**
