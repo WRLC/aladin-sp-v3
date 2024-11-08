@@ -22,9 +22,26 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class IdpController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class IdpController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * IdpController constructor
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(string $memcachedHost, string $memcachedPort)
+    {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Show the current IDP metadata.
      *
@@ -39,7 +56,7 @@ class IdpController extends AbstractController
         $auth = new Auth();  // Create a new Auth object
         $auth->requireAdmin();  // Require authentication
 
-        $idpController = new InstitutionController();
+        $idpController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController object
         $metadata = $idpController->getIdps();  // Get the IDPs
         ksort($metadata);  // Sort the IDPs
 
@@ -57,6 +74,8 @@ class IdpController extends AbstractController
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/delete', name: 'delete_idp')]
     public function deleteIdp(Request $request): Response
@@ -105,6 +124,8 @@ class IdpController extends AbstractController
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/pdo', name: 'generate_pdo_tables')]
     public function generatePdoTables(Request $request): Response
@@ -125,12 +146,13 @@ class IdpController extends AbstractController
             foreach ($sources as $source) {
                 # If pdo is configured, create the new handler and initialize the DB.
                 if ($source['type'] === "pdo") {
-                    $metadataStorageHandler = new MetaDataStorageHandlerPdo($source);
-                    $result = $metadataStorageHandler->initDatabase();
+                    $metadataStorage = new MetaDataStorageHandlerPdo($source);
+                    $result = $metadataStorage->initDatabase();
 
                     if ($result === false) {
                         $this->addFlash('error', 'Failed to initialize metadata database.');  // Add an error flash message
-                    } else {
+                    }
+                    if ($result !== false) {
                         $this->addFlash('success', 'Successfully initialized metadata database.');  // Add a success flash message
                     }
                 }
@@ -152,6 +174,8 @@ class IdpController extends AbstractController
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/flatfile', name: 'convert_flatfile')]
     public function convertFlatfile(Request $request): Response
@@ -176,15 +200,15 @@ class IdpController extends AbstractController
             foreach ($sources as $source) {
                 # If pdo is configured, create the new handler and initialize the DB.
                 if ($source['type'] === "pdo") {
-                    $metadataStorageHandler = new MetaDataStorageHandlerPdo($source);
-                    $metadataStorageHandler->initDatabase();
+                    $metadataStorage = new MetaDataStorageHandlerPdo($source);
+                    $metadataStorage->initDatabase();
 
                     $filename = $metadataDir . '/saml20-idp-remote.php';  // Get the metadata file
                     $metadata = [];
                     require_once $filename;  // Require the saml20-idp-remote.php file
                     $set = basename($filename, ".php");  // Get the set name
                     foreach ($metadata as $key => $value) {  /** @phpstan-ignore foreach.emptyArray */
-                        $metadataStorageHandler->addEntry($key, $set, $value);  // Add the metadata entry
+                        $metadataStorage->addEntry($key, $set, $value);  // Add the metadata entry
                     }
                 }
             }
@@ -200,6 +224,12 @@ class IdpController extends AbstractController
     }
 
     /**
+     * Refresh metadata.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     *
      * @throws Exception
      */
     #[Route('/idps/metarefresh', name: 'metarefresh')]
@@ -225,12 +255,17 @@ class IdpController extends AbstractController
     }
 
     /**
+     * Show the results of the metadata refresh.
+     *
+     * @return Response
      *
      * @throws Exception
      * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/idps/metarefresh/results', name: 'metarefresh_results')]
-    public function metarefreshResults(Request $request): Response
+    public function metarefreshResults(): Response
     {
         $auth = new Auth();  // Create a new Auth object
         $auth->requireAdmin();  // Require authentication
@@ -238,13 +273,14 @@ class IdpController extends AbstractController
         $metarefreshConfig = Configuration::getConfig('module_metarefresh.php');  // Get the metarefresh configuration
         $metarefresh = new MetaRefresh($metarefreshConfig);  // Create a new MetaRefresh object
 
-        Logger::setCaptureLog();
+        $logger = new (Logger::class);  // Create a new Logger object
+        $logger->setCaptureLog();  // Set the log capture
 
-        $metarefresh->main();
+        $metarefresh->main();  // Run the main function
 
-        $logentries = Logger::getCapturedLog();
+        $logentries = $logger->getCapturedLog();  // Get the captured log
 
-        return $this->render('idps/metarefresh_results.html.twig', [
+        return $this->render('idps/metarefresh_results.html.twig', [  // Render the results
             'logentries' => $logentries,
         ]);
     }

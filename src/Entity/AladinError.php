@@ -16,7 +16,7 @@ class AladinError
     /** @var array<string>  */
     private array $errors;
 
-    private bool $log;
+    private bool $log = false;
 
     /**
      * AladinError constructor.
@@ -24,14 +24,12 @@ class AladinError
      * @param string $type
      * @param string $intro
      * @param array<string> $errors
-     * @param bool $log
      */
-    public function __construct(string $type, string $intro, array $errors = [], bool $log = false)
+    public function __construct(string $type, string $intro, array $errors = [])
     {
         $this->type = $type;
         $this->intro = $intro;
         $this->errors = $errors;
-        $this->log = $log;
     }
 
     /**
@@ -109,21 +107,34 @@ class AladinError
      *
      * @return bool
      */
-    public function getLog(): bool
+    public function isLog(): bool
     {
-        return $this->log;
+        if ($this->log) {
+            return true;
+        }
+        return false;
     }
 
     /**
      * Set the log
      *
-     * @param bool $log
+     * @return $this
+     */
+    public function setLog(): AladinError
+    {
+        $this->log = true;
+
+        return $this;
+    }
+
+    /**
+     * Unset the log
      *
      * @return $this
      */
-    public function setLog(bool $log): AladinError
+    public function unsetLog(): AladinError
     {
-        $this->log = $log;
+        $this->log = false;
 
         return $this;
     }

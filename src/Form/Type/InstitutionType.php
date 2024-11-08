@@ -18,15 +18,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InstitutionType extends AbstractType
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * InstitutionType constructor
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(string $memcachedHost, string $memcachedPort)
+    {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Builds Idp entity form
      *
      * @param FormBuilderInterface $builder
      * @param array<string, mixed> $options
      *
-     * @throws Exception
-     *
      * @return void
+     * @throws Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -153,18 +168,17 @@ class InstitutionType extends AbstractType
      */
     private function getIdpChoices(): array
     {
-        $controller = new InstitutionController();
+        $controller = new InstitutionController($this->memcachedHost, $this->memcachedPort);
         $metadata = $controller->getIdps();  // Get IdPs from the IdP controller
         $items = [];  // Initialize the items array
         foreach ($metadata as $idp) {  // For each IdP
             if (is_array($idp)) {  // If the IdP is an array
-                $entity_id = $idp['entityid'];
+                $entityId = $idp['entityid'];
+                $name = $idp['entityid'];
                 if (array_key_exists('name', $idp)) {
                     $name = $idp['name']['en'] . ' - ' . $idp['entityid'];
-                } else {
-                    $name = $idp['entityid'];
                 }
-                $items[$name] = $entity_id;
+                $items[$name] = $entityId;
             }
         }
         ksort($items);  // Sort the items array

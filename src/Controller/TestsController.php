@@ -21,20 +21,43 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
+ * Class TestsController
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TestsController extends AbstractController
 {
     private LoggerInterface $aladinErrorLogger;
 
+    private string $svcProvider;
+
+    private string $authzUrl;
+
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
     /**
      * TestsController constructor.
      *
      * @param LoggerInterface $aladinErrorLogger
+     * @param string $svcProvider
+     * @param string $authzUrl
+     * @param string $memcachedHost
+     * @param string $memcachedPort
      */
-    public function __construct(LoggerInterface $aladinErrorLogger)
-    {
+    public function __construct(
+        LoggerInterface $aladinErrorLogger,
+        string $svcProvider,
+        string $authzUrl,
+        string $memcachedHost,
+        string $memcachedPort
+    ) {
         $this->aladinErrorLogger = $aladinErrorLogger;
+        $this->svcProvider = $svcProvider;
+        $this->authzUrl = $authzUrl;
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
     }
 
     /**
@@ -46,12 +69,14 @@ class TestsController extends AbstractController
      * @return Response
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     #[Route('/authN', name: 'auth_n_test')]
     public function authN(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $error_intro = 'Authentication Test Error';  // Set the error intro text
-        $error = new AladinError('authentication', $error_intro);  // Create a new AladinError
+        $errorIntro = 'Authentication Test Error';  // Set the error intro text
+        $error = new AladinError('authentication', $errorIntro);  // Create a new AladinError
         $errorController = new AladinErrorController();  // Create a new ErrorController
 
         $auth = new Auth();  // Create a new Auth object
@@ -64,7 +89,7 @@ class TestsController extends AbstractController
         $index = $request->get('institution');  // Get the institution index
 
         if (!$index) {  // If the institution is not provided..
-            if ($isAuth) {
+            if ($isAuth) {  // If the user is an admin
                 $form = $this->createForm(AuthnTestType::class, null, [
                     'institutions' => $entityManager->getRepository(Institution::class)->findAll(),
                 ]);  // Create the authentication form
@@ -79,22 +104,22 @@ class TestsController extends AbstractController
                 return $this->render('tests/authNForm.html.twig', [  // Render the authentication form
                     'form' => $form->createView(),  // Set the form
                 ]);
-            } else {
-                $error->setErrors(['No institution provided.']);  // Set the error
-                return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
             }
+            // If the user is not an admin
+            $error->setErrors(['No institution provided.']);  // Set the error
+            return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
         // INSTITUTION
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find the institution by index
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find the institution by index
         if (!$institution) {  // If the institution is not found
             $error->setErrors(['Institution "' . $index . '" not found.']);  // Set the error
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
         if ($entityId) {  // If the session data contains 'default-sp'
-            $institutionController = new InstitutionController();  // Create a new InstitutionController
-            $idp = $institutionController->getIdpDetails($entityId);  // Get the IDP details
+            $instController = new InstitutionController($this->memcachedHost, $this->memcachedPort);  // Create a new InstitutionController
+            $idp = $instController->getIdpDetails($entityId);  // Get the IDP details
             return $this->render('tests/authN.html.twig', [  // Render the authentication page
                 'attributes' => $session->getAuthData('default-sp', 'Attributes'),  // Set the attributes
                 'idp' => $idp,  // Set the IdP
@@ -103,7 +128,7 @@ class TestsController extends AbstractController
         }
 
         // AUTHENTICATION
-        $authnController = new AuthnController();  // Create a new LoginController
+        $authnController = new AuthnController($this->svcProvider);  // Create a new LoginController
         $attributes = $authnController->authnUser($institution);  // Authenticate the user and get the attributes
         if (is_subclass_of($attributes, Exception::class)) {  // If the attributes are an Exception
             $error->setErrors([$attributes->getMessage()]);  // Set the error
@@ -137,7 +162,7 @@ class TestsController extends AbstractController
         }
 
         // INSTITUTION
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
 
         if (!$institution) {  // If the institution is not found
             $this->addFlash('error', 'Institution not found');  // Add a flash message
@@ -162,8 +187,8 @@ class TestsController extends AbstractController
     #[Route('/authZ', name: 'auth_z_test')]
     public function authz(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $error_intro = 'Authorization Test Error';  // Set the error intro text
-        $error = new AladinError('authorization', $error_intro);  // Create a new AladinError
+        $errorIntro = 'Authorization Test Error';  // Set the error intro text
+        $error = new AladinError('authorization', $errorIntro);  // Create a new AladinError
         $errorController = new AladinErrorController();  // Create a new ErrorController
 
         $auth = new Auth();  // Create a new Auth object
@@ -184,9 +209,9 @@ class TestsController extends AbstractController
         }
 
         // INSTITUTION SERVICE
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);
         $service = $entityManager->getRepository(Service::class)->findOneBy(['slug' => $slug]);
-        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['Institution' => $institution->getId(), 'Service' => $service->getId()]);
+        $institutionService = $entityManager->getRepository(InstitutionService::class)->findOneBy(['institution' => $institution->getId(), 'service' => $service->getId()]);
         if (!$institutionService) {  // If the service is not found
             $error->setErrors([$slug . 'is not a valid service for ' . $index]);  // Set the error
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
@@ -196,40 +221,23 @@ class TestsController extends AbstractController
         $user = $request->get('user');  // Get the user
         if (!$user) {  // If the user is not provided
             if ($isAuth) {
-                $form = $this->createForm(AuthzTestType::class, null, [
-                    'institution' => $institutionService->getInstitution(),
-                    'service' => $institutionService->getService(),
-                ]);  // Create the authorization form
-                $form->handleRequest($request);  // Handle the request
-
-                if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
-                    $user = $form->get('user')->getData();  // Get the user
-                    return $this->redirectToRoute('auth_z_test', ['institution' => $index, 'service' => $slug, 'user' => $user]);  // Redirect to the authorization test page
-                }
-
-                return $this->render('tests/authZForm.html.twig', [
-                    'form' => $form,
-                    'institution' => $institutionService->getInstitution(),
-                    'service' => $institutionService->getService(),
-                ]);
-            } else {
-                $error->setErrors(['No user provided.']);  // Set the error
-                return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
+                return $this->authzForm($institutionService, $request);  // Return the authorization form
             }
+            $error->setErrors(['No user provided.']);  // Set the error
+            return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
         // AUTHORIZATION
-        $authzController = new AuthzController();  // Create a new AuthzController
+        $authzController = new AuthzController($this->authzUrl);  // Create a new AuthzController
         $result = $authzController->authz($institutionService, $user);  // Authorize the user
 
         if ($result['errors']) {  // If there's an error in the result
             if ($result['match'][0] == 'Alma user not found') {
                 $error->setErrors(['User "' . $user . '" not found for ' . $institution->getName()]);  // Set the error
                 $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . 'User "' . $user . '" not found for ' . $institution->getName());
-            } else {
-                $error->setErrors($result['match']);
-                $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
             }
+            $error->setErrors($result['match']);
+            $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' . $result['match'][0]);
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
         }
 
@@ -239,6 +247,41 @@ class TestsController extends AbstractController
             'institution' => $institutionService->getInstitution(),  // Set the institution
             'service' => $institutionService->getService(),  // Set the service
             'user' => $user,  // Set the user
+        ]);
+    }
+
+    /**
+     * Authorization form
+     *
+     * @param InstitutionService $institutionService
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function authzForm(InstitutionService $institutionService, Request $request): Response
+    {
+        $form = $this->createForm(AuthzTestType::class, null, [
+            'institution' => $institutionService->getInstitution(),
+            'service' => $institutionService->getService(),
+        ]);  // Create the authorization form
+        $form->handleRequest($request);  // Handle the request
+
+        if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
+            $user = $form->get('user')->getData();  // Get the user
+            return $this->redirectToRoute(
+                'auth_z_test',
+                [
+                    'institution' => $institutionService->getInstitution()->getIndex(),
+                    'service' => $institutionService->getService()->getSlug(),
+                    'user' => $user
+                ]
+            );  // Redirect to the authorization test page
+        }
+
+        return $this->render('tests/authZForm.html.twig', [
+            'form' => $form,
+            'institution' => $institutionService->getInstitution(),
+            'service' => $institutionService->getService(),
         ]);
     }
 }

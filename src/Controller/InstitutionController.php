@@ -20,10 +20,29 @@ use Symfony\Component\Routing\Attribute\Route;
  * Class Institution
  *
  * This class defines a controller for Institution entity
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 
 class InstitutionController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * InstitutionController constructor.
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(
+        string $memcachedHost,
+        string $memcachedPort
+    ) {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * Redirect / to the Institution list page
      *
@@ -83,9 +102,9 @@ class InstitutionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
             $institution = $form->getData();  // Get the form data
-            $all_inst = $entityManager->getRepository(Institution::class)->findAll();  // Get all Institution entities
-            $max_position = $this->getHighestPos($all_inst);  // Get the highest position
-            $institution->setPosition($max_position + 1);  // Set the Institution position to the highest position + 1
+            $allInst = $entityManager->getRepository(Institution::class)->findAll();  // Get all Institution entities
+            $maxPosition = $this->getHighestPos($allInst);  // Get the highest position
+            $institution->setPosition($maxPosition + 1);  // Set the Institution position to the highest position + 1
             $entityManager->persist($institution);  // Persist the Institution entity
             $entityManager->flush();  // Flush the entity manager
 
@@ -118,7 +137,7 @@ class InstitutionController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find an Institution entity by ID
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception
         }
@@ -134,14 +153,14 @@ class InstitutionController extends AbstractController
         foreach ($institutionServices as $institutionService) {  // For each Institution service
             $serviceSlugs[] = $institutionService->getService()->getSlug();  // Add the service slug to the service slugs array
         }
+        // Filter the services
         $services = array_filter($services, function ($service) use ($serviceSlugs) {
-  // Filter the services
             return !in_array($service->getSlug(), $serviceSlugs);  // Return the services not in the service slugs array
         });
 
-        $sessionController = new SessionsController();  // Create a new SessionsController
-        $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
-        $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
+        $sessionController = new SessionsController($this->memcachedHost, $this->memcachedPort);  // Create a new SessionsController
+        $memcached = $sessionController->createMemcachedConnection();  // Create a memcached connection
+        $sessions = $sessionController->getOrderedAladin($memcached);  // Get the ordered Aladin sessions
 
         $filteredSessions = [];  // Initialize the filtered sessions array
         foreach ($sessions as $key => $session) {  // For each session
@@ -184,7 +203,7 @@ class InstitutionController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find an Institution entity by ID
 
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception
@@ -227,7 +246,7 @@ class InstitutionController extends AbstractController
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['inst_index' => $index]);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->findOneBy(['instIndex' => $index]);  // Find an Institution entity by ID
 
         if (!$institution) {  // If the Institution entity is not found
             throw $this->createNotFoundException('Institution not found');  // Throw a 404 exception
@@ -256,7 +275,7 @@ class InstitutionController extends AbstractController
      * Sort the Institution entities by position
      *
      * @param EntityManagerInterface $entityManager
-     * @param int $id
+     * @param int $instId
      * @param int $thing
      *
      * @return Response
@@ -264,12 +283,12 @@ class InstitutionController extends AbstractController
      * @throws \SimpleSAML\Error\Exception
      */
     #[Route('/institution/sort/{id}/{thing}', name: 'sort_institutions')]
-    public function sortInstitutions(EntityManagerInterface $entityManager, int $id, int $thing): Response
+    public function sortInstitutions(EntityManagerInterface $entityManager, int $instId, int $thing): Response
     {
         $auth = new Auth();
         $auth->requireAdmin();  // Require admin access
 
-        $institution = $entityManager->getRepository(Institution::class)->find($id);  // Find an Institution entity by ID
+        $institution = $entityManager->getRepository(Institution::class)->find($instId);  // Find an Institution entity by ID
         $institution->setPosition($thing);  // Set the Institution position
         $entityManager->persist($institution);  // Persist the Institution entity
         $entityManager->flush();  // Flush the entity manager
@@ -307,6 +326,8 @@ class InstitutionController extends AbstractController
      * @return array<string, mixed>
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function getIdps(): array
     {
@@ -323,12 +344,12 @@ class InstitutionController extends AbstractController
      */
     public function sortInstPosition(array $institutions): array
     {
-        $ordered_institutions = [];
+        $orderedInsts = [];
         foreach ($institutions as $institution) {
-            $ordered_institutions[$institution->getPosition()] = $institution;
+            $orderedInsts[$institution->getPosition()] = $institution;
         }
-        ksort($ordered_institutions);
-        return $ordered_institutions;
+        ksort($orderedInsts);
+        return $orderedInsts;
     }
 
     /**

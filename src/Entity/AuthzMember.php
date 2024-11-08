@@ -10,10 +10,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Class AuthzMember
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 #[ORM\Entity(repositoryClass: AuthzMemberRepository::class)]
 #[UniqueEntity(
-    fields: ['InstitutionService', 'member'],
+    fields: ['institutionService', 'member'],
     message: 'This member is already authorized for this institutional service.'
 )]
 class AuthzMember
@@ -25,7 +27,7 @@ class AuthzMember
 
     #[ORM\ManyToOne(inversedBy: 'authzMembers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?InstitutionService $InstitutionService = null;
+    private ?InstitutionService $institutionService = null;
 
     #[ORM\Column(length: 255)]
     private ?string $member = null;
@@ -47,19 +49,19 @@ class AuthzMember
      */
     public function getInstitutionService(): ?InstitutionService
     {
-        return $this->InstitutionService;
+        return $this->institutionService;
     }
 
     /**
      * Set the value of InstitutionService
      *
-     * @param InstitutionService|null $InstitutionService
+     * @param InstitutionService|null $institutionService
      *
      * @return $this
      */
-    public function setInstitutionService(?InstitutionService $InstitutionService): AuthzMember
+    public function setInstitutionService(?InstitutionService $institutionService): AuthzMember
     {
-        $this->InstitutionService = $InstitutionService;
+        $this->institutionService = $institutionService;
 
         return $this;
     }

@@ -5,7 +5,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ path('list_services') }}">Services</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ service.Name }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{{ service.name }}</li>
         </ol>
     </nav>
     <div class="row align-items-center">
@@ -19,28 +19,29 @@
         <tbody>
             <tr>
                 <th scope="row" class="col-2 table-primary">Slug</th>
-                <td class="col-10">{{ service.Slug }}</td>
+                <td class="col-10">{{ service.slug }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Name</th>
-                <td class="col-10">{{ service.Name }}</td>
+                <td class="col-10">{{ service.name }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">URL</th>
-                <td class="col-10">{{ service.Url }}</td>
+                <td class="col-10">{{ service.url }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Callback Path</th>
-                <td class="col-10">{{ service.CallbackPath }}</td>
+                <td class="col-10">{{ service.callbackPath }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Legacy Login Path</th>
-                <td class="col-10">{{ service.LegacyLoginPath }}</td>
+                <td class="col-10">{{ service.legacyLoginPath }}</td>
             </tr>
         </tbody>
     </table>
     <div class="mb-3">
         <h2 class="col col-9">Institutional Services</h2>
+        {% dump service %}
         {% if service.serviceInstitutions|length > 0 %}
             <table class="table table-striped">
                 <caption class="text-secondary form-text">To add an institutional service for {{ service.Name }}, please visit the page of the <a href="{{ path('list_institutions') }}">institution</a> you wish to add the service for.</caption>
@@ -56,20 +57,20 @@
                 <tbody>
                 {% for institution in institutions|sort((a, b) => a.institution.name <=> b.institution.name) %}
                     <tr>
-                        <td>{{ institution.Institution.name }}</td>
-                        <td>{{ institution.IdAttribute }}</td>
+                        <td>{{ institution.institution.name }}</td>
+                        <td>{{ institution.idAttribute }}</td>
                         <td>{{ institution.authzType }}</td>
                         <td>
                             <ul class="list-group list-group-horizontal" style="flex-wrap: wrap;">
-                                {% for member in institution.AuthzMembers %}
+                                {% for member in institution.authzMembers %}
                                     <li class="list-group-item">{{ member.member }}</li>
                                 {% endfor %}
                             </ul>
                         </td>
                         <td class="text-end">
-                            <a href="{{ path('auth_z_test', {'institution': institution.Institution.index, 'service': service.slug}) }}" class="btn btn-success btn-sm">Test AuthZ</a>
-                            <a href="{{ path('edit_service_institution', {'index': institution.Institution.index, 'slug': service.slug}) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <a href="{{ path('delete_service_institution', {'index': institution.Institution.index, 'slug': service.slug}) }}" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="{{ path('auth_z_test', {'institution': institution.institution.index, 'service': service.slug}) }}" class="btn btn-success btn-sm">Test AuthZ</a>
+                            <a href="{{ path('edit_service_institution', {'index': institution.institution.index, 'slug': service.slug}) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ path('delete_service_institution', {'index': institution.institution.index, 'slug': service.slug}) }}" class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
                 {% endfor %}

@@ -28,19 +28,8 @@ class InstitutionServiceType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($builder->getData()->getAuthzType() == 'user_id') {
-            $authzType = 'User IDs';
-            $authzTypeHelp = 'The specific IdP User IDs that are authorized to access this service. (Each value should be added separately.)';
-        } elseif ($builder->getData()->getAuthzType() == 'user_role') {
-            $authzType = 'Roles';
-            $authzTypeHelp = 'The specific Alma Roles (by ID number, not label) that are authorized to access this service. (Each value should be added separately.)';
-        } elseif ($builder->getData()->getAuthzType() == 'user_group') {
-            $authzType = 'Groups';
-            $authzTypeHelp = 'The specific Alma Groups (by name, not label) that are authorized to access this service. (Each value should be added separately.)';
-        } else {
-            $authzType = '';
-            $authzTypeHelp = '';
-        }
+        $authzType = $this->authzType($builder->getData()->getAuthzType());
+        $authzTypeHelp = $this->authzHelp($builder->getData()->getAuthzType());
 
         $authzMemberLabel = 'Authorized ' . $authzType;
         $authzMembersHelp = $authzTypeHelp;
@@ -49,11 +38,11 @@ class InstitutionServiceType extends AbstractType
         $service = $options['service'];
         $type = $options['type'];
 
+        $label = 'Update Institutional Service';
         if ($type == 'add') {
             $label = 'Add Institutional Service';
-        } else {
-            $label = 'Update Institutional Service';
         }
+
         $builder
             ->add('institution', EntityType::class, [
                 'label' => 'Institution',
@@ -133,5 +122,43 @@ class InstitutionServiceType extends AbstractType
             'service' => null,
             'type' => null,
         ]);
+    }
+
+    /**
+     * Get the authorization type
+     *
+     * @param string $authzType
+     *
+     * @return string
+     */
+    private function authzType(string $authzType): string
+    {
+        if ($authzType == 'user_id') {
+            return 'User IDs';
+        } elseif ($authzType == 'user_role') {
+            return 'Roles';
+        } elseif ($authzType == 'user_group') {
+            return 'Groups';
+        }
+        return '';
+    }
+
+    /**
+     * Get the authorization help text
+     *
+     * @param string $authzType
+     *
+     * @return string
+     */
+    private function authzHelp(string $authzType): string
+    {
+        if ($authzType == 'user_id') {
+            return 'The specific IdP User IDs that are authorized to access this service. (Each value should be added separately.)';
+        } elseif ($authzType == 'user_role') {
+            return 'The specific Alma Roles (by ID number, not label) that are authorized to access this service. (Each value should be added separately.)';
+        } elseif ($authzType == 'user_group') {
+            return 'The specific Alma Groups (by name, not label) that are authorized to access this service. (Each value should be added separately.)';
+        }
+        return '';
     }
 }

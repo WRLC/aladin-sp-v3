@@ -12,10 +12,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Class InstitutionService
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 #[ORM\Entity(repositoryClass: InstitutionServiceRepository::class)]
 #[UniqueEntity(
-    fields: ['Institution', 'Service'],
+    fields: ['institution', 'service'],
     message: 'This service is already associated with the institution.'
 )]
 class InstitutionService
@@ -25,24 +27,24 @@ class InstitutionService
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'InstitutionServices')]
+    #[ORM\ManyToOne(targetEntity: Institution::class, inversedBy: 'institutionServices')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Institution $Institution = null;
+    private ?Institution $institution = null;
 
     #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'serviceInstitutions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Service $Service = null;
+    private ?Service $service = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $AuthzType = null;
+    private ?string $authzType = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $id_attribute = null;
+    private ?string $idAttribute = null;
 
     /**
      * @var Collection<int, AuthzMember>
      */
-    #[ORM\OneToMany(targetEntity: AuthzMember::class, mappedBy: 'InstitutionService', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AuthzMember::class, mappedBy: 'institutionService', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $authzMembers;
 
     public function __construct()
@@ -67,19 +69,19 @@ class InstitutionService
      */
     public function getInstitution(): ?Institution
     {
-        return $this->Institution;
+        return $this->institution;
     }
 
     /**
      * Set the value of Institution
      *
-     * @param Institution|null $Institution
+     * @param Institution|null $institution
      *
      * @return $this
      */
-    public function setInstitution(?Institution $Institution): InstitutionService
+    public function setInstitution(?Institution $institution): InstitutionService
     {
-        $this->Institution = $Institution;
+        $this->institution = $institution;
 
         return $this;
     }
@@ -91,19 +93,19 @@ class InstitutionService
      */
     public function getService(): ?Service
     {
-        return $this->Service;
+        return $this->service;
     }
 
     /**
      * Set the value of Service
      *
-     * @param Service|null $Service
+     * @param Service|null $service
      *
      * @return $this
      */
-    public function setService(?Service $Service): InstitutionService
+    public function setService(?Service $service): InstitutionService
     {
-        $this->Service = $Service;
+        $this->service = $service;
 
         return $this;
     }
@@ -115,19 +117,19 @@ class InstitutionService
      */
     public function getAuthzType(): ?string
     {
-        return $this->AuthzType;
+        return $this->authzType;
     }
 
     /**
      * Set the value of AuthzType
      *
-     * @param string|null $AuthzType
+     * @param string|null $authzType
      *
      * @return $this
      */
-    public function setAuthzType(?string $AuthzType): InstitutionService
+    public function setAuthzType(?string $authzType): InstitutionService
     {
-        $this->AuthzType = $AuthzType;
+        $this->authzType = $authzType;
 
         return $this;
     }
@@ -139,19 +141,19 @@ class InstitutionService
      */
     public function getIdAttribute(): ?string
     {
-        return $this->id_attribute;
+        return $this->idAttribute;
     }
 
     /**
      * Set the value of id_attribute
      *
-     * @param string $id_attribute
+     * @param string $idAttribute
      *
      * @return $this
      */
-    public function setIdAttribute(string $id_attribute): InstitutionService
+    public function setIdAttribute(string $idAttribute): InstitutionService
     {
-        $this->id_attribute = $id_attribute;
+        $this->idAttribute = $idAttribute;
 
         return $this;
     }

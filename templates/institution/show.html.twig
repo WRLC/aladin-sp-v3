@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ institution.Name }} | WRLC Aladin-SP{% endblock %}
+{% block title %}{{ institution.name }} | WRLC Aladin-SP{% endblock %}
 
 {% block body %}
     <nav aria-label="breadcrumb">
@@ -22,25 +22,25 @@
         <tbody>
             <tr>
                 <th scope="row" class="col-2 table-primary">Index</th>
-                <td class="col-10">{{ institution.Index }}</td>
+                <td class="col-10">{{ institution.index }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Name</th>
-                <td class="col-10">{{ institution.Name }}</td>
+                <td class="col-10">{{ institution.name }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">WAYF Label</th>
                 <td class="col-10">
-                    {% if institution.WayfLabel %}
-                        {{ institution.WayfLabel }}
+                    {% if institution.wayfLabel %}
+                        {{ institution.wayfLabel }}
                     {% else %}
-                        {{ institution.Name }}
+                        {{ institution.name }}
                     {% endif %}
                 </td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Alma Code</th>
-                <td class="col-10">{{ institution.AlmaLocationCode }}</td>
+                <td class="col-10">{{ institution.almaLocationCode }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">IdP</th>
@@ -48,34 +48,34 @@
                     {% if idpDetails.name.en is defined %}
                         {{ idpDetails.name.en }} -
                     {% endif %}
-                    {{ institution.EntityId }}
+                    {{ institution.entityId }}
                 </td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Mail Attribute</th>
-                <td class="col-10">{{ institution.MailAttribute }}</td>
+                <td class="col-10">{{ institution.mailAttribute }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Name Attribute</th>
-                <td class="col-10">{{ institution.NameAttribute }}</td>
+                <td class="col-10">{{ institution.nameAttribute }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">First Name Attribute</th>
-                <td class="col-10">{{ institution.FirstNameAttribute }}</td>
+                <td class="col-10">{{ institution.firstNameAttribute }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">ID Attribute</th>
-                <td class="col-10">{{ institution.IdAttribute }}</td>
+                <td class="col-10">{{ institution.idAttribute }}</td>
             </tr>
             <tr>
                 <th scope="row" class="col-2 table-primary">Special User ID Tranform</th>
-                <td class="col-10">{{ institution.SpecialTransform ? 'Yes' : 'No' }}</td>
+                <td class="col-10">{{ institution.specialTransform ? 'Yes' : 'No' }}</td>
             </tr>
         </tbody>
     </table>
     <div class="mb-3">
         <h2>Institutional Services</h2>
-        {% if institution.InstitutionServices|length > 0 %}
+        {% if institution.institutionServices|length > 0 %}
             <table class="table table-striped">
                 <thead>
                     <tr class="table-dark">
@@ -87,10 +87,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for service in institution.InstitutionServices|sort((a, b) => a.Service.name <=> b.Service.name) %}
+                    {% for service in institution.institutionServices|sort((a, b) => a.service.name <=> b.service.name) %}
                         <tr>
-                            <td>{{ service.Service.name }}</td>
-                            <td>{{ service.IdAttribute }}</td>
+                            <td>{{ service.service.name }}</td>
+                            <td>{{ service.idAttribute }}</td>
                             <td>{{ service.authzType }}</td>
                             <td>
                                 <ul class="list-group list-group-horizontal" style="flex-wrap: wrap;">
@@ -100,9 +100,9 @@
                                 </ul>
                             </td>
                             <td class="text-end">
-                                <a href="{{ path('auth_z_test', {'institution': institution.index, 'service': service.Service.slug}) }}" class="btn btn-success btn-sm">Test AuthZ</a>
-                                <a href="{{ path('edit_institution_service', {'index': institution.index, 'slug': service.Service.slug}) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="{{ path('delete_institution_service', {'index': institution.index, 'slug': service.Service.slug}) }}" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="{{ path('auth_z_test', {'institution': institution.index, 'service': service.service.slug}) }}" class="btn btn-success btn-sm">Test AuthZ</a>
+                                <a href="{{ path('edit_institution_service', {'index': institution.index, 'slug': service.service.slug}) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ path('delete_institution_service', {'index': institution.index, 'slug': service.service.slug}) }}" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                     {% endfor %}
@@ -150,8 +150,8 @@
                         <tr style="font-size: 0.85em">
                             <td>{{ key }}</td>
                             <td>
-                                {% if value.Service|default %}
-                                    {{ value.Service }}
+                                {% if value.service|default %}
+                                    {{ value.service }}
                                 {% endif %}
                             </td>
                             <td>{{ value.UserName }}</td>

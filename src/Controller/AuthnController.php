@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Institution;
 use Exception;
+use Psr\Container\ContainerExceptionInterface;
 use SimpleSAML\Auth\Simple;
 use SimpleSAML\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,26 +14,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AuthnController extends AbstractController
 {
+    private string $svcProvider;
+
+    /**
+     * AuthnController constructor.
+     *
+     * @param string $svcProvider
+     */
+    public function __construct(string $svcProvider)
+    {
+        $this->svcProvider = $svcProvider;
+    }
     /**
      * Authenticate the user
      *
      * @param Institution $institution
      *
-     * @return array<string, mixed>|Exception
+     * @return array<string, mixed>|Exception|ContainerExceptionInterface
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
-    public function authnUser(Institution $institution): array | Exception
+    public function authnUser(Institution $institution): array | Exception | ContainerExceptionInterface
     {
         // Get the service provider name
-        $sp = $_ENV['SERVICE_PROVIDER_NAME'];  // Get the service provider name
+        $svcp = $this->svcProvider;  // Get the service provider name
 
-        $auth_source = new Simple($sp, Configuration::getConfig());  // Create a new SimpleSAML_Auth_Simple object
+        $authSource = new Simple($svcp, Configuration::getConfig());  // Create a new SimpleSAML_Auth_Simple object
         try {
-            $auth_source->requireAuth(['saml:idp' => $institution->getEntityId(),]);  // Require authentication
+            $authSource->requireAuth(['saml:idp' => $institution->getEntityId(),]);  // Require authentication
         } catch (Exception $e) {
             return $e;
         }
-        return $auth_source->getAttributes();  // Return the user attributes
+        return $authSource->getAttributes();  // Return the user attributes
     }
 }

@@ -28,9 +28,9 @@ flushed in a behavioral way.
 
     composer require gedmo/doctrine-extensions
 
-* [Symfony](/doc/symfony.md)
-* [Laravel 5](https://www.laraveldoctrine.org/docs/1.3/extensions)
-* [Laminas](/doc/laminas.md)
+* [Symfony](/doc/frameworks/symfony.md)
+* [Laravel](/doc/frameworks/laravel.md)
+* [Laminas](/doc/frameworks/laminas.md)
 
 ### Upgrading
 
@@ -66,7 +66,7 @@ can be easily implemented using Mapping extension to handle the additional metad
 
 ### Version Compatibility
 
-* DBAL: `^3.2`
+* DBAL: `^3.2` (for all the extensions) or `^4.0` (for all the extensions, except **Loggable**)
 * ORM: `^2.14` or `^3.0`
 * MongoDB ODM: `^2.3`
 

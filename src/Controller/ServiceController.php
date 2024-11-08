@@ -21,6 +21,21 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class ServiceController extends AbstractController
 {
+    private string $memcachedHost;
+
+    private string $memcachedPort;
+
+    /**
+     * ServiceController constructor
+     *
+     * @param string $memcachedHost
+     * @param string $memcachedPort
+     */
+    public function __construct(string $memcachedHost, string $memcachedPort)
+    {
+        $this->memcachedHost = $memcachedHost;
+        $this->memcachedPort = $memcachedPort;
+    }
     /**
      * List all Service entities
      *
@@ -102,9 +117,9 @@ class ServiceController extends AbstractController
 
         $institutionServices = $service->getServiceInstitutions();  // Get the InstitutionServices for the Service
 
-        $sessionController = new SessionsController();  // Create a new SessionsController
-        $m = $sessionController->createMemcachedConnection();  // Create a memcached connection
-        $sessions = $sessionController->getOrderedAladin($m);  // Get the ordered Aladin sessions
+        $sessionController = new SessionsController($this->memcachedHost, $this->memcachedPort);  // Create a new SessionsController
+        $memcached = $sessionController->createMemcachedConnection();  // Create a memcached connection
+        $sessions = $sessionController->getOrderedAladin($memcached);  // Get the ordered Aladin sessions
 
         $filteredSessions = [];  // Initialize the filtered sessions array
         foreach ($sessions as $key => $session) {  // For each session
@@ -209,12 +224,12 @@ class ServiceController extends AbstractController
      */
     public function alphaSvcSlug(array $services): array
     {
-        $alpha_services = [];
+        $alphaSvcs = [];
         foreach ($services as $service) {
-            $alpha_services[$service->getSlug()] = $service;
+            $alphaSvcs[$service->getSlug()] = $service;
         }
-        ksort($alpha_services);
-        return $alpha_services;
+        ksort($alphaSvcs);
+        return $alphaSvcs;
     }
 
     /**
