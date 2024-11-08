@@ -221,22 +221,7 @@ class TestsController extends AbstractController
         $user = $request->get('user');  // Get the user
         if (!$user) {  // If the user is not provided
             if ($isAuth) {
-                $form = $this->createForm(AuthzTestType::class, null, [
-                    'institution' => $institutionService->getInstitution(),
-                    'service' => $institutionService->getService(),
-                ]);  // Create the authorization form
-                $form->handleRequest($request);  // Handle the request
-
-                if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
-                    $user = $form->get('user')->getData();  // Get the user
-                    return $this->redirectToRoute('auth_z_test', ['institution' => $index, 'service' => $slug, 'user' => $user]);  // Redirect to the authorization test page
-                }
-
-                return $this->render('tests/authZForm.html.twig', [
-                    'form' => $form,
-                    'institution' => $institutionService->getInstitution(),
-                    'service' => $institutionService->getService(),
-                ]);
+                return $this->authzForm($institutionService, $request);  // Return the authorization form
             }
             $error->setErrors(['No user provided.']);  // Set the error
             return $this->render('error.html.twig', $errorController->renderError($error));  // Return the error page
@@ -262,6 +247,41 @@ class TestsController extends AbstractController
             'institution' => $institutionService->getInstitution(),  // Set the institution
             'service' => $institutionService->getService(),  // Set the service
             'user' => $user,  // Set the user
+        ]);
+    }
+
+    /**
+     * Authorization form
+     *
+     * @param InstitutionService $institutionService
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function authzForm(InstitutionService $institutionService, Request $request): Response
+    {
+        $form = $this->createForm(AuthzTestType::class, null, [
+            'institution' => $institutionService->getInstitution(),
+            'service' => $institutionService->getService(),
+        ]);  // Create the authorization form
+        $form->handleRequest($request);  // Handle the request
+
+        if ($form->isSubmitted() && $form->isValid()) {  // If the form is submitted and valid
+            $user = $form->get('user')->getData();  // Get the user
+            return $this->redirectToRoute(
+                'auth_z_test',
+                [
+                    'institution' => $institutionService->getInstitution()->getIndex(),
+                    'service' => $institutionService->getService()->getSlug(),
+                    'user' => $user
+                ]
+            );  // Redirect to the authorization test page
+        }
+
+        return $this->render('tests/authZForm.html.twig', [
+            'form' => $form,
+            'institution' => $institutionService->getInstitution(),
+            'service' => $institutionService->getService(),
         ]);
     }
 }
