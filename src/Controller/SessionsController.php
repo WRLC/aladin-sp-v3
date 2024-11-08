@@ -178,15 +178,12 @@ class SessionsController extends AbstractController
      * @return array<string>|Exception
      *
      * @throws Exception
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function getAllKeys(Memcached $memcached): array | Exception
     {
         $host = $memcached->getServerList()[0]['host'];
         $port = $memcached->getServerList()[0]['port'];
 
-        $allKeys = [];
         $sock = fsockopen($host, $port, $errno, $errstr);
         if ($sock === false) {
             throw new Exception("Error connection to server $host on port $port: ($errno) $errstr");
@@ -196,6 +193,28 @@ class SessionsController extends AbstractController
             throw new Exception("Error writing to socket");
         }
 
+        $allKeys = $this->getTheKeys($sock);
+
+        if (fclose($sock) === false) {
+            return new Exception('Error closing socket');
+        }
+
+        return $allKeys;
+    }
+
+    /**
+     * Get all keys from the memcached server
+     *
+     * @param resource $sock
+     *
+     * @return array<string>
+     *
+     * @throws Exception
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    private function getTheKeys($sock): array
+    {
+        $allKeys = [];
         $slabCounts = [];
         while (($line = fgets($sock)) !== false) {
             $line = trim($line);
@@ -226,11 +245,6 @@ class SessionsController extends AbstractController
                 }
             }
         }
-
-        if (fclose($sock) === false) {
-            return new Exception('Error closing socket');
-        }
-
         return $allKeys;
     }
 
