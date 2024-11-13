@@ -344,24 +344,13 @@ class Institution
     /**
      * Set the Special Transform toggler state
      *
+     * @param bool $isSpecialTransform The Special Transform toggler state
      *
      * @return $this The Institution entity
      */
-    public function setSpecialTransform(): Institution
+    public function setSpecialTransform(bool $isSpecialTransform): Institution
     {
-        $this->specialTransform = true;
-
-        return $this;
-    }
-
-    /**
-     * Unset the Special Transform toggler state
-     *
-     * @return $this The Institution entity
-     */
-    public function unsetSpecialTransform(): Institution
-    {
-        $this->specialTransform = false;
+        $this->specialTransform = $isSpecialTransform;
 
         return $this;
     }

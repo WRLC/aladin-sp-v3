@@ -6,6 +6,7 @@ use App\Entity\Institution;
 use App\Controller\InstitutionController;
 use Exception;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -122,18 +123,13 @@ class InstitutionType extends AbstractType
                 'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
                 'required' => false,
             ])
-            ->add('special_transform', ChoiceType::class, [
-                'attr' => ['class' => 'form-select'],
+            ->add('special_transform', CheckboxType::class, [
+                'attr' => ['class' => 'form-check-input'],
                 'label' => 'Special Transform for UserID?',
-                'label_attr' => ['class' => 'form-label'],
-                'choices' => [
-                    'No' => false,
-                    'Yes' => true,
-                ],
-                'placeholder' => '-- Select Yes or No --',
+                'label_attr' => ['class' => 'form-check-label'],
                 'help' => 'Whether the special transform function (splitting the IdP User ID at the "@" symbol and using the first part as the User ID) should be used for this institution.',
                 'help_attr' => ['class' => 'mb-3 text-secondary form-text'],
-                'required' => true,
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-primary'],
