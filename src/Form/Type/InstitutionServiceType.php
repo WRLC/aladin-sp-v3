@@ -127,11 +127,11 @@ class InstitutionServiceType extends AbstractType
     /**
      * Get the authorization type
      *
-     * @param string $authzType
+     * @param string|null $authzType
      *
      * @return string
      */
-    private function authzType(string $authzType): string
+    private function authzType(string|null $authzType): string
     {
         if ($authzType == 'user_id') {
             return 'User IDs';
@@ -146,11 +146,11 @@ class InstitutionServiceType extends AbstractType
     /**
      * Get the authorization help text
      *
-     * @param string $authzType
+     * @param string|null $authzType
      *
      * @return string
      */
-    private function authzHelp(string $authzType): string
+    private function authzHelp(string|null $authzType): string
     {
         if ($authzType == 'user_id') {
             return 'The specific IdP User IDs that are authorized to access this service. (Each value should be added separately.)';
