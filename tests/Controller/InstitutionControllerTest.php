@@ -13,7 +13,7 @@ class InstitutionControllerTest extends WebTestCase
     /**
      * @return void
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function testSomething(): void
     {
