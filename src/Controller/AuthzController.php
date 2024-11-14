@@ -80,7 +80,7 @@ class AuthzController extends AbstractController
      */
     private function authzNone(Authz $authz): array
     {
-        $authz->setAuthorized();  // ...grant access
+        $authz->setAuthorized(true);  // ...grant access
         return $this->returnAuthz($authz);
     }
 
@@ -97,13 +97,13 @@ class AuthzController extends AbstractController
     {
         // If the user is not in the authorized members list...
         if (!in_array($user, $this->getAuthzMembers($institutionService))) {
-            $authz->setErrors();  // ...set the error flag
+            $authz->setErrors(true);  // ...set the error flag
             $authz->setMatch(  // ...set the matching user
                 ['User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName()]
             );
             return $this->returnAuthz($authz);  // ...return an error
         }
-        $authz->setAuthorized();  // ...grant access
+        $authz->setAuthorized(true);  // ...grant access
         return $this->returnAuthz($authz);
     }
 
@@ -124,7 +124,7 @@ class AuthzController extends AbstractController
 
         // If the attributes are are an error...
         if (key_exists('error', $attributes)) {
-            $authz->setErrors();  // ...set the error flag
+            $authz->setErrors(true);  // ...set the error flag
             $authz->setMatch(  // ...set the matching user
                 [
                     'User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName(),
@@ -134,7 +134,7 @@ class AuthzController extends AbstractController
             return $this->returnAuthz($authz);  // ...return an error
         }
         // Otherwise...
-        $authz->setAuthorized();  // ...grant access
+        $authz->setAuthorized(true);  // ...grant access
         return $this->returnAuthz($authz);  // ...return the authorization
     }
 
@@ -160,7 +160,7 @@ class AuthzController extends AbstractController
 
         // If the attributes are are an error...
         if (key_exists('error', $attributes)) {
-            $authz->setErrors();  // ...set the error flag
+            $authz->setErrors(true);  // ...set the error flag
             $authz->setMatch(  // ...set the matching user
                 [
                     'User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName(),
@@ -188,7 +188,7 @@ class AuthzController extends AbstractController
         }
 
         // If we're still here (phew!), we had at least one matching role...
-        $authz->setAuthorized();  // ...so grant access
+        $authz->setAuthorized(true);  // ...so grant access
         $authz->setMatch($matchingRoles);  // ...set the matching roles
         return $this->returnAuthz($authz);  // ...and return the authorization
     }
@@ -210,7 +210,7 @@ class AuthzController extends AbstractController
 
         // If the attributes are are an error...
         if (key_exists('error', $attributes)) {
-            $authz->setErrors();  // ...set the error flag
+            $authz->setErrors(true);  // ...set the error flag
             $authz->setMatch(  // ...set the matching user
                 [
                     'User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName(),
@@ -221,7 +221,7 @@ class AuthzController extends AbstractController
         }
 
         if (in_array($attributes['user_group']['value'], $this->getAuthzMembers($institutionService))) {
-            $authz->setAuthorized();
+            $authz->setAuthorized(true);
             $authz->setMatch([$attributes['user_group']['value']]);
             return $this->returnAuthz($authz);
         }
@@ -240,7 +240,7 @@ class AuthzController extends AbstractController
      */
     private function authzError(InstitutionService $institutionService, string $user, Authz $authz): array
     {
-        $authz->setErrors();  // Set the error flag
+        $authz->setErrors(true);  // Set the error flag
         $authz->setMatch(  // Set the matching user
             ['User ' . $user . ' not authorized to use ' . $institutionService->getService()->getName()]
         );

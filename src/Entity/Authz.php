@@ -66,23 +66,13 @@ class Authz
     /**
      * Set the authorized value
      *
-     * @return $this
-     */
-    public function setAuthorized(): Authz
-    {
-        $this->authorized = true;
-
-        return $this;
-    }
-
-    /**
-     * Unset the authorized value
+     * @param bool $authz
      *
      * @return $this
      */
-    public function unsetAuthorized(): Authz
+    public function setAuthorized(bool $authz): Authz
     {
-        $this->authorized = false;
+        $this->authorized = $authz;
 
         return $this;
     }
@@ -127,23 +117,13 @@ class Authz
     /**
      * Set the errors
      *
-     * @return $this
-     */
-    public function setErrors(): Authz
-    {
-        $this->errors = true;
-
-        return $this;
-    }
-
-    /**
-     * Unset the errors
+     * @param bool $errors
      *
      * @return $this
      */
-    public function unsetErrors(): Authz
+    public function setErrors(bool $errors): Authz
     {
-        $this->errors = false;
+        $this->errors = $errors;
 
         return $this;
     }

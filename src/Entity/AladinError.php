@@ -118,23 +118,13 @@ class AladinError
     /**
      * Set the log
      *
-     * @return $this
-     */
-    public function setLog(): AladinError
-    {
-        $this->log = true;
-
-        return $this;
-    }
-
-    /**
-     * Unset the log
+     * @param bool $log
      *
      * @return $this
      */
-    public function unsetLog(): AladinError
+    public function setLog(bool $log): AladinError
     {
-        $this->log = false;
+        $this->log = $log;
 
         return $this;
     }
