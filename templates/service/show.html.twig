@@ -41,7 +41,6 @@
     </table>
     <div class="mb-3">
         <h2 class="col col-9">Institutional Services</h2>
-        {% dump service %}
         {% if service.serviceInstitutions|length > 0 %}
             <table class="table table-striped">
                 <caption class="text-secondary form-text">To add an institutional service for {{ service.Name }}, please visit the page of the <a href="{{ path('list_institutions') }}">institution</a> you wish to add the service for.</caption>
