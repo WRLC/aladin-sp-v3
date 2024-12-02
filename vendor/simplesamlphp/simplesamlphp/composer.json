@@ -84,7 +84,7 @@
         "symfony/var-exporter": "^6.4",
         "symfony/yaml": "^6.4",
         "twig/intl-extra": "^3.7",
-        "twig/twig": "^3.5"
+        "twig/twig": "^3.14.0"
     },
     "require-dev": {
         "ext-curl": "*",
@@ -117,7 +117,8 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "muglug/package-versions-56": true,
             "phpstan/extension-installer": true,
-            "simplesamlphp/composer-module-installer": true
+            "simplesamlphp/composer-module-installer": true,
+            "simplesamlphp/composer-xmlprovider-installer": true
         }
     },
     "extra": {
@@ -129,5 +130,5 @@
         "translations:unused": "php bin/translations translations:unused",
         "translations:update:translatable": "php bin/translations translations:update:translatable"
     },
-    "version": "v2.3.2"
+    "version": "v2.3.4"
 }

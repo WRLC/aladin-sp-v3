@@ -175,7 +175,8 @@ class Language
         if (array_intersect(['pt-br', 'zh-tw'], $configuredAvailableLanguages)) {
             Logger::warning(
                 "Deprecated locales found in `language.available`. "
-                . "Please replace 'pt-br' with 'pt_BR' and 'zh-tw' with 'zh_TW'.",
+                . "Please replace 'pt-br' with 'pt_BR',"
+                . " and 'zh-tw' with 'zh_TW'.",
             );
 
             if (($i = array_search('pt-br', $configuredAvailableLanguages)) !== false) {
@@ -192,7 +193,8 @@ class Language
             if (Locales::exists($code)) {
                 $availableLanguages[] = $code;
             } else {
-                Logger::error("Language \"$code\" not installed. Check config.");
+                /* The configured language code can't be found in Symfony's list of known locales */
+                Logger::error("Locale \"$code\" is not known to the translation system. Check language settings in your config.");
             }
         }
 

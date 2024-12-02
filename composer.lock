@@ -3157,16 +3157,16 @@
         },
         {
             "name": "simplesamlphp/simplesamlphp",
-            "version": "v2.3.2",
+            "version": "v2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/simplesamlphp.git",
-                "reference": "1ee347667046b8d9d633188dd7e4fd7e800bdf14"
+                "reference": "210a8f677f827b6296f6ae4c056f6297498e7762"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp/zipball/1ee347667046b8d9d633188dd7e4fd7e800bdf14",
-                "reference": "1ee347667046b8d9d633188dd7e4fd7e800bdf14",
+                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp/zipball/210a8f677f827b6296f6ae4c056f6297498e7762",
+                "reference": "210a8f677f827b6296f6ae4c056f6297498e7762",
                 "shasum": ""
             },
             "require": {
@@ -3209,7 +3209,7 @@
                 "symfony/var-exporter": "^6.4",
                 "symfony/yaml": "^6.4",
                 "twig/intl-extra": "^3.7",
-                "twig/twig": "^3.5"
+                "twig/twig": "^3.14.0"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -3283,20 +3283,20 @@
                 "issues": "https://github.com/simplesamlphp/simplesamlphp/issues",
                 "source": "https://github.com/simplesamlphp/simplesamlphp"
             },
-            "time": "2024-09-06T17:18:36+00:00"
+            "time": "2024-12-01T23:44:39+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-assets-base",
-            "version": "v2.3.1",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/simplesamlphp-assets-base.git",
-                "reference": "b21b0a05cdedce3eb242b06d9bea30186bfea8e1"
+                "reference": "3f83d1afb16a2a807ac26f6a6a8e2f03bad75abe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-assets-base/zipball/b21b0a05cdedce3eb242b06d9bea30186bfea8e1",
-                "reference": "b21b0a05cdedce3eb242b06d9bea30186bfea8e1",
+                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-assets-base/zipball/3f83d1afb16a2a807ac26f6a6a8e2f03bad75abe",
+                "reference": "3f83d1afb16a2a807ac26f6a6a8e2f03bad75abe",
                 "shasum": ""
             },
             "require": {
@@ -3317,9 +3317,9 @@
             "description": "Assets for the SimpleSAMLphp main repository",
             "support": {
                 "issues": "https://github.com/simplesamlphp/simplesamlphp-assets-base/issues",
-                "source": "https://github.com/simplesamlphp/simplesamlphp-assets-base/tree/v2.3.1"
+                "source": "https://github.com/simplesamlphp/simplesamlphp-assets-base/tree/v2.3.2"
             },
-            "time": "2024-10-13T01:14:49+00:00"
+            "time": "2024-12-01T01:26:55+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-authorize",

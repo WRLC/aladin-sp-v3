@@ -5,9 +5,45 @@
 This document lists the changes between versions of SimpleSAMLphp.
 See the [upgrade notes](https://simplesamlphp.org/docs/stable/simplesamlphp-upgrade-notes.html) for specific information about upgrading.
 
-## Version 2.3.3
+## Version 2.3.5
 
 Released TBD
+
+## Version 2.3.4
+
+Released 2024-12-02
+
+`Security`
+
+* A security bug was patched in the `saml2-library` that allowed for XXE during the parsing
+  of SAML2-messages (CVE-2024-52596)
+
+`Other fixes`
+
+* Attributes translations are now in the "attributes" domain (#2328).
+* Add `index` directive to Nginx example configuration (#2329).
+* Better error message when using legacy endpoints format (#2335).
+* Some minor improvements to the changes in 2.3.3.
+
+## Version 2.3.3
+
+Released 2024-11-16
+
+* Fix `st`-language by updating the ICU-files (#2305)
+* Fix docs and configuration examples regarding SSO-endpoints.
+
+`admin`
+
+* Fix regression in metadata converter clipboard-button (#2253)
+* Fix typo that caused the metadata file-upload to be hidden (#2271)
+
+`discopower`
+
+* Throw a meaningful exception when tags contain illegal characters (v1.4.1)
+
+`ldap`
+
+* Fix a missing negation that rendered multi-ldap broken (v2.3.7)
 
 ## Version 2.3.2
 
