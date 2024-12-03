@@ -20,19 +20,15 @@ use function in_array;
 /**
  * Class responsible for purging databases of data before reloading data fixtures.
  */
-class ORMPurger implements PurgerInterface, ORMPurgerInterface
+final class ORMPurger implements ORMPurgerInterface
 {
     public const PURGE_MODE_DELETE   = 1;
     public const PURGE_MODE_TRUNCATE = 2;
 
-    private ?EntityManagerInterface $em;
-
     /**
      * If the purge should be done through DELETE or TRUNCATE statements
-     *
-     * @var int
      */
-    private $purgeMode = self::PURGE_MODE_DELETE;
+    private int $purgeMode = self::PURGE_MODE_DELETE;
 
     /**
      * Table/view names to be excluded from purge
@@ -42,7 +38,7 @@ class ORMPurger implements PurgerInterface, ORMPurgerInterface
     private array $excluded;
 
     /** @var list<string>|null */
-    private ?array $cachedSqlStatements = null;
+    private array|null $cachedSqlStatements = null;
 
     /**
      * Construct new purger instance.
@@ -50,20 +46,15 @@ class ORMPurger implements PurgerInterface, ORMPurgerInterface
      * @param EntityManagerInterface|null $em       EntityManagerInterface instance used for persistence.
      * @param string[]                    $excluded array of table/view names to be excluded from purge
      */
-    public function __construct(?EntityManagerInterface $em = null, array $excluded = [])
+    public function __construct(private EntityManagerInterface|null $em = null, array $excluded = [])
     {
-        $this->em       = $em;
         $this->excluded = $excluded;
     }
 
     /**
      * Set the purge mode
-     *
-     * @param int $mode
-     *
-     * @return void
      */
-    public function setPurgeMode($mode)
+    public function setPurgeMode(int $mode): void
     {
         $this->purgeMode           = $mode;
         $this->cachedSqlStatements = null;
@@ -71,16 +62,13 @@ class ORMPurger implements PurgerInterface, ORMPurgerInterface
 
     /**
      * Get the purge mode
-     *
-     * @return int
      */
-    public function getPurgeMode()
+    public function getPurgeMode(): int
     {
         return $this->purgeMode;
     }
 
-    /** @inheritDoc */
-    public function setEntityManager(EntityManagerInterface $em)
+    public function setEntityManager(EntityManagerInterface $em): void
     {
         $this->em                  = $em;
         $this->cachedSqlStatements = null;
@@ -88,16 +76,13 @@ class ORMPurger implements PurgerInterface, ORMPurgerInterface
 
     /**
      * Retrieve the EntityManagerInterface instance this purger instance is using.
-     *
-     * @return EntityManagerInterface
      */
-    public function getObjectManager()
+    public function getObjectManager(): EntityManagerInterface
     {
         return $this->em;
     }
 
-    /** @inheritDoc */
-    public function purge()
+    public function purge(): void
     {
         $connection = $this->em->getConnection();
         array_map([$connection, 'executeStatement'], $this->getPurgeStatements());
@@ -261,7 +246,7 @@ class ORMPurger implements PurgerInterface, ORMPurgerInterface
     private function getJoinTableName(
         $assoc,
         ClassMetadata $class,
-        AbstractPlatform $platform
+        AbstractPlatform $platform,
     ): string {
         return $this->em->getConfiguration()->getQuoteStrategy()->getJoinTableName($assoc, $class, $platform);
     }

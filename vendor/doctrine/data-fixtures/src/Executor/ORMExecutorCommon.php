@@ -20,7 +20,7 @@ trait ORMExecutorCommon
     private EntityManagerInterface $originalManager;
     private ORMReferenceListener $listener;
 
-    public function __construct(EntityManagerInterface $em, ?ORMPurgerInterface $purger = null)
+    public function __construct(EntityManagerInterface $em, ORMPurgerInterface|null $purger = null)
     {
         $this->originalManager = $em;
         // Make sure, wrapInTransaction() exists on the EM.
@@ -43,16 +43,13 @@ trait ORMExecutorCommon
 
     /**
      * Retrieve the EntityManagerInterface instance this executor instance is using.
-     *
-     * @return EntityManagerInterface
      */
-    public function getObjectManager()
+    public function getObjectManager(): EntityManagerInterface
     {
         return $this->originalManager;
     }
 
-    /** @inheritDoc */
-    public function setReferenceRepository(ReferenceRepository $referenceRepository)
+    public function setReferenceRepository(ReferenceRepository $referenceRepository): void
     {
         $this->em->getEventManager()->removeEventListener(
             $this->listener->getSubscribedEvents(),

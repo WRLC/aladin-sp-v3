@@ -11,99 +11,63 @@ use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\Common\DataFixtures\SharedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-use function get_class;
+use function get_debug_type;
 use function sprintf;
 
 /**
  * Abstract fixture executor.
+ *
+ * @internal since 1.8.0
  */
-abstract class AbstractExecutor
+abstract class AbstractExecutor implements LoggerAwareInterface
 {
-    /**
-     * Purger instance for purging database before loading data fixtures
-     *
-     * @var PurgerInterface
-     */
-    protected $purger;
+    use LoggerAwareTrait;
 
     /**
-     * Logger callback for logging messages when loading data fixtures
-     *
-     * @var callable
+     * Purger instance for purging database before loading data fixtures
      */
-    protected $logger;
+    protected PurgerInterface|null $purger = null;
 
     /**
      * Fixture reference repository
-     *
-     * @var ReferenceRepository
      */
-    protected $referenceRepository;
+    protected ReferenceRepository $referenceRepository;
 
     public function __construct(ObjectManager $manager)
     {
         $this->referenceRepository = new ReferenceRepository($manager);
     }
 
-    /** @return ReferenceRepository */
-    public function getReferenceRepository()
+    public function getReferenceRepository(): ReferenceRepository
     {
         return $this->referenceRepository;
     }
 
-    public function setReferenceRepository(ReferenceRepository $referenceRepository)
+    public function setReferenceRepository(ReferenceRepository $referenceRepository): void
     {
         $this->referenceRepository = $referenceRepository;
     }
 
     /**
      * Sets the Purger instance to use for this executor instance.
-     *
-     * @return void
      */
-    public function setPurger(PurgerInterface $purger)
+    public function setPurger(PurgerInterface $purger): void
     {
         $this->purger = $purger;
     }
 
-    /** @return PurgerInterface */
-    public function getPurger()
+    public function getPurger(): PurgerInterface
     {
         return $this->purger;
     }
 
     /**
-     * Set the logger callable to execute with the log() method.
-     *
-     * @param callable $logger
-     *
-     * @return void
-     */
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    /**
-     * Logs a message using the logger.
-     *
-     * @param string $message
-     *
-     * @return void
-     */
-    public function log($message)
-    {
-        $logger = $this->logger;
-        $logger($message);
-    }
-
-    /**
      * Load a fixture with the given persistence manager.
-     *
-     * @return void
      */
-    public function load(ObjectManager $manager, FixtureInterface $fixture)
+    public function load(ObjectManager $manager, FixtureInterface $fixture): void
     {
         if ($this->logger) {
             $prefix = '';
@@ -111,7 +75,7 @@ abstract class AbstractExecutor
                 $prefix = sprintf('[%d] ', $fixture->getOrder());
             }
 
-            $this->log('loading ' . $prefix . get_class($fixture));
+            $this->logger->debug('loading ' . $prefix . get_debug_type($fixture));
         }
 
         // additionally pass the instance of reference repository to shared fixtures
@@ -126,11 +90,9 @@ abstract class AbstractExecutor
     /**
      * Purges the database before loading.
      *
-     * @return void
-     *
      * @throws Exception if the purger is not defined.
      */
-    public function purge()
+    public function purge(): void
     {
         if ($this->purger === null) {
             throw new Exception(
@@ -139,9 +101,7 @@ abstract class AbstractExecutor
             );
         }
 
-        if ($this->logger) {
-            $this->log('purging database');
-        }
+        $this->logger?->debug('purging database');
 
         $this->purger->purge();
     }
@@ -151,8 +111,6 @@ abstract class AbstractExecutor
      *
      * @param FixtureInterface[] $fixtures Array of fixtures to execute.
      * @param bool               $append   Whether to append the data fixtures or purge the database before loading.
-     *
-     * @return void
      */
-    abstract public function execute(array $fixtures, bool $append = false);
+    abstract public function execute(array $fixtures, bool $append = false): void;
 }

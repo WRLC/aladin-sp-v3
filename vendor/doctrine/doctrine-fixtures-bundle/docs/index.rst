@@ -12,35 +12,17 @@ This bundle is compatible with any database supported by `Doctrine ORM`_
 Installation
 ------------
 
-In Symfony 4 or higher applications that use `Symfony Flex`_, open a command
-console, enter your project directory and run the following command:
+If you're using `Symfony Flex`_, run this command and you're done:
 
 .. code-block:: terminal
 
     $ composer require --dev orm-fixtures
 
-Starting from Symfony 4.0, Flex should be used by default and register the
-bundle for you, and in that case you can skip to the next section and start
-writing fixtures.
-
-In Symfony 3 applications (or when not using Symfony Flex), run this other
-command instead:
+If you're not using Flex, run this other command instead:
 
 .. code-block:: terminal
 
     $ composer require --dev doctrine/doctrine-fixtures-bundle
-
-You will also need to enable the bundle. In Symfony 3 and earlier applications,
-update the ``AppKernel`` class::
-
-    // app/AppKernel.php
-
-    // ...
-    // registerBundles()
-    if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
-        // ...
-        $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
-    }
 
 Writing Fixtures
 ----------------
@@ -60,7 +42,7 @@ Create a fixtures class and start adding products::
 
     class AppFixtures extends Fixture
     {
-        public function load(ObjectManager $manager)
+        public function load(ObjectManager $manager): void
         {
             // create 20 products! Bam!
             for ($i = 0; $i < 20; $i++) {
@@ -120,7 +102,7 @@ injection::
         }
 
         // ...
-        public function load(ObjectManager $manager)
+        public function load(ObjectManager $manager): void
         {
             $user = new User();
             $user->setUsername('admin');
@@ -166,7 +148,7 @@ exact same object via its name.
     {
         public const ADMIN_USER_REFERENCE = 'admin-user';
 
-        public function load(ObjectManager $manager)
+        public function load(ObjectManager $manager): void
         {
             $userAdmin = new User('admin', 'pass_1234');
             $manager->persist($userAdmin);
@@ -183,7 +165,7 @@ exact same object via its name.
     // ...
     class GroupFixtures extends Fixture
     {
-        public function load(ObjectManager $manager)
+        public function load(ObjectManager $manager): void
         {
             $userGroup = new Group('administrators');
             // this reference returns the User object created in UserFixtures
@@ -215,7 +197,7 @@ an array of the fixture classes that must be loaded before this one::
     // ...
     class UserFixtures extends Fixture
     {
-        public function load(ObjectManager $manager)
+        public function load(ObjectManager $manager): void
         {
             // ...
         }
@@ -229,12 +211,12 @@ an array of the fixture classes that must be loaded before this one::
 
     class GroupFixtures extends Fixture implements DependentFixtureInterface
     {
-        public function load(ObjectManager $manager)
+        public function load(ObjectManager $manager): void
         {
             // ...
         }
 
-        public function getDependencies()
+        public function getDependencies(): array
         {
             return [
                 UserFixtures::class,
@@ -322,7 +304,7 @@ You can also customize purging behavior significantly more and implement a custo
     // ...
     class CustomPurger implements PurgerInterface
     {
-        public function purge() : void
+        public function purge(): void
         {
             // ...
         }
@@ -376,7 +358,7 @@ The next step is to register our custom purger factory and specify its alias.
 
         use App\Purger\CustomerPurgerFactory;
 
-        return function(ContainerConfigurator $configurator) : void {
+        return function(ContainerConfigurator $configurator): void {
             $services = $configurator->services();
 
             $services->set(CustomerPurgerFactory::class)
@@ -430,7 +412,7 @@ Then, enable Dependency Injection for the ``fixtures`` directory:
         // config/services.php
         namespace Symfony\Component\DependencyInjection\Loader\Configurator;
     
-        return function(ContainerConfigurator $container) : void {
+        return function(ContainerConfigurator $container): void {
             $services = $container->services()
                 ->defaults()
                     ->autowire()

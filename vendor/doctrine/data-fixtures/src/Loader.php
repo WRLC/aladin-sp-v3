@@ -20,7 +20,6 @@ use function asort;
 use function class_exists;
 use function class_implements;
 use function count;
-use function get_class;
 use function get_declared_classes;
 use function implode;
 use function in_array;
@@ -40,14 +39,14 @@ class Loader
     /**
      * Array of fixture object instances to execute.
      *
-     * @psalm-var array<class-string<FixtureInterface>, FixtureInterface>
+     * @phpstan-var array<class-string<FixtureInterface>, FixtureInterface>
      */
     private array $fixtures = [];
 
     /**
      * Array of ordered fixture object instances.
      *
-     * @psalm-var array<class-string<FixtureInterface>|int, FixtureInterface>
+     * @phpstan-var array<class-string<FixtureInterface>|int, FixtureInterface>
      */
     private array $orderedFixtures = [];
 
@@ -73,7 +72,7 @@ class Loader
      *
      * @return array $fixtures Array of loaded fixture object instances.
      */
-    public function loadFromDirectory($dir)
+    public function loadFromDirectory(string $dir): array
     {
         if (! is_dir($dir)) {
             throw new InvalidArgumentException(sprintf('"%s" does not exist', $dir));
@@ -94,7 +93,7 @@ class Loader
      *
      * @return array $fixtures Array of loaded fixture object instances.
      */
-    public function loadFromFile($fileName)
+    public function loadFromFile(string $fileName): array
     {
         if (! is_readable($fileName)) {
             throw new InvalidArgumentException(sprintf('"%s" does not exist or is not readable', $fileName));
@@ -107,24 +106,16 @@ class Loader
 
     /**
      * Has fixture?
-     *
-     * @param FixtureInterface $fixture
-     *
-     * @return bool
      */
-    public function hasFixture($fixture)
+    public function hasFixture(FixtureInterface $fixture): bool
     {
-        return isset($this->fixtures[get_class($fixture)]);
+        return isset($this->fixtures[$fixture::class]);
     }
 
     /**
      * Get a specific fixture instance
-     *
-     * @param string $className
-     *
-     * @return FixtureInterface
      */
-    public function getFixture($className)
+    public function getFixture(string $className): FixtureInterface
     {
         if (! isset($this->fixtures[$className])) {
             throw new InvalidArgumentException(sprintf(
@@ -139,9 +130,9 @@ class Loader
     /**
      * Add a fixture object instance to the loader.
      */
-    public function addFixture(FixtureInterface $fixture)
+    public function addFixture(FixtureInterface $fixture): void
     {
-        $fixtureClass = get_class($fixture);
+        $fixtureClass = $fixture::class;
 
         if (isset($this->fixtures[$fixtureClass])) {
             return;
@@ -150,7 +141,7 @@ class Loader
         if ($fixture instanceof OrderedFixtureInterface && $fixture instanceof DependentFixtureInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Class "%s" can\'t implement "%s" and "%s" at the same time.',
-                get_class($fixture),
+                $fixture::class,
                 'OrderedFixtureInterface',
                 'DependentFixtureInterface',
             ));
@@ -175,7 +166,7 @@ class Loader
     /**
      * Returns the array of data fixtures to execute.
      *
-     * @psalm-return array<class-string<FixtureInterface>|int, FixtureInterface>
+     * @phpstan-return array<class-string<FixtureInterface>|int, FixtureInterface>
      */
     public function getFixtures()
     {
@@ -200,11 +191,9 @@ class Loader
      * Check if a given fixture is transient and should not be considered a data fixtures
      * class.
      *
-     * @psalm-param class-string<object> $className
-     *
-     * @return bool
+     * @phpstan-param class-string<object> $className
      */
-    public function isTransient($className)
+    public function isTransient(string $className): bool
     {
         $rc = new ReflectionClass($className);
         if ($rc->isAbstract()) {
@@ -218,12 +207,8 @@ class Loader
 
     /**
      * Creates the fixture object from the class.
-     *
-     * @param string $class
-     *
-     * @return FixtureInterface
      */
-    protected function createFixture($class)
+    protected function createFixture(string $class): FixtureInterface
     {
         return new $class();
     }
@@ -259,12 +244,10 @@ class Loader
 
     /**
      * Orders fixtures by dependencies
-     *
-     * @return void
      */
-    private function orderFixturesByDependencies()
+    private function orderFixturesByDependencies(): void
     {
-        /** @psalm-var array<class-string<DependentFixtureInterface>, int> */
+        /** @phpstan-var array<class-string<DependentFixtureInterface>, int> */
         $sequenceForClasses = [];
 
         // If fixtures were already ordered by number then we need
@@ -287,7 +270,7 @@ class Loader
 
         // First we determine which classes has dependencies and which don't
         foreach ($this->fixtures as $fixture) {
-            $fixtureClass = get_class($fixture);
+            $fixtureClass = $fixture::class;
 
             if ($fixture instanceof OrderedFixtureInterface) {
                 continue;
@@ -365,7 +348,7 @@ class Loader
         $this->orderedFixtures = array_merge($this->orderedFixtures, $orderedFixtures);
     }
 
-    /** @psalm-param iterable<class-string> $dependenciesClasses */
+    /** @phpstan-param iterable<class-string> $dependenciesClasses */
     private function validateDependencies(iterable $dependenciesClasses): bool
     {
         $loadedFixtureClasses = array_keys($this->fixtures);
@@ -383,12 +366,12 @@ class Loader
     }
 
     /**
-     * @psalm-param array<class-string<DependentFixtureInterface>, int> $sequences
-     * @psalm-param iterable<class-string<FixtureInterface>>|null       $classes
+     * @phpstan-param array<class-string<DependentFixtureInterface>, int> $sequences
+     * @phpstan-param iterable<class-string<FixtureInterface>>|null       $classes
      *
-     * @psalm-return array<class-string<FixtureInterface>>
+     * @phpstan-return array<class-string<FixtureInterface>>
      */
-    private function getUnsequencedClasses(array $sequences, ?iterable $classes = null): array
+    private function getUnsequencedClasses(array $sequences, iterable|null $classes = null): array
     {
         $unsequencedClasses = [];
 
@@ -410,10 +393,10 @@ class Loader
     /**
      * Load fixtures from files contained in iterator.
      *
-     * @psalm-param Iterator<SplFileInfo> $iterator Iterator over files from
+     * @phpstan-param Iterator<SplFileInfo> $iterator Iterator over files from
      *                                              which fixtures should be loaded.
      *
-     * @psalm-return list<FixtureInterface> $fixtures Array of loaded fixture object instances.
+     * @phpstan-return list<FixtureInterface> $fixtures Array of loaded fixture object instances.
      */
     private function loadFromIterator(Iterator $iterator): array
     {
