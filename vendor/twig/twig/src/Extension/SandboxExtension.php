@@ -120,14 +120,12 @@ final class SandboxExtension extends AbstractExtension
     public function ensureToStringAllowed($obj, int $lineno = -1, ?Source $source = null)
     {
         if (\is_array($obj)) {
-            foreach ($obj as $v) {
-                $this->ensureToStringAllowed($v, $lineno, $source);
-            }
+            $this->ensureToStringAllowedForArray($obj, $lineno, $source);
 
             return $obj;
         }
 
-        if ($this->isSandboxed($source) && $obj instanceof \Stringable) {
+        if ($obj instanceof \Stringable && $this->isSandboxed($source)) {
             try {
                 $this->policy->checkMethodAllowed($obj, '__toString');
             } catch (SecurityNotAllowedMethodError $e) {
@@ -139,5 +137,29 @@ final class SandboxExtension extends AbstractExtension
         }
 
         return $obj;
+    }
+
+    private function ensureToStringAllowedForArray(array $obj, int $lineno, ?Source $source, array &$stack = []): void
+    {
+        foreach ($obj as $k => $v) {
+            if (!$v) {
+                continue;
+            }
+
+            if (!\is_array($v)) {
+                $this->ensureToStringAllowed($v, $lineno, $source);
+                continue;
+            }
+
+            if ($r = \ReflectionReference::fromArrayElement($obj, $k)) {
+                if (isset($stack[$r->getId()])) {
+                    continue;
+                }
+
+                $stack[$r->getId()] = true;
+            }
+
+            $this->ensureToStringAllowedForArray($v, $lineno, $source, $stack);
+        }
     }
 }
