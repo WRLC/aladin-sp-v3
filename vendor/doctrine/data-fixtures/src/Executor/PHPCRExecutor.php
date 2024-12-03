@@ -12,19 +12,16 @@ use function method_exists;
 /**
  * Class responsible for executing data fixtures.
  */
-class PHPCRExecutor extends AbstractExecutor
+final class PHPCRExecutor extends AbstractExecutor
 {
-    private DocumentManagerInterface $dm;
-
     /**
      * @param DocumentManagerInterface $dm     manager instance used for persisting the fixtures
      * @param PHPCRPurger|null         $purger to remove the current data if append is false
      */
-    public function __construct(DocumentManagerInterface $dm, ?PHPCRPurger $purger = null)
+    public function __construct(private DocumentManagerInterface $dm, PHPCRPurger|null $purger = null)
     {
         parent::__construct($dm);
 
-        $this->dm = $dm;
         if ($purger === null) {
             return;
         }
@@ -33,18 +30,17 @@ class PHPCRExecutor extends AbstractExecutor
         $this->setPurger($purger);
     }
 
-    /** @return DocumentManagerInterface */
-    public function getObjectManager()
+    public function getObjectManager(): DocumentManagerInterface
     {
         return $this->dm;
     }
 
     /** @inheritDoc */
-    public function execute(array $fixtures, $append = false)
+    public function execute(array $fixtures, bool $append = false): void
     {
         $that = $this;
 
-        $function = static function ($dm) use ($append, $that, $fixtures) {
+        $function = static function ($dm) use ($append, $that, $fixtures): void {
             if ($append === false) {
                 $that->purge();
             }

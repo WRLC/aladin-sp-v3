@@ -11,28 +11,23 @@ use PHPCR\Util\NodeHelper;
 /**
  * Class responsible for purging databases of data before reloading data fixtures.
  */
-class PHPCRPurger implements PurgerInterface
+final class PHPCRPurger implements PurgerInterface
 {
-    private ?DocumentManagerInterface $dm;
+    public function __construct(private DocumentManagerInterface|null $dm = null)
+    {
+    }
 
-    public function __construct(?DocumentManagerInterface $dm = null)
+    public function setDocumentManager(DocumentManager $dm): void
     {
         $this->dm = $dm;
     }
 
-    public function setDocumentManager(DocumentManager $dm)
-    {
-        $this->dm = $dm;
-    }
-
-    /** @return DocumentManagerInterface|null */
-    public function getObjectManager()
+    public function getObjectManager(): DocumentManagerInterface|null
     {
         return $this->dm;
     }
 
-    /** @inheritDoc */
-    public function purge()
+    public function purge(): void
     {
         $session = $this->dm->getPhpcrSession();
         NodeHelper::purgeWorkspace($session);

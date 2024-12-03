@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Doctrine\Common\DataFixtures\Executor;
 
 use Doctrine\Common\DataFixtures\Event\Listener\MongoDBReferenceListener;
-use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
+use Doctrine\Common\DataFixtures\Purger\MongoDBPurgerInterface;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 /**
  * Class responsible for executing data fixtures.
  */
-class MongoDBExecutor extends AbstractExecutor
+final class MongoDBExecutor extends AbstractExecutor
 {
-    private DocumentManager $dm;
     private MongoDBReferenceListener $listener;
 
     /**
@@ -22,9 +21,8 @@ class MongoDBExecutor extends AbstractExecutor
      *
      * @param DocumentManager $dm DocumentManager instance used for persistence.
      */
-    public function __construct(DocumentManager $dm, ?MongoDBPurger $purger = null)
+    public function __construct(private DocumentManager $dm, MongoDBPurgerInterface|null $purger = null)
     {
-        $this->dm = $dm;
         if ($purger !== null) {
             $this->purger = $purger;
             $this->purger->setDocumentManager($dm);
@@ -38,16 +36,13 @@ class MongoDBExecutor extends AbstractExecutor
 
     /**
      * Retrieve the DocumentManager instance this executor instance is using.
-     *
-     * @return DocumentManager
      */
-    public function getObjectManager()
+    public function getObjectManager(): DocumentManager
     {
         return $this->dm;
     }
 
-    /** @inheritDoc */
-    public function setReferenceRepository(ReferenceRepository $referenceRepository)
+    public function setReferenceRepository(ReferenceRepository $referenceRepository): void
     {
         $this->dm->getEventManager()->removeEventListener(
             $this->listener->getSubscribedEvents(),
@@ -60,7 +55,7 @@ class MongoDBExecutor extends AbstractExecutor
     }
 
     /** @inheritDoc */
-    public function execute(array $fixtures, $append = false)
+    public function execute(array $fixtures, bool $append = false): void
     {
         if ($append === false) {
             $this->purge();

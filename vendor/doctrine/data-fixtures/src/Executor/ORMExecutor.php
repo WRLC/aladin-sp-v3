@@ -9,15 +9,15 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Class responsible for executing data fixtures.
  */
-class ORMExecutor extends AbstractExecutor
+final class ORMExecutor extends AbstractExecutor
 {
     use ORMExecutorCommon;
 
     /** @inheritDoc */
-    public function execute(array $fixtures, $append = false)
+    public function execute(array $fixtures, bool $append = false): void
     {
         $executor = $this;
-        $this->em->wrapInTransaction(static function (EntityManagerInterface $em) use ($executor, $fixtures, $append) {
+        $this->em->wrapInTransaction(static function (EntityManagerInterface $em) use ($executor, $fixtures, $append): void {
             if ($append === false) {
                 $executor->purge();
             }

@@ -7,7 +7,6 @@ namespace SimpleSAML\XML;
 use DOMElement;
 use SimpleSAML\Assert\Assert;
 use SimpleSAML\XML\Exception\SchemaViolationException;
-use SimpleSAML\XML\StringElementTrait;
 
 use function str_replace;
 
@@ -61,5 +60,5 @@ trait Base64ElementTrait
      * @param \DOMElement|null $parent The element we should append to.
      * @return \DOMElement
      */
-    abstract public function instantiateParentElement(DOMElement $parent = null): DOMElement;
+    abstract public function instantiateParentElement(?DOMElement $parent = null): DOMElement;
 }

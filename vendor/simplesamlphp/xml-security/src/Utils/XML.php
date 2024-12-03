@@ -33,8 +33,8 @@ class XML
     public static function canonicalizeData(
         DOMElement $element,
         string $c14nMethod,
-        array $xpaths = null,
-        array $prefixes = null,
+        ?array $xpaths = null,
+        ?array $prefixes = null,
     ): string {
         $withComments = match ($c14nMethod) {
             C::C14N_EXCLUSIVE_WITH_COMMENTS, C::C14N_INCLUSIVE_WITH_COMMENTS => true,
@@ -101,7 +101,7 @@ class XML
                         }
                     }
                     break;
-                case C::XPATH_URI:
+                case C::XPATH10_URI:
                     $xpath = $transform->getXPath();
                     if ($xpath !== null) {
                         $arXPath = [];

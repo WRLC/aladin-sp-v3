@@ -43,45 +43,31 @@ class TopologicalSorter
      */
     private bool $allowCyclicDependencies;
 
-    /** @param bool $allowCyclicDependencies */
-    public function __construct($allowCyclicDependencies = true)
+    public function __construct(bool $allowCyclicDependencies = true)
     {
         $this->allowCyclicDependencies = (bool) $allowCyclicDependencies;
     }
 
     /**
      * Adds a new node (vertex) to the graph, assigning its hash and value.
-     *
-     * @param string $hash
-     *
-     * @return void
      */
-    public function addNode($hash, ClassMetadata $node)
+    public function addNode(string $hash, ClassMetadata $node): void
     {
         $this->nodeList[$hash] = new Vertex($node);
     }
 
     /**
      * Checks the existence of a node in the graph.
-     *
-     * @param string $hash
-     *
-     * @return bool
      */
-    public function hasNode($hash)
+    public function hasNode(string $hash): bool
     {
         return isset($this->nodeList[$hash]);
     }
 
     /**
      * Adds a new dependency (edge) to the graph using their hashes.
-     *
-     * @param string $fromHash
-     * @param string $toHash
-     *
-     * @return void
      */
-    public function addDependency($fromHash, $toHash)
+    public function addDependency(string $fromHash, string $toHash): void
     {
         $definition = $this->nodeList[$fromHash];
 
@@ -99,7 +85,7 @@ class TopologicalSorter
      * @throws RuntimeException
      * @throws CircularReferenceException
      */
-    public function sort()
+    public function sort(): array
     {
         foreach ($this->nodeList as $definition) {
             if ($definition->state !== Vertex::NOT_VISITED) {
@@ -122,12 +108,10 @@ class TopologicalSorter
      *
      * Note: Highly performance-sensitive method.
      *
-     * @return void
-     *
      * @throws RuntimeException
      * @throws CircularReferenceException
      */
-    private function visit(Vertex $definition)
+    private function visit(Vertex $definition): void
     {
         $definition->state = Vertex::IN_PROGRESS;
 

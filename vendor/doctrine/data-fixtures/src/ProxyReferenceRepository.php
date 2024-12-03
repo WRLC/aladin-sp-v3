@@ -7,7 +7,6 @@ namespace Doctrine\Common\DataFixtures;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
-use function get_class;
 use function serialize;
 use function unserialize;
 
@@ -21,23 +20,10 @@ class ProxyReferenceRepository extends ReferenceRepository
 {
     /**
      * Serialize reference repository
-     *
-     * @return string
      */
-    public function serialize()
+    public function serialize(): string
     {
-        $unitOfWork       = $this->getManager()->getUnitOfWork();
-        $simpleReferences = [];
-
-        foreach ($this->getReferences() as $name => $reference) {
-            $className = $this->getRealClass(get_class($reference));
-
-            $simpleReferences[$name] = [$className, $this->getIdentifier($reference, $unitOfWork)];
-        }
-
         return serialize([
-            'references' => $simpleReferences, // For BC, remove in next major.
-            'identities' => $this->getIdentities(), // For BC, remove in next major.
             'identitiesByClass' => $this->getIdentitiesByClass(),
         ]);
     }
@@ -46,35 +32,10 @@ class ProxyReferenceRepository extends ReferenceRepository
      * Unserialize reference repository
      *
      * @param string $serializedData Serialized data
-     *
-     * @return void
      */
-    public function unserialize($serializedData)
+    public function unserialize(string $serializedData): void
     {
         $repositoryData = unserialize($serializedData);
-
-        // For BC, remove in next major.
-        if (! isset($repositoryData['identitiesByClass'])) {
-            $references = $repositoryData['references'];
-
-            foreach ($references as $name => $proxyReference) {
-                $this->setReference(
-                    $name,
-                    $this->getManager()->getReference(
-                        $proxyReference[0], // entity class name
-                        $proxyReference[1],  // identifiers
-                    ),
-                );
-            }
-
-            $identities = $repositoryData['identities'];
-
-            foreach ($identities as $name => $identity) {
-                $this->setReferenceIdentity($name, $identity);
-            }
-
-            return;
-        }
 
         foreach ($repositoryData['identitiesByClass'] as $className => $identities) {
             foreach ($identities as $name => $identity) {
@@ -95,10 +56,8 @@ class ProxyReferenceRepository extends ReferenceRepository
      * Load data fixture reference repository
      *
      * @param string $baseCacheName Base cache name
-     *
-     * @return bool
      */
-    public function load($baseCacheName)
+    public function load(string $baseCacheName): bool
     {
         $filename = $baseCacheName . '.ser';
 
@@ -121,10 +80,8 @@ class ProxyReferenceRepository extends ReferenceRepository
      * Save data fixture reference repository
      *
      * @param string $baseCacheName Base cache name
-     *
-     * @return void
      */
-    public function save($baseCacheName)
+    public function save(string $baseCacheName): void
     {
         $serializedData = $this->serialize();
 
