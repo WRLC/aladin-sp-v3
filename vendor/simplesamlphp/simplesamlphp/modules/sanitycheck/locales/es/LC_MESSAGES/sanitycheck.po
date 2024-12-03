@@ -1,0 +1,8 @@
+msgid "These checks failed:"
+msgstr "Las siguientes comprobaciones han fallado:"
+
+msgid "These checks succeeded:"
+msgstr "Las siguientes comprobaciones fueron satisfactorias:"
+
+msgid "Sanity check of your SimpleSAMLphp setup"
+msgstr "Comprobaciones básicas de la instalación"

@@ -672,8 +672,8 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'Gettext\\' => 
         array (
-            0 => __DIR__ . '/..' . '/gettext/translator/src',
-            1 => __DIR__ . '/..' . '/gettext/gettext/src',
+            0 => __DIR__ . '/..' . '/gettext/gettext/src',
+            1 => __DIR__ . '/..' . '/gettext/translator/src',
         ),
         'Gedmo\\' => 
         array (
