@@ -462,8 +462,12 @@ class LoginController extends AbstractController
                 $institutionService->getService()->getName()
             );
             $error->setErrors($result['match']);
+            $message = '';
+            if (count($result['match']) > 0) {
+                $message = $result['match'][0];
+            }
             $this->aladinErrorLogger->error('[' . $error->getType() . '] ' . $error->getIntro() . ': ' .
-                $result['match'][0]);
+                $message);
             return $error;
         }
 
