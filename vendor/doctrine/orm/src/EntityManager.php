@@ -565,9 +565,9 @@ class EntityManager implements EntityManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function isUninitializedObject($obj): bool
+    public function isUninitializedObject($value): bool
     {
-        return $this->unitOfWork->isUninitializedObject($obj);
+        return $this->unitOfWork->isUninitializedObject($value);
     }
 
     public function getFilters(): FilterCollection
@@ -586,7 +586,7 @@ class EntityManager implements EntityManagerInterface
     }
 
     /**
-     * @psalm-param LockMode::* $lockMode
+     * @phpstan-param LockMode::* $lockMode
      *
      * @throws OptimisticLockException
      * @throws TransactionRequiredException
