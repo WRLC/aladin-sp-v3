@@ -7,24 +7,24 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Util\Http;
+namespace PHPUnit\Logging\TeamCity;
 
-use function file_get_contents;
+use PHPUnit\Event\InvalidArgumentException;
+use PHPUnit\Event\TestSuite\Skipped;
+use PHPUnit\Event\TestSuite\SkippedSubscriber;
 
 /**
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
- *
- * @codeCoverageIgnore
  */
-final class PhpDownloader implements Downloader
+final class TestSuiteSkippedSubscriber extends Subscriber implements SkippedSubscriber
 {
     /**
-     * @param non-empty-string $url
+     * @throws InvalidArgumentException
      */
-    public function download(string $url): false|string
+    public function notify(Skipped $event): void
     {
-        return file_get_contents($url);
+        $this->logger()->testSuiteSkipped($event);
     }
 }
