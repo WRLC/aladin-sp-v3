@@ -1,8 +1,23 @@
+# Upgrade to 3.4
+
+Using the same class several times in a discriminator map is deprecated.
+In 4.0, this will be an error.
+
 # Upgrade to 3.3
 
 ## Deprecate `DatabaseDriver`
 
 The class `Doctrine\ORM\Mapping\Driver\DatabaseDriver` is deprecated without replacement.
+
+## Add `Doctrine\ORM\Query\OutputWalker` interface, deprecate `Doctrine\ORM\Query\SqlWalker::getExecutor()`
+
+Output walkers should implement the new `\Doctrine\ORM\Query\OutputWalker` interface and create
+`Doctrine\ORM\Query\Exec\SqlFinalizer` instances instead of `Doctrine\ORM\Query\Exec\AbstractSqlExecutor`s.
+The output walker must not base its workings on the query `firstResult`/`maxResult` values, so that the 
+`SqlFinalizer` can be kept in the query cache and used regardless of the actual `firstResult`/`maxResult` values.
+Any operation dependent on `firstResult`/`maxResult` should take place within the `SqlFinalizer::createExecutor()`
+method. Details can be found at https://github.com/doctrine/orm/pull/11188.
+
 
 # Upgrade to 3.2
 
@@ -737,7 +752,7 @@ Use `toIterable()` instead.
 
 Output walkers should implement the new `\Doctrine\ORM\Query\OutputWalker` interface and create
 `Doctrine\ORM\Query\Exec\SqlFinalizer` instances instead of `Doctrine\ORM\Query\Exec\AbstractSqlExecutor`s.
-The output walker must not base its workings on the query `firstResult`/`maxResult` values, so that the 
+The output walker must not base its workings on the query `firstResult`/`maxResult` values, so that the
 `SqlFinalizer` can be kept in the query cache and used regardless of the actual `firstResult`/`maxResult` values.
 Any operation dependent on `firstResult`/`maxResult` should take place within the `SqlFinalizer::createExecutor()`
 method. Details can be found at https://github.com/doctrine/orm/pull/11188.
@@ -750,7 +765,7 @@ change in behavior.
 
 Progress on this is tracked at https://github.com/doctrine/orm/issues/11624 .
 
-## PARTIAL DQL syntax is undeprecated 
+## PARTIAL DQL syntax is undeprecated
 
 Use of the PARTIAL keyword is not deprecated anymore in DQL, because we will be
 able to support PARTIAL objects with PHP 8.4 Lazy Objects and

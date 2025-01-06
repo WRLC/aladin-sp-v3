@@ -54,7 +54,7 @@ class ReferenceRepository
      * @param object $reference Reference object
      * @param object $uow       Unit of work
      */
-    protected function getIdentifier(object $reference, object $uow): array
+    protected function getIdentifier(object $reference, object $uow): mixed
     {
         // In case Reference is not yet managed in UnitOfWork
         if (! $this->hasIdentifier($reference)) {
@@ -208,7 +208,7 @@ class ReferenceRepository
     /**
      * Get all stored identities
      *
-     * @phpstan-return array<class-string, array<string, object>>
+     * @phpstan-return array<class-string, array<string, mixed>>
      */
     public function getIdentitiesByClass(): array
     {

@@ -27,7 +27,7 @@ final class SymfonyFixturesLoader extends SymfonyBridgeLoader
     /**
      * @internal
      *
-     * @psalm-param list<array{fixture: FixtureInterface, groups: list<string>}> $fixtures
+     * @phpstan-param list<array{fixture: FixtureInterface, groups: list<string>}> $fixtures
      */
     public function addFixtures(array $fixtures): void
     {
@@ -134,7 +134,7 @@ final class SymfonyFixturesLoader extends SymfonyBridgeLoader
     /**
      * Collect any dependent fixtures from the given classes.
      *
-     * @psalm-return array<string,true>
+     * @phpstan-return array<string,true>
      */
     private function collectDependencies(string ...$fixtureClass): array
     {
