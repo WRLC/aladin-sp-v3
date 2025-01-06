@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0c823bfdd996f59348df6eedd0f6d596ff905611',
+        'reference' => '16c3c323e57014e08c8df2fb1a12ccbe6ee47b0b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0c823bfdd996f59348df6eedd0f6d596ff905611',
+            'reference' => '16c3c323e57014e08c8df2fb1a12ccbe6ee47b0b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -583,8 +583,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '3.0.0',
+                0 => '3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache-implementation' => array(
@@ -1602,8 +1602,8 @@
             'dev_requirement' => true,
         ),
         'twig/extra-bundle' => array(
-            'pretty_version' => 'v3.16.0',
-            'version' => '3.16.0.0',
+            'pretty_version' => 'v3.18.0',
+            'version' => '3.18.0.0',
             'reference' => '9746573ca4bc1cd03a767a183faadaf84e0c31fa',
             'type' => 'symfony-bundle',
             'install_path' => __DIR__ . '/../twig/extra-bundle',
@@ -1611,8 +1611,8 @@
             'dev_requirement' => false,
         ),
         'twig/intl-extra' => array(
-            'pretty_version' => 'v3.16.0',
-            'version' => '3.16.0.0',
+            'pretty_version' => 'v3.18.0',
+            'version' => '3.18.0.0',
             'reference' => '4eeab2a3f8d04d1838be7251ab2d183f817aea7b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twig/intl-extra',

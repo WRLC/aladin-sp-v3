@@ -12377,8 +12377,8 @@
         },
         {
             "name": "twig/extra-bundle",
-            "version": "v3.16.0",
-            "version_normalized": "3.16.0.0",
+            "version": "v3.18.0",
+            "version_normalized": "3.18.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/twig-extra-bundle.git",
@@ -12438,7 +12438,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/twigphp/twig-extra-bundle/tree/v3.16.0"
+                "source": "https://github.com/twigphp/twig-extra-bundle/tree/v3.18.0"
             },
             "funding": [
                 {
@@ -12454,8 +12454,8 @@
         },
         {
             "name": "twig/intl-extra",
-            "version": "v3.16.0",
-            "version_normalized": "3.16.0.0",
+            "version": "v3.18.0",
+            "version_normalized": "3.18.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/intl-extra.git",
@@ -12505,7 +12505,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/twigphp/intl-extra/tree/v3.16.0"
+                "source": "https://github.com/twigphp/intl-extra/tree/v3.18.0"
             },
             "funding": [
                 {
