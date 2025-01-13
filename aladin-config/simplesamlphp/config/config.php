@@ -318,7 +318,7 @@ $config = [
      * the error to 'technicalcontact_email'.
      */
     'showerrors' => false,
-    'errorreporting' => true,
+    'errorreporting' => false,
 
     /*
      * Custom error show function called from SimpleSAML\Error\Error::show.
