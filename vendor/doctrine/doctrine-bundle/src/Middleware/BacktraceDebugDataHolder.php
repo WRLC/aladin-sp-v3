@@ -11,7 +11,6 @@ use function in_array;
 
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
-/** @psalm-suppress MissingDependency */
 class BacktraceDebugDataHolder extends DebugDataHolder
 {
     /** @var string[] */

@@ -89,7 +89,8 @@ class DoctrineOrmMappingsPass extends RegisterMappingsPass
     public static function createYamlMappingDriver(array $namespaces, array $managerParameters = [], $enabledParameter = false, array $aliasMap = [])
     {
         $locator = new Definition(SymfonyFileLocator::class, [$namespaces, '.orm.yml']);
-        $driver  = new Definition(YamlDriver::class, [$locator]);
+        /* @phpstan-ignore class.notFound */
+        $driver = new Definition(YamlDriver::class, [$locator]);
 
         return new DoctrineOrmMappingsPass($driver, $namespaces, $managerParameters, $enabledParameter, $aliasMap);
     }
@@ -133,6 +134,7 @@ class DoctrineOrmMappingsPass extends RegisterMappingsPass
     public static function createAnnotationMappingDriver(array $namespaces, array $directories, array $managerParameters = [], $enabledParameter = false, array $aliasMap = [], bool $reportFieldsWhereDeclared = false)
     {
         $reader = new Reference('annotation_reader');
+        /* @phpstan-ignore class.notFound */
         $driver = new Definition(AnnotationDriver::class, [$reader, $directories, $reportFieldsWhereDeclared]);
 
         return new DoctrineOrmMappingsPass($driver, $namespaces, $managerParameters, $enabledParameter, $aliasMap);

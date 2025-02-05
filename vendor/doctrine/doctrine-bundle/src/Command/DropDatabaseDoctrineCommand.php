@@ -74,6 +74,7 @@ EOT);
         }
 
         /** @psalm-suppress InvalidArrayOffset Need to be compatible with DBAL < 4, which still has `$params['url']` */
+        /* @phpstan-ignore unset.offset */
         unset($params['dbname'], $params['url']);
 
         if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {

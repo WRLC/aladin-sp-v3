@@ -24,7 +24,7 @@ use function count;
 use function usort;
 
 /**
- * @psalm-type QueryType = array{
+ * @phpstan-type QueryType = array{
  *    executionMS: float,
  *    explainable: bool,
  *    sql: string,
@@ -32,7 +32,7 @@ use function usort;
  *    runnable: bool,
  *    types: ?array<array-key, Type|int|string|null>,
  * }
- * @psalm-type DataType = array{
+ * @phpstan-type DataType = array{
  *    caches: array{
  *       enabled: bool,
  *       counts: array<"puts"|"hits"|"misses", int>,
@@ -54,7 +54,7 @@ class DoctrineDataCollector extends BaseCollector
 
     /**
      * @var mixed[][]|null
-     * @psalm-var ?array<string, list<QueryType&array{count: int, index: int, executionPercent?: float}>>
+     * @phpstan-var ?array<string, list<QueryType&array{count: int, index: int, executionPercent?: float}>>
      */
     private ?array $groupedQueries = null;
 
@@ -216,7 +216,7 @@ class DoctrineDataCollector extends BaseCollector
 
     /**
      * @return array<string, array<string, int>>
-     * @psalm-return array<"puts"|"hits"|"misses", array<string, int>>
+     * @phpstan-return array<"puts"|"hits"|"misses", array<string, int>>
      */
     public function getCacheRegions()
     {
@@ -237,7 +237,7 @@ class DoctrineDataCollector extends BaseCollector
 
     /**
      * @return string[][]
-     * @psalm-return array<string, list<QueryType&array{count: int, index: int, executionPercent?: float}>>
+     * @phpstan-return array<string, list<QueryType&array{count: int, index: int, executionPercent?: float}>>
      */
     public function getGroupedQueries()
     {

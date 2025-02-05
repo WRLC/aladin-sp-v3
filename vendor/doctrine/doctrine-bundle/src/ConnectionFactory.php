@@ -28,7 +28,7 @@ use function trigger_deprecation;
 
 use const PHP_EOL;
 
-/** @psalm-import-type Params from DriverManager */
+/** @phpstan-import-type Params from DriverManager */
 class ConnectionFactory
 {
     /** @internal */
@@ -63,7 +63,7 @@ class ConnectionFactory
      *
      * @param mixed[]               $params
      * @param array<string, string> $mappingTypes
-     * @psalm-param Params $params
+     * @phpstan-param Params $params
      *
      * @return Connection
      */
@@ -108,6 +108,7 @@ class ConnectionFactory
                         throw InvalidWrapperClass::new($params['wrapperClass']);
                     }
 
+                    /* @phpstan-ignore staticMethod.notFound */
                     throw DBALException::invalidWrapperClass($params['wrapperClass']);
                 }
 
@@ -118,7 +119,7 @@ class ConnectionFactory
             $connection = DriverManager::getConnection(...array_merge([$params, $config], $eventManager ? [$eventManager] : []));
             $params     = $this->addDatabaseSuffix(array_merge($connection->getParams(), $overriddenOptions));
             $driver     = $connection->getDriver();
-            /** @psalm-suppress InvalidScalarArgument Bogus error, StaticServerVersionProvider implements Doctrine\DBAL\ServerVersionProvider  */
+            /** @phpstan-ignore arguments.count (DBAL < 4.x doesn't accept an argument) */
             $platform = $driver->getDatabasePlatform(
                 ...(class_exists(StaticServerVersionProvider::class)
                     ? [new StaticServerVersionProvider($params['serverVersion'] ?? $params['primary']['serverVersion'] ?? '')]
@@ -186,6 +187,7 @@ class ConnectionFactory
         } catch (DriverException $driverException) {
             $class = class_exists(DBALException::class) ? DBALException::class : ConnectionException::class;
 
+            /* @phpstan-ignore new.interface */
             throw new $class(
                 'An exception occurred while establishing a connection to figure out your platform version.' . PHP_EOL .
                 "You can circumvent this by setting a 'server_version' configuration value" . PHP_EOL . PHP_EOL .
@@ -244,11 +246,11 @@ class ConnectionFactory
      * updated list of parameters.
      *
      * @param mixed[] $params The list of parameters.
-     * @psalm-param Params $params
+     * @phpstan-param Params $params
      *
      * @return mixed[] A modified list of parameters with info from a database
      *                 URL extracted into individual parameter parts.
-     * @psalm-return Params
+     * @phpstan-return Params
      *
      * @throws DBALException
      */

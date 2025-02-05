@@ -742,7 +742,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'Doctrine\\Bundle\\MigrationsBundle\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle',
+            0 => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src',
         ),
         'Doctrine\\Bundle\\FixturesBundle\\' => 
         array (
