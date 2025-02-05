@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'bcd628fb18d71411319fc0448be13bd4e4ec0544',
+        'reference' => 'b12fb4249d671e6fa3fcb4d15cf4022d7159f201',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bcd628fb18d71411319fc0448be13bd4e4ec0544',
+            'reference' => 'b12fb4249d671e6fa3fcb4d15cf4022d7159f201',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1614,8 +1614,8 @@
             'dev_requirement' => true,
         ),
         'twig/extra-bundle' => array(
-            'pretty_version' => 'v3.18.0',
-            'version' => '3.18.0.0',
+            'pretty_version' => 'v3.19.0',
+            'version' => '3.19.0.0',
             'reference' => '9746573ca4bc1cd03a767a183faadaf84e0c31fa',
             'type' => 'symfony-bundle',
             'install_path' => __DIR__ . '/../twig/extra-bundle',
