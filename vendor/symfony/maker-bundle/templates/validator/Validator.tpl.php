@@ -1,11 +1,10 @@
 <?= "<?php\n" ?>
 
-namespace <?= $namespace; ?>;
+namespace <?= $class_data->getNamespace(); ?>;
 
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
+<?= $class_data->getUseStatements(); ?>
 
-class <?= $class_name ?> extends ConstraintValidator
+<?= $class_data->getClassDeclaration(); ?>
 {
     public function validate(mixed $value, Constraint $constraint): void
     {
@@ -18,6 +17,7 @@ class <?= $class_name ?> extends ConstraintValidator
         // TODO: implement the validation here
         $this->context->buildViolation($constraint->message)
             ->setParameter('{{ value }}', $value)
-            ->addViolation();
+            ->addViolation()
+        ;
     }
 }
