@@ -71,7 +71,7 @@ final class MakeTwigComponent extends AbstractMaker
 
         $factory = $generator->createClassNameDetails(
             $name,
-            $this->namespace,
+            str_replace($generator->getRootNamespace().'\\', '', $this->namespace),
         );
 
         $templatePath = str_replace('\\', '/', $factory->getRelativeNameWithoutSuffix());
@@ -79,14 +79,14 @@ final class MakeTwigComponent extends AbstractMaker
 
         $generator->generateClass(
             $factory->getFullName(),
-            \sprintf('%s/../Resources/skeleton/twig/%s', __DIR__, $live ? 'LiveComponent.tpl.php' : 'Component.tpl.php'),
+            \sprintf('%s/templates/twig/%s', \dirname(__DIR__, 2), $live ? 'LiveComponent.tpl.php' : 'Component.tpl.php'),
             [
                 'live' => $live,
             ]
         );
         $generator->generateTemplate(
             "components/{$templatePath}.html.twig",
-            \sprintf('%s/../Resources/skeleton/twig/%s', __DIR__, 'component_template.tpl.php')
+            \sprintf('%s/templates/twig/%s', \dirname(__DIR__, 2), 'component_template.tpl.php')
         );
 
         $generator->writeChanges();
@@ -111,7 +111,7 @@ final class MakeTwigComponent extends AbstractMaker
 
         try {
             $value = Yaml::parse($this->fileManager->getFileContents($path));
-            $this->namespace = substr(array_key_first($value['twig_component']['defaults']), 4);
+            $this->namespace = array_key_first($value['twig_component']['defaults']);
         } catch (\Throwable $throwable) {
             throw new RuntimeCommandException(message: 'Unable to parse twig_component.yaml', previous: $throwable);
         }

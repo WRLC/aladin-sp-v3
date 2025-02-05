@@ -91,7 +91,7 @@ use const PHP_VERSION_ID;
  * DoctrineExtension is an extension for the Doctrine DBAL and ORM library.
  *
  * @final since 2.9
- * @psalm-type DBALConfig = array{
+ * @phpstan-type DBALConfig = array{
  *      connections: array<string, array{logging: bool, profiling: bool, profiling_collect_backtrace: bool, idle_connection_ttl: int}>,
  *      driver_schemes: array<string, string>,
  *      default_connection: string,
@@ -579,7 +579,6 @@ class DoctrineExtension extends AbstractDoctrineExtension
 
         $entityManagers = [];
         foreach (array_keys($config['entity_managers']) as $name) {
-            /** @psalm-suppress InvalidArrayOffset */
             $entityManagers[$name] = sprintf('doctrine.orm.%s_entity_manager', $name);
         }
 
@@ -1186,12 +1185,15 @@ class DoctrineExtension extends AbstractDoctrineExtension
                 return SimplifiedXmlDriver::class;
 
             case 'yml':
+                /* @phpstan-ignore class.notFound */
                 return SimplifiedYamlDriver::class;
 
             case 'php':
+                /* @phpstan-ignore class.notFound */
                 return class_exists(PHPDriver::class) ? PHPDriver::class : LegacyPHPDriver::class;
 
             case 'staticphp':
+                /* @phpstan-ignore class.notFound */
                 return class_exists(StaticPHPDriver::class) ? StaticPHPDriver::class : LegacyStaticPHPDriver::class;
 
             case 'attribute':

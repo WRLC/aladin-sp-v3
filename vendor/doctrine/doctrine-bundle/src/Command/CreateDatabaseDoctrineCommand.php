@@ -63,6 +63,7 @@ EOT);
 
         // Need to get rid of _every_ occurrence of dbname from connection configuration as we have already extracted all relevant info from url
         /** @psalm-suppress InvalidArrayOffset Need to be compatible with DBAL < 4, which still has `$params['url']` */
+        /** @phpstan-ignore unset.offset */
         unset($params['dbname'], $params['path'], $params['url']);
 
         if ($connection->getDatabasePlatform() instanceof PostgreSQLPlatform) {
