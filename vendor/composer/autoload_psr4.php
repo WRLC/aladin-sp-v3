@@ -116,7 +116,7 @@ return array(
     'PDepend\\' => array($vendorDir . '/pdepend/pdepend/src/main/php/PDepend'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'Masterminds\\' => array($vendorDir . '/masterminds/html5/src'),
-    'League\\Uri\\' => array($vendorDir . '/league/uri-interfaces'),
+    'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
     'Gettext\\Languages\\' => array($vendorDir . '/gettext/languages/src'),
     'Gettext\\' => array($vendorDir . '/gettext/gettext/src', $vendorDir . '/gettext/translator/src'),

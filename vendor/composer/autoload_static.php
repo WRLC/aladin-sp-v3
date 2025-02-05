@@ -11,6 +11,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '89efb1254ef2d1c5d80096acd12c4098' => __DIR__ . '/..' . '/twig/twig/src/Resources/core.php',
         'ffecb95d45175fd40f75be8a23b34f90' => __DIR__ . '/..' . '/twig/twig/src/Resources/debug.php',
         'c7baa00073ee9c61edf148c51917cfb4' => __DIR__ . '/..' . '/twig/twig/src/Resources/escaper.php',
@@ -161,12 +162,9 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'Monolog\\' => 8,
             'Masterminds\\' => 12,
         ),
-        'L' => 
-        array (
-            'League\\Uri\\' => 11,
-        ),
         'G' => 
         array (
+            'GuzzleHttp\\Psr7\\' => 16,
             'GrahamCampbell\\ResultType\\' => 26,
             'Gettext\\Languages\\' => 18,
             'Gettext\\' => 8,
@@ -658,9 +656,9 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
-        'League\\Uri\\' => 
+        'GuzzleHttp\\Psr7\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (
