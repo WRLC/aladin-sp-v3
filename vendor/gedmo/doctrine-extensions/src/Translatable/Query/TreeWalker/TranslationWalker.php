@@ -10,8 +10,8 @@
 namespace Gedmo\Translatable\Query\TreeWalker;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -32,8 +32,10 @@ use Doctrine\ORM\Query\AST\UpdateStatement;
 use Doctrine\ORM\Query\AST\WhereClause;
 use Doctrine\ORM\Query\Exec\AbstractSqlExecutor;
 use Doctrine\ORM\Query\Exec\SingleSelectExecutor;
-use Doctrine\ORM\Query\SqlWalker;
+use Doctrine\ORM\Query\Exec\SingleSelectSqlFinalizer;
+use Doctrine\ORM\Query\Exec\SqlFinalizer;
 use Gedmo\Exception\RuntimeException;
+use Gedmo\Tool\ORM\Walker\CompatSqlOutputWalker;
 use Gedmo\Tool\ORM\Walker\SqlWalkerCompat;
 use Gedmo\Translatable\Hydrator\ORM\ObjectHydrator;
 use Gedmo\Translatable\Hydrator\ORM\SimpleObjectHydrator;
@@ -54,7 +56,7 @@ use Gedmo\Translatable\TranslatableListener;
  *
  * @final since gedmo/doctrine-extensions 3.11
  */
-class TranslationWalker extends SqlWalker
+class TranslationWalker extends CompatSqlOutputWalker
 {
     use SqlWalkerCompat;
 
@@ -84,7 +86,7 @@ class TranslationWalker extends SqlWalker
      *
      * @var array<string, array<string, mixed>>
      *
-     * @phpstan-var array<string, array{metadata: ClassMetadata}>
+     * @phpstan-var array<string, array{metadata: ClassMetadata<object>}>
      */
     private array $translatedComponents = [];
 
@@ -139,6 +141,21 @@ class TranslationWalker extends SqlWalker
         $this->prepareTranslatedComponents();
 
         return new SingleSelectExecutor($statement, $this);
+    }
+
+    /**
+     * @param DeleteStatement|UpdateStatement|SelectStatement $AST
+     */
+    protected function doGetFinalizerWithCompat($AST): SqlFinalizer
+    {
+        // If it's not a Select, the TreeWalker ought to skip it, and just return the parent.
+        // @see https://github.com/doctrine-extensions/DoctrineExtensions/issues/2013
+        if (!$AST instanceof SelectStatement) {
+            return parent::getFinalizer($AST);
+        }
+        $this->prepareTranslatedComponents();
+
+        return new SingleSelectSqlFinalizer($this->walkSelectStatement($AST));
     }
 
     protected function doWalkSelectStatementWithCompat(SelectStatement $selectStatement): string
@@ -272,7 +289,7 @@ class TranslationWalker extends SqlWalker
         $joinStrategy = $q->getHint(TranslatableListener::HINT_INNER_JOIN) ? 'INNER' : 'LEFT';
 
         foreach ($this->translatedComponents as $dqlAlias => $comp) {
-            /** @var ClassMetadata $meta */
+            /** @var ClassMetadata<object> $meta */
             $meta = $comp['metadata'];
             $config = $this->listener->getConfiguration($em, $meta->getName());
             $transClass = $this->listener->getTranslationClass($ea, $meta->getName());
@@ -297,7 +314,7 @@ class TranslationWalker extends SqlWalker
 
                     $mappingFK = $transMeta->getFieldMapping('foreignKey');
                     $mappingPK = $meta->getFieldMapping($identifier);
-                    $fkColName = $this->getCastedForeignKey($compTblAlias.'.'.$idColName, $mappingFK['type'], $mappingPK['type']);
+                    $fkColName = $this->getCastedForeignKey($compTblAlias.'.'.$idColName, $mappingFK->type ?? $mappingFK['type'], $mappingPK->type ?? $mappingPK['type']);
                     $sql .= ' AND '.$tblAlias.'.'.$quoteStrategy->getColumnName('foreignKey', $transMeta, $this->platform)
                         .' = '.$fkColName;
                 }
@@ -308,11 +325,11 @@ class TranslationWalker extends SqlWalker
 
                 // Treat translation as original field type
                 $fieldMapping = $meta->getFieldMapping($field);
-                if ((($this->platform instanceof MySQLPlatform)
-                    && in_array($fieldMapping['type'], ['decimal'], true))
-                    || (!($this->platform instanceof MySQLPlatform)
-                    && !in_array($fieldMapping['type'], ['datetime', 'datetimetz', 'date', 'time'], true))) {
-                    $type = Type::getType($fieldMapping['type']);
+                if ((($this->platform instanceof AbstractMySQLPlatform)
+                    && in_array($fieldMapping->type ?? $fieldMapping['type'], ['decimal'], true))
+                    || (!($this->platform instanceof AbstractMySQLPlatform)
+                    && !in_array($fieldMapping->type ?? $fieldMapping['type'], ['datetime', 'datetimetz', 'date', 'time'], true))) {
+                    $type = Type::getType($fieldMapping->type ?? $fieldMapping['type']);
 
                     // In ORM 2.x, $fieldMapping is an array. In ORM 3.x, it's a data object. Always cast to an array for compatibility across versions.
                     $substituteField = 'CAST('.$substituteField.' AS '.$type->getSQLDeclaration((array) $fieldMapping, $this->platform).')';
@@ -349,9 +366,9 @@ class TranslationWalker extends SqlWalker
     /**
      * Search for translated components in the select clause
      *
-     * @param array<string, array<string, ClassMetadata>> $queryComponents
+     * @param array<string, array<string, ClassMetadata<object>>> $queryComponents
      *
-     * @phpstan-param array<string, array{metadata: ClassMetadata}> $queryComponents
+     * @phpstan-param array<string, array{metadata: ClassMetadata<object>}> $queryComponents
      */
     private function extractTranslatedComponents(array $queryComponents): void
     {

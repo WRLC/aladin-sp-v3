@@ -25,9 +25,6 @@ use Psr\Clock\ClockInterface;
  */
 final class ORM extends BaseAdapterORM implements TimestampableAdapter, ClockAwareAdapterInterface
 {
-    /**
-     * @var ClockInterface|null
-     */
     private ?ClockInterface $clock = null;
 
     public function setClock(ClockInterface $clock): void
@@ -36,7 +33,7 @@ final class ORM extends BaseAdapterORM implements TimestampableAdapter, ClockAwa
     }
 
     /**
-     * @param ClassMetadata $meta
+     * @param ClassMetadata<object> $meta
      */
     public function getDateValue($meta, $field)
     {

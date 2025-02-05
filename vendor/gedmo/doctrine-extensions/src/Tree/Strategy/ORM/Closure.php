@@ -87,7 +87,8 @@ class Closure implements Strategy
     }
 
     /**
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface   $em
+     * @param ORMClassMetadata<object> $meta
      */
     public function processMetadataLoad($em, $meta)
     {
@@ -524,7 +525,9 @@ class Closure implements Strategy
             }
 
             // Avoid type conversion performance penalty
-            $type = 'integer' === $mapping['type'] ? ArrayParameterType::INTEGER : ArrayParameterType::STRING;
+            $type = 'integer' === ($mapping->type ?? $mapping['type'])
+                ? ArrayParameterType::INTEGER
+                : ArrayParameterType::STRING;
 
             // We calculate levels for all nodes
             $sql = 'SELECT c.descendant, MAX(c.depth) + 1 AS levelNum ';
@@ -561,7 +564,7 @@ class Closure implements Strategy
     }
 
     /**
-     * @param ORMClassMetadata $closureMetadata
+     * @param ORMClassMetadata<object> $closureMetadata
      */
     private function hasClosureTableUniqueConstraint(ClassMetadata $closureMetadata): bool
     {
@@ -579,7 +582,7 @@ class Closure implements Strategy
     }
 
     /**
-     * @param ORMClassMetadata $closureMetadata
+     * @param ORMClassMetadata<object> $closureMetadata
      */
     private function hasClosureTableDepthIndex(ClassMetadata $closureMetadata): bool
     {
