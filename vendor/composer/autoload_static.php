@@ -1357,6 +1357,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'PHPUnit\\Metadata\\IgnoreDeprecations' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/IgnoreDeprecations.php',
         'PHPUnit\\Metadata\\IgnoreFunctionForCodeCoverage' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/IgnoreFunctionForCodeCoverage.php',
         'PHPUnit\\Metadata\\IgnoreMethodForCodeCoverage' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/IgnoreMethodForCodeCoverage.php',
+        'PHPUnit\\Metadata\\InvalidAttributeException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/Exception/InvalidAttributeException.php',
         'PHPUnit\\Metadata\\InvalidVersionRequirementException' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/Exception/InvalidVersionRequirementException.php',
         'PHPUnit\\Metadata\\Metadata' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/Metadata.php',
         'PHPUnit\\Metadata\\MetadataCollection' => __DIR__ . '/..' . '/phpunit/phpunit/src/Metadata/MetadataCollection.php',
