@@ -22,9 +22,6 @@ use SimpleSAML\XHTML\Template;
 class MetaRefresh
 {
     /** @var \SimpleSAML\Configuration */
-    protected Configuration $config;
-
-    /** @var \SimpleSAML\Configuration */
     protected Configuration $module_config;
 
     /**
@@ -43,9 +40,8 @@ class MetaRefresh
      * @throws \Exception
      */
     public function __construct(
-        Configuration $config,
+        protected Configuration $config,
     ) {
-        $this->config = $config;
         $this->module_config = Configuration::getConfig('module_metarefresh.php');
         $this->authUtils = new Utils\Auth();
     }
