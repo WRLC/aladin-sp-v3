@@ -9,9 +9,9 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '89efb1254ef2d1c5d80096acd12c4098' => __DIR__ . '/..' . '/twig/twig/src/Resources/core.php',
         'ffecb95d45175fd40f75be8a23b34f90' => __DIR__ . '/..' . '/twig/twig/src/Resources/debug.php',
         'c7baa00073ee9c61edf148c51917cfb4' => __DIR__ . '/..' . '/twig/twig/src/Resources/escaper.php',
@@ -123,6 +123,8 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'Symfony\\Bridge\\Doctrine\\' => 24,
             'SimpleSAML\\XML\\' => 15,
             'SimpleSAML\\XMLSecurity\\' => 23,
+            'SimpleSAML\\SOAP\\' => 16,
+            'SimpleSAML\\SAML2\\' => 17,
             'SimpleSAML\\Module\\sanitycheck\\' => 30,
             'SimpleSAML\\Module\\saml\\' => 23,
             'SimpleSAML\\Module\\multiauth\\' => 28,
@@ -158,6 +160,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPMailer\\PHPMailer\\' => 20,
             'PDepend\\' => 8,
+        ),
+        'N' => 
+        array (
+            'Nyholm\\Psr7\\' => 12,
         ),
         'M' => 
         array (
@@ -536,6 +542,14 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/xml-security/src',
         ),
+        'SimpleSAML\\SOAP\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplesamlphp/xml-soap/src',
+        ),
+        'SimpleSAML\\SAML2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/simplesamlphp/saml2/src',
+        ),
         'SimpleSAML\\Module\\sanitycheck\\' => 
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/sanitycheck/src',
@@ -598,7 +612,7 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         ),
         'SAML2\\' => 
         array (
-            0 => __DIR__ . '/..' . '/simplesamlphp/saml2/src/SAML2',
+            0 => __DIR__ . '/..' . '/simplesamlphp/saml2-legacy/src/SAML2',
         ),
         'RobRichards\\XMLSecLibs\\' => 
         array (
@@ -652,6 +666,10 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'PDepend\\' => 
         array (
             0 => __DIR__ . '/..' . '/pdepend/pdepend/src/main/php/PDepend',
+        ),
+        'Nyholm\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nyholm/psr7/src',
         ),
         'Monolog\\' => 
         array (
