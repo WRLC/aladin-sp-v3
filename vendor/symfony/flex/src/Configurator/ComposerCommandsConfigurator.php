@@ -19,9 +19,9 @@ use Symfony\Flex\Recipe;
 use Symfony\Flex\Update\RecipeUpdate;
 
 /**
- * @author Fabien Potencier <fabien@symfony.com>
+ * @author Marcin Morawski <marcin@morawskim.pl>
  */
-class ComposerScriptsConfigurator extends AbstractConfigurator
+class ComposerCommandsConfigurator extends AbstractConfigurator
 {
     public function configure(Recipe $recipe, $scripts, Lock $lock, array $options = [])
     {
@@ -34,14 +34,10 @@ class ComposerScriptsConfigurator extends AbstractConfigurator
     {
         $json = new JsonFile(Factory::getComposerFile());
 
-        $jsonContents = $json->read();
-        $autoScripts = $jsonContents['scripts']['auto-scripts'] ?? [];
-        foreach (array_keys($scripts) as $cmd) {
-            unset($autoScripts[$cmd]);
-        }
-
         $manipulator = new JsonManipulator(file_get_contents($json->getPath()));
-        $manipulator->addSubNode('scripts', 'auto-scripts', $autoScripts);
+        foreach ($scripts as $key => $command) {
+            $manipulator->removeSubNode('scripts', $key);
+        }
 
         file_put_contents($json->getPath(), $manipulator->getContents());
     }
@@ -67,12 +63,10 @@ class ComposerScriptsConfigurator extends AbstractConfigurator
 
     private function configureScripts(array $scripts, JsonFile $json): string
     {
-        $jsonContents = $json->read();
-        $autoScripts = $jsonContents['scripts']['auto-scripts'] ?? [];
-        $autoScripts = array_merge($autoScripts, $scripts);
-
         $manipulator = new JsonManipulator(file_get_contents($json->getPath()));
-        $manipulator->addSubNode('scripts', 'auto-scripts', $autoScripts);
+        foreach ($scripts as $cmdName => $script) {
+            $manipulator->addSubNode('scripts', $cmdName, $script);
+        }
 
         return $manipulator->getContents();
     }
