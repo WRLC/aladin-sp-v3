@@ -99,7 +99,6 @@ return array(
     'SimpleSAML\\Module\\core\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/modules/core/src'),
     'SimpleSAML\\Module\\authorize\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/modules/authorize/src'),
     'SimpleSAML\\Module\\admin\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/modules/admin/src'),
-    'SimpleSAML\\Composer\\XMLProvider\\' => array($vendorDir . '/simplesamlphp/composer-xmlprovider-installer/src'),
     'SimpleSAML\\Composer\\' => array($vendorDir . '/simplesamlphp/composer-module-installer/src'),
     'SimpleSAML\\Assert\\' => array($vendorDir . '/simplesamlphp/assert/src'),
     'SimpleSAML\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/src/SimpleSAML'),

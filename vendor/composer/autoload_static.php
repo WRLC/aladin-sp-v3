@@ -136,7 +136,6 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
             'SimpleSAML\\Module\\core\\' => 23,
             'SimpleSAML\\Module\\authorize\\' => 28,
             'SimpleSAML\\Module\\admin\\' => 24,
-            'SimpleSAML\\Composer\\XMLProvider\\' => 32,
             'SimpleSAML\\Composer\\' => 20,
             'SimpleSAML\\Assert\\' => 18,
             'SimpleSAML\\' => 11,
@@ -593,10 +592,6 @@ class ComposerStaticInite298426247c538df39c754429f92ade5
         'SimpleSAML\\Module\\admin\\' => 
         array (
             0 => __DIR__ . '/..' . '/simplesamlphp/simplesamlphp/modules/admin/src',
-        ),
-        'SimpleSAML\\Composer\\XMLProvider\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/simplesamlphp/composer-xmlprovider-installer/src',
         ),
         'SimpleSAML\\Composer\\' => 
         array (
