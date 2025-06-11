@@ -108,11 +108,14 @@ class HTTP
      */
     private function getServerHost(): string
     {
+        $current = null;
         if (array_key_exists('HTTP_HOST', $_SERVER)) {
             $current = $_SERVER['HTTP_HOST'];
         } elseif (array_key_exists('SERVER_NAME', $_SERVER)) {
             $current = $_SERVER['SERVER_NAME'];
-        } else {
+        }
+
+        if (is_null($current)) {
             // almost certainly not what you want, but...
             $current = 'localhost';
         }
@@ -611,7 +614,7 @@ class HTTP
             return '/';
         }
         // get the name of the current script
-        $path = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $path = explode(DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_FILENAME']);
         $script = array_pop($path);
 
         // get the portion of the URI up to the script, i.e.: /simplesaml/some/directory/script.php
@@ -619,7 +622,7 @@ class HTTP
             return '/';
         }
         $uri_s = explode('/', $matches[0]);
-        $file_s = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $file_s = explode(DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_FILENAME']);
 
         // compare both arrays from the end, popping elements matching out of them
         while ($uri_s[count($uri_s) - 1] === $file_s[count($file_s) - 1]) {
