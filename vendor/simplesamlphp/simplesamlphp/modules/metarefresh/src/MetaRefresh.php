@@ -32,9 +32,9 @@ class MetaRefresh
     }
 
     /**
-     * @param string $crontag Only refresh sets which allow this crontag
+     * @param string|null $crontag Only refresh sets which allow this crontag
      */
-    public function runRefresh(string $crontag = null): void
+    public function runRefresh(?string $crontag = null): void
     {
         $sets = $this->modconfig->getArray('sets');
         /** @var string $datadir */
@@ -66,7 +66,7 @@ class MetaRefresh
                 throw new Exception("Invalid outputDir specified.");
             }
 
-            $outputFormat = $set->getValueValidate('outputFormat', ['flatfile', 'serialize', 'pdo'], 'flatfile');
+            $outputFormat = $set->getOptionalValueValidate('outputFormat', ['flatfile', 'serialize', 'pdo'], 'flatfile');
 
             $oldMetadataSrc = MetaDataStorageSource::getSource([
                 'type' => $outputFormat,

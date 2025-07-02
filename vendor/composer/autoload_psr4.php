@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-docblock/src'),
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Twig\\Extra\\TwigExtraBundle\\' => array($vendorDir . '/twig/extra-bundle'),
     'Twig\\Extra\\Intl\\' => array($vendorDir . '/twig/intl-extra'),
@@ -99,6 +99,7 @@ return array(
     'SimpleSAML\\Module\\core\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/modules/core/src'),
     'SimpleSAML\\Module\\authorize\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/modules/authorize/src'),
     'SimpleSAML\\Module\\admin\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/modules/admin/src'),
+    'SimpleSAML\\Composer\\XMLProvider\\' => array($vendorDir . '/simplesamlphp/composer-xmlprovider-installer/src'),
     'SimpleSAML\\Composer\\' => array($vendorDir . '/simplesamlphp/composer-module-installer/src'),
     'SimpleSAML\\Assert\\' => array($vendorDir . '/simplesamlphp/assert/src'),
     'SimpleSAML\\' => array($vendorDir . '/simplesamlphp/simplesamlphp/src/SimpleSAML'),
@@ -122,7 +123,7 @@ return array(
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
     'Gettext\\Languages\\' => array($vendorDir . '/gettext/languages/src'),
-    'Gettext\\' => array($vendorDir . '/gettext/translator/src', $vendorDir . '/gettext/gettext/src'),
+    'Gettext\\' => array($vendorDir . '/gettext/gettext/src', $vendorDir . '/gettext/translator/src'),
     'Gedmo\\' => array($vendorDir . '/gedmo/doctrine-extensions/src'),
     'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
