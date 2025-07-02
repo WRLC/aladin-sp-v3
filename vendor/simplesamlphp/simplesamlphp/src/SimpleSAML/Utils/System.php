@@ -94,7 +94,9 @@ class System
                     (is_array($error) ? $error['message'] : 'no error available'),
                 );
             }
-        } elseif (!is_writable($tempDir)) {
+        }
+
+        if (!is_writable($tempDir)) {
             throw new Error\Exception(
                 'Temporary directory "' . $tempDir .
                 '" cannot be written to by the current user' .
@@ -121,7 +123,7 @@ class System
      * @return string An absolute path referring to $path.
      *
      */
-    public function resolvePath(string $path, string $base = null): string
+    public function resolvePath(string $path, ?string $base = null): string
     {
         if ($base === null) {
             $config = Configuration::getInstance();

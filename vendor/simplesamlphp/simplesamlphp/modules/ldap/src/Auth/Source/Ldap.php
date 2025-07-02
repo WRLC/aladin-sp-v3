@@ -49,8 +49,8 @@ class Ldap extends UserPassBase
     /**
      * Constructor for this authentication source.
      *
-     * @param array $info  Information about this authentication source.
-     * @param array $config  Configuration.
+     * @param array<mixed> $info  Information about this authentication source.
+     * @param array<mixed> $config  Configuration.
      */
     public function __construct(array $info, array $config)
     {
@@ -59,7 +59,7 @@ class Ldap extends UserPassBase
 
         $this->ldapConfig = Configuration::loadFromArray(
             $config,
-            'authsources[' . var_export($this->authId, true) . ']'
+            'authsources[' . var_export($this->authId, true) . ']',
         );
 
         $this->connector = ConnectorFactory::fromAuthSource($this->authId);
@@ -67,14 +67,19 @@ class Ldap extends UserPassBase
 
 
     /**
-     * Attempt to log in using the given username and password.
+     * Attempt to log in using SASL and the given username and password.
      *
      * @param string $username  The username the user wrote.
      * @param string $password  The password the user wrote.
-     * @return array  Associative array with the users attributes.
+     * @param array<mixed> $sasl_args  SASL options
+     * @return array<mixed> Associative array with the users attributes.
      */
-    protected function login(string $username, #[\SensitiveParameter]string $password): array
-    {
+    protected function loginSasl(
+        string $username,
+        #[\SensitiveParameter]
+        string $password,
+        array $sasl_args = [],
+    ): array {
         if (preg_match('/^\s*$/', $password)) {
             // The empty string is considered an anonymous bind to Symfony
             throw new Error\Error('WRONGUSERPASS');
@@ -109,7 +114,7 @@ class Ldap extends UserPassBase
             Assert::nullOrNotWhitespaceOnly($searchUsername);
 
             $searchPassword = $this->ldapConfig->getOptionalString('search.password', null);
-            Assert::nullOrnotWhitespaceOnly($searchPassword);
+            Assert::nullOrNotWhitespaceOnly($searchPassword);
 
             try {
                 $this->connector->bind($searchUsername, $searchPassword);
@@ -128,7 +133,20 @@ class Ldap extends UserPassBase
         }
 
         /* Verify the credentials */
-        $this->connector->bind($dn, $password);
+        if (!empty($sasl_args)) {
+            $this->connector->saslBind(
+                $dn,
+                $password,
+                $sasl_args['mech'],
+                $sasl_args['realm'],
+                $sasl_args['authc_id'],
+                $sasl_args['authz_id'],
+                $sasl_args['props'],
+            );
+            $dn = $this->connector->whoami();
+        } else {
+            $this->connector->bind($dn, $password);
+        }
 
         /* If the credentials were correct, rebind using a privileged account to read attributes */
         $readUsername = $this->ldapConfig->getOptionalString('priv.username', null);
@@ -145,12 +163,24 @@ class Ldap extends UserPassBase
         return $this->processAttributes(/** @scrutinizer-ignore-type */$entry);
     }
 
+    /**
+     * Attempt to log in using the given username and password.
+     *
+     * @param string $username  The username the user wrote.
+     * @param string $password  The password the user wrote.
+     * @return array<mixed> Associative array with the users attributes.
+     */
+    protected function login(string $username, #[\SensitiveParameter]string $password): array
+    {
+        return $this->loginSasl($username, $password);
+    }
+
 
     /**
      * Attempt to find a user's attributes given its username.
      *
      * @param string $username  The username who's attributes we want.
-     * @return array  Associative array with the users attributes.
+     * @return array<mixed> Associative array with the users attributes.
      */
     public function getAttributes(string $username): array
     {
@@ -158,7 +188,7 @@ class Ldap extends UserPassBase
         Assert::nullOrNotWhitespaceOnly($searchUsername);
 
         $searchPassword = $this->ldapConfig->getOptionalString('search.password', null);
-        Assert::nullOrnotWhitespaceOnly($searchPassword);
+        Assert::nullOrNotWhitespaceOnly($searchPassword);
 
         try {
             $this->connector->bind($searchUsername, $searchPassword);
@@ -206,7 +236,7 @@ class Ldap extends UserPassBase
 
     /**
      * @param \Symfony\Component\Ldap\Entry $entry
-     * @return array
+     * @return array<mixed>
      */
     private function processAttributes(Entry $entry): array
     {

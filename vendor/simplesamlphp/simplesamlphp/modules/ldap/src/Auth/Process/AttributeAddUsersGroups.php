@@ -33,7 +33,7 @@ class AttributeAddUsersGroups extends BaseFilter
     /**
      * Initialize this filter.
      *
-     * @param array $config Configuration information about this filter.
+     * @param array<mixed> $config Configuration information about this filter.
      * @param mixed $reserved For future use.
      */
     public function __construct(array $config, $reserved)
@@ -51,7 +51,7 @@ class AttributeAddUsersGroups extends BaseFilter
      * LDAP search filters to be added to the base filters for this authproc-filter.
      * It's an array of key => value pairs that will be translated to (key=value) in the ldap query.
      *
-     * @var array
+     * @var array<mixed>
      */
     protected array $additional_filters;
 
@@ -63,7 +63,7 @@ class AttributeAddUsersGroups extends BaseFilter
      * are then added to the request attributes.
      *
      * @throws \SimpleSAML\Error\Exception
-     * @param array &$state
+     * @param array<mixed> &$state
      */
     public function process(array &$state): void
     {
@@ -72,7 +72,7 @@ class AttributeAddUsersGroups extends BaseFilter
         // Log the process
         Logger::debug(sprintf(
             '%s : Attempting to get the users groups...',
-            $this->title
+            $this->title,
         ));
 
         $this->additional_filters = $this->config->getOptionalArray('additional_filters', []);
@@ -100,7 +100,7 @@ class AttributeAddUsersGroups extends BaseFilter
                 '%s : The group attribute [%s] is not an array of group DNs. %s',
                 $this->title,
                 $map['groups'],
-                $this->varExport($attributes[$map['groups']])
+                $this->varExport($attributes[$map['groups']]),
             ));
         }
 
@@ -114,7 +114,7 @@ class AttributeAddUsersGroups extends BaseFilter
             '%s : Added users groups to the group attribute[%s]: %s',
             $this->title,
             $map['groups'],
-            implode('; ', $groups)
+            implode('; ', $groups),
         ));
     }
 
@@ -124,15 +124,15 @@ class AttributeAddUsersGroups extends BaseFilter
      * get their group membership, recursively.
      *
      * @throws \SimpleSAML\Error\Exception
-     * @param array $attributes
-     * @return array
+     * @param array<mixed> $attributes
+     * @return array<mixed>
      */
     protected function getGroups(array $attributes): array
     {
         // Log the request
         Logger::debug(sprintf(
             '%s : Checking for groups based on the best method for the LDAP product.',
-            $this->title
+            $this->title,
         ));
 
         $this->connector->bind($this->searchUsername, $this->searchPassword);
@@ -157,7 +157,7 @@ class AttributeAddUsersGroups extends BaseFilter
                 // Log the AD specific search
                 Logger::debug(sprintf(
                     '%s : Searching LDAP using ActiveDirectory specific method.',
-                    $this->title
+                    $this->title,
                 ));
 
                 // Make sure the defined DN attribute exists
@@ -178,7 +178,7 @@ class AttributeAddUsersGroups extends BaseFilter
                         '%s : The DN attribute [%s] does not have a [0] value defined. %s',
                         $this->title,
                         $dn_attribute,
-                        $this->varExport($attributes[$dn_attribute])
+                        $this->varExport($attributes[$dn_attribute]),
                     ));
 
                     return [];
@@ -195,7 +195,7 @@ class AttributeAddUsersGroups extends BaseFilter
                     $map['member'],
                     $map['type'],
                     $this->type_map['group'],
-                    implode('; ', $arrayUtils->arrayize($this->searchBase))
+                    implode('; ', $arrayUtils->arrayize($this->searchBase)),
                 ));
 
                 $filter = sprintf(
@@ -210,7 +210,7 @@ class AttributeAddUsersGroups extends BaseFilter
                     $this->searchBase,
                     $filter,
                     $options,
-                    true
+                    true,
                 );
 
                 break;
@@ -218,7 +218,7 @@ class AttributeAddUsersGroups extends BaseFilter
                 // Log the OpenLDAP specific search
                 Logger::debug(sprintf(
                     '%s : Searching LDAP using OpenLDAP specific method.',
-                    $this->title
+                    $this->title,
                 ));
 
                 Logger::debug(sprintf(
@@ -227,27 +227,27 @@ class AttributeAddUsersGroups extends BaseFilter
                     implode(', ', $this->searchBase),
                     $map['memberOf'],
                     $attributes[$map['username']][0],
-                    $map['member']
+                    $map['member'],
                 ));
 
                 $filter = sprintf(
                     '(&(%s=%s))',
                     $map['memberOf'],
-                    $attributes[$map['username']][0]
+                    $attributes[$map['username']][0],
                 );
 
                 $entries = $this->connector->searchForMultiple(
                     $this->searchBase,
                     $filter,
                     $options,
-                    true
+                    true,
                 );
 
                 break;
             default:
                 // Log the generic search
                 Logger::debug(
-                    sprintf('%s : Searching LDAP using the generic search method.', $this->title)
+                    sprintf('%s : Searching LDAP using the generic search method.', $this->title),
                 );
 
                 // Make sure the defined memberOf attribute exists
@@ -258,7 +258,7 @@ class AttributeAddUsersGroups extends BaseFilter
                         "%s : The memberOf attribute [%s] is not defined in the user's attributes: [%s]",
                         $this->title,
                         $map['memberOf'],
-                        implode(', ', array_keys($attributes))
+                        implode(', ', array_keys($attributes)),
                     ),
                     Error\Exception::class,
                 );
@@ -281,7 +281,7 @@ class AttributeAddUsersGroups extends BaseFilter
                     implode('; ', $attributes[$map['memberOf']]),
                     $map['memberOf'],
                     $map['type'],
-                    $this->type_map['group']
+                    $this->type_map['group'],
                 ));
 
                 // Search for the users group membership, recursively
@@ -291,20 +291,18 @@ class AttributeAddUsersGroups extends BaseFilter
         $groups = [];
         foreach ($entries as $entry) {
             if ($entry->hasAttribute($return_attribute)) {
-                /** @psalm-var array $values */
                 $values = $entry->getAttribute($return_attribute);
                 $groups[] = array_pop($values);
                 continue;
             } elseif ($entry->hasAttribute(strtolower($return_attribute))) {
                 // Some backends return lowercase attributes
-                /** @psalm-var array $values */
                 $values = $entry->getAttribute(strtolower($return_attribute));
                 $groups[] = array_pop($values);
                 continue;
             }
 
             // Could not find return attribute, log and continue
-            Logger::notice(sprintf(
+            Logger::debug(sprintf(
                 '%s : The return attribute [%s] could not be found in entry `%s`.',
                 $this->title,
                 implode(', ', array_unique([$map['return'], strtolower($map['return'])])),
@@ -330,9 +328,9 @@ class AttributeAddUsersGroups extends BaseFilter
      * Avoids loops by only searching a DN once. Returns
      * the list of groups found.
      *
-     * @param array $memberOf
-     * @param array $options
-     * @return array
+     * @param array<mixed> $memberOf
+     * @param array<mixed> $options
+     * @return array<mixed>
      */
     protected function search(array $memberOf, array $options): array
     {

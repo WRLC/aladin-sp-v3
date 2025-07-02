@@ -6,7 +6,9 @@ namespace SimpleSAML\XML;
 
 use DOMDocument;
 use SimpleSAML\Assert\Assert;
-use SimpleSAML\XML\Exception\{IOException, RuntimeException, UnparseableXMLException};
+use SimpleSAML\XML\Exception\IOException;
+use SimpleSAML\XML\Exception\RuntimeException;
+use SimpleSAML\XML\Exception\UnparseableXMLException;
 
 use function file_get_contents;
 use function func_num_args;
@@ -24,7 +26,7 @@ final class DOMDocumentFactory
      * @var non-negative-int
      * TODO: Add LIBXML_NO_XXE to the defaults when PHP 8.4.0 + libxml 2.13.0 become generally available
      */
-    public const DEFAULT_OPTIONS = \LIBXML_COMPACT | \LIBXML_NONET | \LIBXML_NSCLEAN;
+    public const DEFAULT_OPTIONS = LIBXML_COMPACT | LIBXML_NONET | LIBXML_NSCLEAN;
 
 
     /**
@@ -51,7 +53,7 @@ final class DOMDocumentFactory
 
         // If LIBXML_NO_XXE is available and option not set
         if (func_num_args() === 1 && defined('LIBXML_NO_XXE')) {
-            $options |= \LIBXML_NO_XXE;
+            $options |= LIBXML_NO_XXE;
         }
 
         $domDocument = self::create();
@@ -70,7 +72,7 @@ final class DOMDocumentFactory
 
         foreach ($domDocument->childNodes as $child) {
             Assert::false(
-                $child->nodeType === \XML_DOCUMENT_TYPE_NODE,
+                $child->nodeType === XML_DOCUMENT_TYPE_NODE,
                 'Dangerous XML detected, DOCTYPE nodes are not allowed in the XML body',
                 RuntimeException::class,
             );
@@ -88,6 +90,7 @@ final class DOMDocumentFactory
      */
     public static function fromFile(
         string $file,
+        ?string $schemaFile = null,
         int $options = self::DEFAULT_OPTIONS,
     ): DOMDocument {
         error_clear_last();

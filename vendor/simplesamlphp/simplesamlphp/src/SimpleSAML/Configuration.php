@@ -6,7 +6,9 @@ namespace SimpleSAML;
 
 use Exception;
 use ParseError;
+use SAML2\Binding;
 use SAML2\Constants;
+use SAML2\Exception\Protocol\UnsupportedBindingException;
 use SimpleSAML\Assert\Assert;
 use SimpleSAML\Error;
 use SimpleSAML\Utils;
@@ -39,7 +41,7 @@ class Configuration implements Utils\ClearableState
     /**
      * The release version of this package
      */
-    public const VERSION = '2.2.4';
+    public const VERSION = '2.4.2';
 
     /**
      * A default value which means that the given option is required.
@@ -1180,12 +1182,12 @@ class Configuration implements Utils\ClearableState
             case 'saml20-sp-remote:AssertionConsumerService':
                 return Constants::BINDING_HTTP_POST;
             case 'saml20-idp-remote:ArtifactResolutionService':
+            case 'attributeauthority-remote:AttributeService':
                 return Constants::BINDING_SOAP;
             default:
                 throw new Exception('Missing default binding for ' . $endpointType . ' in ' . $set);
         }
     }
-
 
     /**
      * Helper function for dealing with metadata endpoints.
@@ -1205,30 +1207,21 @@ class Configuration implements Utils\ClearableState
             return [];
         }
 
-
         $eps = $this->configuration[$endpointType];
-        if (is_string($eps)) {
-            // for backwards-compatibility
-            $eps = [$eps];
-        } elseif (!is_array($eps)) {
-            throw new Exception($loc . ': Expected array or string.');
+        if (!is_array($eps)) {
+            $filename = explode('/', $loc)[0];
+            throw new Error\CriticalConfigurationError(
+                "Endpoint of type $endpointType is not an array in $loc.",
+                $filename,
+            );
         }
 
+        $eps_count = count($eps);
 
         foreach ($eps as $i => &$ep) {
             $iloc = $loc . '[' . var_export($i, true) . ']';
 
-            if (is_string($ep)) {
-                // for backwards-compatibility
-                $ep = [
-                    'Location' => $ep,
-                    'Binding'  => $this->getDefaultBinding($endpointType),
-                ];
-                $responseLocation = $this->getOptionalString($endpointType . 'Response', null);
-                if ($responseLocation !== null) {
-                    $ep['ResponseLocation'] = $responseLocation;
-                }
-            } elseif (!is_array($ep)) {
+            if (!is_array($ep)) {
                 throw new Exception($iloc . ': Expected a string or an array.');
             }
 
@@ -1240,12 +1233,24 @@ class Configuration implements Utils\ClearableState
             }
 
             if (!array_key_exists('Binding', $ep)) {
-                throw new Exception($iloc . ': Missing Binding.');
+                $ep['Binding'] = $this->getDefaultBinding($endpointType);
             }
             if (!is_string($ep['Binding'])) {
                 throw new Exception($iloc . ': Binding must be a string.');
             }
 
+            if ($eps_count <= 1) {
+                $isDefault = false;
+                if (array_key_exists('isDefault', $ep) && $ep['isDefault']) {
+                    $isDefault = true;
+                } else {
+                    try {
+                        Binding::getBinding($ep['Binding']);
+                    } catch (UnsupportedBindingException $e) {
+                        $ep['Binding'] = $this->getDefaultBinding($endpointType);
+                    }
+                }
+            }
             if (array_key_exists('ResponseLocation', $ep)) {
                 if (!is_string($ep['ResponseLocation'])) {
                     throw new Exception($iloc . ': ResponseLocation must be a string.');
@@ -1313,7 +1318,7 @@ class Configuration implements Utils\ClearableState
      */
     public function getDefaultEndpoint(
         string $endpointType,
-        array $bindings = null,
+        ?array $bindings = null,
         mixed $default = self::REQUIRED_OPTION,
     ): mixed {
         $endpoints = $this->getEndpoints($endpointType);
@@ -1418,7 +1423,9 @@ class Configuration implements Utils\ClearableState
                 }
                 $ret[] = $key;
             }
-            return $ret;
+            if (!empty($ret)) {
+                return $ret;
+            }
         } elseif ($this->hasValue($prefix . 'certData')) {
             $certData = $this->getString($prefix . 'certData');
             $certData = preg_replace('/\s+/', '', $certData);
@@ -1463,7 +1470,10 @@ class Configuration implements Utils\ClearableState
                     'X509Certificate' => $certData,
                 ],
             ];
-        } elseif ($required === true) {
+        }
+
+        // If still here, we didn't find a certificate of the requested use
+        if ($required === true) {
             throw new Error\Exception($this->location . ': Missing certificate in metadata.');
         } else {
             return [];
