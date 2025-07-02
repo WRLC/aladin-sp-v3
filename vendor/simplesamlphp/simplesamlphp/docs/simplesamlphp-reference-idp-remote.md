@@ -182,7 +182,7 @@ $metadata['entity-id-2'] = [
 `SingleLogoutService`
 :   Endpoint URL for logout requests and responses. You should obtain this from the IdP. Users who log out from your service is redirected to this URL with the LogoutRequest using HTTP-REDIRECT.
 
-:   The value of this option is specified in the format shown in [endpoint format](./simplesamlphp-metadata-endpoints).
+:   The value of this option is specified in one of several [endpoint formats](./simplesamlphp-metadata-endpoints).
 
 `SingleLogoutServiceResponse`
 :   Endpoint URL for logout responses. Overrides the `SingleLogoutService`-option for responses.
@@ -190,7 +190,7 @@ $metadata['entity-id-2'] = [
 `SingleSignOnService`
 :   Endpoint URL for sign on. You should obtain this from the IdP. For SAML 2.0, SimpleSAMLphp will use the HTTP-Redirect binding when contacting this endpoint.
 
-:   The value of this option is specified in the format shown in [endpoint format](./simplesamlphp-metadata-endpoints).
+:   The value of this option is specified in one of several [endpoint formats](./simplesamlphp-metadata-endpoints).
 
 `SPNameQualifier`
 :   This corresponds to the SPNameQualifier in the SAML 2.0 specification. It allows to give subjects a SP specific namespace. This option is rarely used, so if you don't need it, leave it out. When left out, SimpleSAMLphp assumes the entityID of your SP as the SPNameQualifier.
@@ -203,7 +203,7 @@ $metadata['entity-id-2'] = [
 
 ### Decrypting assertions
 
-It is possible to decrypt the assertions received from an IdP. The supported algorithms are listed in `sharedkey_algorithm` below.
+It is possible to decrypt the assertions received from an IdP. Currently the only algorithm supported is `AES128_CBC` or `RIJNDAEL_128`.
 
 There are two modes of encryption supported by SimpleSAMLphp. One is symmetric encryption, in which case both the SP and the IdP needs to share a key. The other mode is the use of public key encryption. In that mode, the public key of the SP is extracted from the certificate of the SP.
 

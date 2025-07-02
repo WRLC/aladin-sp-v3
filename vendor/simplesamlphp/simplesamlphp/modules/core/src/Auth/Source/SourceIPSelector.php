@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Module\core\Auth\Source;
 
-use SimpleSAML\{Error, Logger};
 use SimpleSAML\Assert\Assert;
-use Symfony\Component\HttpFoundation\{IpUtils, Request};
+use SimpleSAML\Error;
+use SimpleSAML\Logger;
+use SimpleSAML\Utils;
 
 use function array_key_exists;
 use function sprintf;
@@ -90,14 +91,13 @@ class SourceIPSelector extends AbstractSourceSelector
      */
     protected function selectAuthSource(/** @scrutinizer ignore-unused */ array &$state): string
     {
-        $ip = Request::createFromGlobals()->getClientIp();
-        Assert::notNull($ip, "Unable to determine client IP.");
+        $netUtils = new Utils\Net();
+        $ip = $_SERVER['REMOTE_ADDR'];
 
-        $state['sourceIPSelector:zone'] = 'default';
         $source = $this->defaultSource;
         foreach ($this->zones as $name => $zone) {
             foreach ($zone['subnet'] as $subnet) {
-                if (IpUtils::checkIp($ip, $subnet)) {
+                if ($netUtils->ipCIDRcheck($subnet, $ip)) {
                     // Client's IP is in one of the ranges for the secondary auth source
                     Logger::info(sprintf(
                         "core:SourceIPSelector:  Selecting zone `%s` based on client IP %s",

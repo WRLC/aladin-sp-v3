@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
-use Twig\Extension\DebugExtension;
 use Twig\Extra\Intl\IntlExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
@@ -43,6 +42,7 @@ use function is_null;
 use function key;
 use function ksort;
 use function strripos;
+use function strtolower;
 use function strval;
 use function substr;
 
@@ -177,10 +177,9 @@ class Template extends Response
      * the original file.
      * @param string $asset
      * @param string|null $module
-     * @param bool $tag
      * @return string
      */
-    public function asset(string $asset, ?string $module = null, bool $tag = true): string
+    public function asset(string $asset, string $module = null): string
     {
         $baseDir = $this->configuration->getBaseDir();
         $basePath = $this->configuration->getBasePath();
@@ -199,12 +198,6 @@ class Template extends Response
             // don't be too harsh if an asset is missing, just pretend it's there...
             return $path;
         }
-
-        if ($tag === false) {
-            // The asset is requested without a tag
-            return $path;
-        }
-
         $file = new File($file);
 
         $tag = $this->configuration->getVersion();
@@ -296,7 +289,6 @@ class Template extends Response
     {
         $auto_reload = $this->configuration->getOptionalBoolean('template.auto_reload', true);
         $cache = $this->configuration->getOptionalString('template.cache', null);
-        $templateDebug = $this->configuration->getOptionalBoolean('template.debug', false);
 
         // set up template paths
         $loader = $this->setupTwigTemplatepaths();
@@ -323,17 +315,10 @@ class Template extends Response
             'strict_variables' => true,
         ];
 
-        if ($templateDebug) {
-            $options['debug'] = true;
-        }
-
         $twig = new Environment($loader, $options);
         $twigTranslator = new TwigTranslator([Translate::class, 'translateSingularGettext']);
         $twig->addExtension(new TranslationExtension($twigTranslator));
         $twig->addExtension(new IntlExtension());
-        if ($templateDebug) {
-            $twig->addExtension(new DebugExtension());
-        }
 
         $twig->addFunction(new TwigFunction('moduleURL', [Module::class, 'getModuleURL']));
 
@@ -480,6 +465,7 @@ class Template extends Response
             $parameterName = $this->getTranslator()->getLanguage()->getLanguageParameterName();
             $langmap = [];
             foreach ($languages as $lang => $current) {
+                $lang = strtolower($lang);
                 $langname = $this->translator->getLanguage()->getLanguageLocalizedName($lang);
                 $url = false;
                 if (!$current) {

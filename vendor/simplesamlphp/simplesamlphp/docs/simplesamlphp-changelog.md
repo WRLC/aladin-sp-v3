@@ -5,165 +5,27 @@
 This document lists the changes between versions of SimpleSAMLphp.
 See the [upgrade notes](https://simplesamlphp.org/docs/stable/simplesamlphp-upgrade-notes.html) for specific information about upgrading.
 
-## Version 2.4.2
-
-Released 2025-06-04
-
-* Fixed a bug where metadata-endpoints with isDefault set would not yield the expected metadata (#2439)
-* Fixed a backwards incompatibility that would throw an exception on an invalid entityID.
-  The exception was downgraded to a warning in the log (#2448)
-* Fixed a security-issue where cron-jobs could be executed using the default key,
-  even if a different one was set (#2453)
-
-`memcacheMonitor`
-
-* Fixed an issue that prevented the latest version of this module from being installed on SSP 2.4.x
-
-`negotiate`
-
-* Fixed an issue that prevented the latest version of this module from being installed on SSP 2.4.x
-
-## Version 2.4.1
-
-Released 2025-05-14
-
-* Reverted #2278 because of a regression in SLO when using SSP as a bridge (#2436)
-* Fixed a dependency on a dev-version of the saml2-library
-
-## Version 2.4.0
-
-Released 2025-04-16
-
-* Added a new feature flag `encryption.optional` to allow unencrypted assertions if the SP does
-  not provide an encryption certificate (#2208)
-* Make translations tool theme-aware (#2315)
-* Fix deprecation of Twig spaceless-filter (#2229)
-* Add possibility to provide connection context to XML storage-handler (#2332)
-* Throw user-friendly exception with the proper HTTP statuscode for incorrect HTTP-method (#2234)
-* Fixed build-workflow to only re-build the website once
-* Bugfix: Use entityID from state to allow overriding the issuer (#2345)
-* When only a single IdP is in scope, skip discovery screen (#2355)
-* Downgrade simplesamlphp/composer-module-installer to 1.3.x to keep things working with older (OS-supplied)
-  versions of composer
-* Skip test if xdebug.mode does not contain develop (#2419)
-* Add a console-script to clear cache (#2410)
-* PHP 8.4 Deprecation fixes (#2413)
-* Warn if a module has an unexpected translation-domain in its po file.
-* Add configuration that enables/disables twig template debug mode (#2406)
-* Add support for IDP Discovery protocol (#2402)
-* Destroy session cookies on logout (#2278)
-* A new module to allow debugging SP logins (#2381)
-* When only a single IdP is in scope, skip discovery screen (#2355)
-* Add authproc-filter to manipulate the Assertion's Issuer (#2346)
-* Many improvements to docs and translations
-* Updated dependencies
-
-`adfs`
-
-* The ADFS-module has been disconnected from the SSP release. To continue to use it, the module has to be manually installed.
-* The ADFS-module was completely rewritten and now uses our own XML-libraries for building, signing and encrypting XML (v3.0.0)
-
-`discopower`
-
-* Create discopower.po for italian locale (#22)
-* Hide tab list when there's only one tab
-* Fix for tags containing uppercase letters
-* Updated jQuery
-
-`ldap`
-
-* Add SASL-support (v2.4.0). Note that this required a newer version of symfony/ldap than the one packaged (v2.4.3)
-
-`metarefresh`
-
-* Fixed parsing of large metadata files (v1.2.4)
-
-`saml`
-
-* Stricter regexp to verify SubjectID/PairwiseID: disallow trailing spaces.
-
-## Version 2.3.7
+## Version 2.2.5
 
 Released TBD
 
-* Fixed loading translations for themes where there is no explicit X-Domain set in the po file.
+## Version 2.2.4
 
-## Version 2.3.6
+Released 2024-12-02
 
-Released 2025-02-17
+`Security`
 
-* Fixed PHP 8.4 deprecation notices
-* Fixed infinite recursion (#2367)
-* Added a new feature flag `encryption.optional` to allow unencrypted assertions if the SP does
-  not provide an encryption certificate (#2208)
-* Make translations tool theme-aware (#2315)
-* Fixed build-workflow to only re-build the website once
-* Bugfix: Use entityID from state to allow overriding the issuer (#2345)
-* When only a single IdP is in scope, skip discovery screen (#2355)
-* Fixed "Undefined array key" warning in RequestedAuthnContextSelector if no RAC is present in the request
-* SimpleSAMLAuthToken cookie is now removed during an SLO
+* A security bug was patched in the `saml2-library` that allowed for XXE during the parsing
+  of SAML2-messages (CVE-2024-52596)
 
-`adfs`
+`Other fixes`
 
-* PHP 8.4 support
-* The ADFS-module has been disconnected from the SSP release. To continue to use it, the module has to be manually installed.
-* The ADFS-module was completely rewritten and now uses our own XML-libraries for building, signing and encrypting XML (v3.0.0)
+* Run ob_end_clean() on configuration file parsing error (#2219)
+* Fix typo that caused the metadata file-upload to be hidden (#2271)
 
-`authcrypt`
+`admin`
 
-* PHP 8.4 support
-
-`discopower`
-
-* Hide tab list when there's only one tab (simplesamlphp/simplesamlphp-module-discopower#27) (v1.5.0)
-* Bugfix: Use jquery-assets repo to work around symlink-issue (simplesamlphp/simplesamlphp-module-discopower#28) (v1.5.1)
-
-`ldap`
-
-* Add SASL-support (v2.4.0). Note that this required a newer version of symfony/ldap than the one packaged (v2.4.3)
-
-`saml`
-
-* Stricter regexp to verify SubjectID/PairwiseID: disallow trailing spaces.
-* Feature: Add authproc-filter to be able to manipulate the Assertion's Issuer (#2346)
-
-`debugsp`
-
-* Added module to allow testing the SP you have in your installation without needing admin login
-  This is similar to the admin/test page but can more easily be used by an IdP who may not have admin
-  privileges on your site.
-
-## Version 2.3.0
-
-Released 2024-08-20
-
-* The SubjectID authproc-filter now has a new option `hashed`, which if set to true
-  will automatically hash the unique part of the ID. This will also automatically
-  make the unique part of the ID in compliance with the specs (#2006)
-* Add microsecond support to the FileLoggingHandler (#2084)
-* Session ID's are now hashed when stored in a database (#2106)
-* Improved HTML 5 compatibility (#2162)
-* Fix: preloaded resource not used (#2207)
-* BC-break (unintentional): plain-text admin-password are no longer allowed (#2113)
-
-`authorize`
-
-* Feature: allow a user to reauthenticate with a different account (simplesamlphp/simplesamlphp-module-authorize#17) (v1.5.0)
-* Feature: show user what account he's using when authorization fails (simplesamlphp/simplesamlphp-module-authorize#20) (v1.6.0)
-* Fix: fix faulty translation (v1.6.1)
-
-`consent`
-
-* Update Luxembourgish translations (v1.4.0)
-
-`negotiate`
-
-* Add support for SPNEGO channel binding (v2.3.1)
-
-`sqlauth`
-
-* Add username_regex option - run regular expression over username before querying the
-  database (simplesamlphp/simplesamlphp-module-sqlauth#11) (v1.3.0)
+* Fix metadata-viewer to output a valid PHP array
 
 ## Version 2.2.3
 
@@ -357,9 +219,6 @@ Released 2023-10-30
 * Changed the UNIQUE constraint for the SP LogoutStore database to PRIMARY KEY to
   prevent confusing warnings in Drupal (#1862)
 * Add Accept HTTP headers to MDQ queries (#1865)
-
-### Chores
-
 * The custom error- and exception handlers were moved to their very own classes (#1858)
 
 ## Version 2.0.8

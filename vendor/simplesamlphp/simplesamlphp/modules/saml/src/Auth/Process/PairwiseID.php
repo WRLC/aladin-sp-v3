@@ -7,8 +7,6 @@ namespace SimpleSAML\Module\saml\Auth\Process;
 use SAML2\Constants;
 use SimpleSAML\{Auth, Utils};
 
-use function strtolower;
-
 /**
  * Filter to generate the Pairwise ID attribute.
  *
@@ -41,6 +39,11 @@ class PairwiseID extends SubjectID
      */
     public const NAME = 'PairwiseID';
 
+    /**
+     * @var \SimpleSAML\Utils\Config
+     */
+    protected Utils\Config $configUtils;
+
 
     /**
      * Initialize this filter.
@@ -51,6 +54,8 @@ class PairwiseID extends SubjectID
     public function __construct(array &$config, $reserved)
     {
         parent::__construct($config, $reserved);
+
+        $this->configUtils = new Utils\Config();
     }
 
 
@@ -77,11 +82,23 @@ class PairwiseID extends SubjectID
         }
 
         // Calculate hash
-        $hash = $this->calculateHash($userID . '|' . $sp_entityid);
+        $salt = $this->configUtils->getSecretSalt();
+        $hash = hash_hmac('sha256', $userID . '|' . $sp_entityid, $salt, false);
 
-        $value = strtolower($hash . '@' . $scope);
+        $value = $hash . '@' . strtolower($scope);
         $this->validateGeneratedIdentifier($value);
 
         $state['Attributes'][Constants::ATTR_PAIRWISE_ID] = [$value];
+    }
+
+
+    /**
+     * Inject the \SimpleSAML\Utils\Config dependency.
+     *
+     * @param \SimpleSAML\Utils\Config $configUtils
+     */
+    public function setConfigUtils(Utils\Config $configUtils): void
+    {
+        $this->configUtils = $configUtils;
     }
 }

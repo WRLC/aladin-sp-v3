@@ -55,17 +55,6 @@ of the git repository. If you would like your simpler issues to be
 solved for you execute `phpcbf` which will update the code to remedy
 as many issues as it can.
 
-## CSS and common asset setup
-
-The common assets such as CSS in SimpleSAMLphp, for example, that
-stored in public/assets/base/css/stylesheet.css comes from the
-[simplesamlphp-assets-base](https://github.com/simplesamlphp/simplesamlphp-assets-base)
-package.
-
-The dependencies are updated using github actions in
-simplesamlphp-assets-base. Select a recent branch such as release-2.2
-and dig into the .github directory for details.
-
 ## Following a simple login
 
 The `SimpleSAML\Auth\Simple` class takes the authentication_source
@@ -124,10 +113,6 @@ might like to make the pull request against the simplesamlphp-2.1
 branch and leave it to the team to also apply it to master and other
 branches in the same way that code updates work.
 
-Some docs offered under the `docs` directory on the web site come from modules.
-For example the [saml module](https://simplesamlphp.org/docs/2.3/saml/sp.html)
-file comes from the file `./modules/saml/docs/sp.md` in the git repository.
-
 ### Documentation linting
 
 The CI system has some linting for markdown files in place. This uses
@@ -153,16 +138,3 @@ cd ./node_modules/.bin
 
 You will probably want to make a script or alias to the above command
 and apply it before pushing documentation changes to github.
-
-## Making a release
-
-The release process is documented on the wiki
-<https://github.com/simplesamlphp/simplesamlphp/wiki/Release-process>.
-
-## Dependbot
-
-The dependbot
-<https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/configuring-dependabot-security-updates> runs on the master branch
-and creates pull requests with recommended updates.
-
-The release branches are updated automatically as part of the release process.

@@ -106,7 +106,6 @@ class DiscoController
         $urlSource = $request->get('source', null);
         $discoSource = $request->get('sourceChoice', null);
 
-        $selectedSource = null;
         if ($urlSource !== null) {
             $selectedSource = $urlSource;
         } elseif ($discoSource !== null) {

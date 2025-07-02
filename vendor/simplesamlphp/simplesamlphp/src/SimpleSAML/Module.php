@@ -156,13 +156,13 @@ class Module
      * configuration and the actual request, it will run a PHP script and exit, or return a Response produced either
      * by another controller or by a static file.
      *
-     * @param \Symfony\Component\HttpFoundation\Request|null $request The request to process. Defaults to the current one.
+     * @param Request|null $request The request to process. Defaults to the current one.
      *
      * @return Response|BinaryFileResponse Returns a Response object that can be sent to the browser.
      * @throws Error\BadRequest In case the request URI is malformed.
      * @throws Error\NotFound In case the request URI is invalid or the resource it points to cannot be found.
      */
-    public static function process(?Request $request = null): Response
+    public static function process(Request $request = null): Response
     {
         if ($request === null) {
             $request = Request::createFromGlobals();
@@ -455,17 +455,6 @@ class Module
             $className = 'SimpleSAML\\Module\\' . $tmp[0] . $type . $tmp[1];
         }
 
-        // Check if the class exists to give a more informative error
-        // for cases where modules might have been moved or renamed.
-        // Otherwise a not subclass of error would be thrown for a class
-        // that does not exist.
-        if (!class_exists($className, true)) {
-            throw new Exception(
-                'Could not resolve \'' . $id . '\': The class \'' . $className
-                . '\' does not exist.',
-            );
-        }
-
         if ($subclass !== null && !is_subclass_of($className, $subclass)) {
             throw new Exception(
                 'Could not resolve \'' . $id . '\': The class \'' . $className
@@ -476,28 +465,6 @@ class Module
         return $className;
     }
 
-
-    /**
-     * Create an object of a class returned by resolveNonModuleClass() or resolveClass().
-     *
-     * @param string The classname.
-     * @param string|null $subclass The class should be a subclass of this class. Optional.
-     *
-     * @return the new object
-     */
-    public static function createObject(string $className, ?string $subclass = null): object
-    {
-        $obj = new $className();
-        if ($subclass) {
-            if (!is_subclass_of($obj, $subclass, false)) {
-                throw new Exception(
-                    'Could not instantiate \'' . $className . '\': The class \'' . $className
-                    . '\' isn\'t a subclass of \'' . $subclass . '\'.',
-                );
-            }
-        }
-        return $obj;
-    }
 
     /**
      * Get absolute URL to a specified module resource.

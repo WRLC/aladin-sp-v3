@@ -17,11 +17,7 @@ use SimpleSAML\Module\ldap\ConnectorInterface;
 
 abstract class BaseFilter extends Auth\ProcessingFilter
 {
-    /**
-     * TODO: Support ldap:LDAPMulti, if possible
-     *
-     * @var string[]
-     */
+    // TODO: Support ldap:LDAPMulti, if possible
     protected static array $ldapsources = ['ldap:Ldap', 'authX509:X509userCert'];
 
     /**
@@ -29,14 +25,14 @@ abstract class BaseFilter extends Auth\ProcessingFilter
      * name. Used for abstraction / configuration of the LDAP
      * attribute names, which may change between dir service.
      *
-     * @var array<mixed>
+     * @var array
      */
     protected array $attribute_map;
 
     /**
      * The base DN of the LDAP connection. Used when searching the LDAP server.
      *
-     * @var array<mixed>
+     * @var array
      */
     protected array $searchBase;
 
@@ -68,7 +64,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
      * List of LDAP object types, used to determine the type of
      * object that a DN references.
      *
-     * @var array<mixed>
+     * @var array
      */
     protected array $type_map;
 
@@ -79,7 +75,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
      * instance/object and stores everything in class members.
      *
      * @throws \SimpleSAML\Error\Exception
-     * @param array<mixed> &$config
+     * @param array &$config
      * @param mixed $reserved
      */
     public function __construct(array &$config, $reserved)
@@ -108,7 +104,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
                 '%s : Retrieved authsource [%s] configuration values: %s',
                 $this->title,
                 $config['authsource'],
-                $this->varExport($authconfig),
+                $this->varExport($authconfig)
             ));
         }
 
@@ -127,7 +123,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
         Logger::debug(sprintf(
             '%s : Configuration values retrieved; BaseDN: %s',
             $this->title,
-            $this->varExport($this->searchBase),
+            $this->varExport($this->searchBase)
         ));
 
         // Setup the attribute map which will be used to search LDAP
@@ -146,7 +142,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
         Logger::debug(sprintf(
             '%s : Attribute map created: %s',
             $this->title,
-            $this->varExport($this->attribute_map),
+            $this->varExport($this->attribute_map)
         ));
 
         // Setup the object type map which is used to determine a DNs' type
@@ -159,7 +155,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
         Logger::debug(sprintf(
             '%s : Type map created: %s',
             $this->title,
-            $this->varExport($this->type_map),
+            $this->varExport($this->type_map)
         ));
     }
 
@@ -168,7 +164,6 @@ abstract class BaseFilter extends Auth\ProcessingFilter
      * Parse authsource config
      *
      * @param string $as The name of the authsource
-     * @return array<mixed>
      */
     private function parseAuthSourceConfig(string $as): array
     {
@@ -176,7 +171,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
         Logger::debug(sprintf(
             '%s : Attempting to get configuration values from authsource [%s]',
             $this->title,
-            $as,
+            $as
         ));
 
         // Get the authsources file, which should contain the config
@@ -187,7 +182,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
             throw new Error\Exception(sprintf(
                 '%s : Authsource [%s] defined in filter parameters not found in authsources.php',
                 $this->title,
-                $as,
+                $as
             ));
         }
 
@@ -199,7 +194,7 @@ abstract class BaseFilter extends Auth\ProcessingFilter
             throw new Error\Exception(sprintf(
                 '%s : Authsource [%s] specified in filter parameters is not an ldap:LDAP type',
                 $this->title,
-                $as,
+                $as
             ));
         }
 

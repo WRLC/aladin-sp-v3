@@ -44,7 +44,7 @@ class Ldap implements ConnectorInterface
      * @param int $version
      * @param string $extension
      * @param bool $debug
-     * @param array<mixed> $options
+     * @param array $options
      */
     public function __construct(
         string $connection_strings,
@@ -52,7 +52,7 @@ class Ldap implements ConnectorInterface
         int $version = 3,
         string $extension = 'ext_ldap',
         bool $debug = false,
-        array $options = ['referrals' => false, 'network_timeout' => 3],
+        array $options = ['referrals' => false, 'network_timeout' => 3]
     ) {
         foreach (explode(' ', $connection_strings) as $connection_string) {
             Assert::regex($connection_string, '#^ldap[s]?:\/\/#');
@@ -75,7 +75,7 @@ class Ldap implements ConnectorInterface
                 'version'           => $version,
                 'debug'             => $debug,
                 'options'           => $options,
-            ],
+            ]
         );
 
         $this->connection = new LdapObject($this->adapter);
@@ -99,7 +99,7 @@ class Ldap implements ConnectorInterface
         try {
             $this->connection->bind($username, strval($password));
         } catch (InvalidCredentialsException $e) {
-            throw new Error\Error($this->resolveBindException());
+            throw new Error\Error($this->resolveBindError($e));
         }
 
         if ($username === null) {
@@ -109,46 +109,6 @@ class Ldap implements ConnectorInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function saslBind(
-        ?string $username,
-        #[\SensitiveParameter]?string $password,
-        ?string $mech,
-        ?string $realm,
-        ?string $authcId,
-        ?string $authzId,
-        ?string $props,
-    ): void {
-        if (!method_exists($this->connection, 'saslBind')) {
-            throw new Error\Error("SASL not implemented");
-        }
-
-        try {
-            $this->connection->saslBind($username, strval($password), $mech, $realm, $authcId, $authzId, $props);
-        } catch (InvalidCredentialsException $e) {
-            throw new Error\Error($this->resolveBindException());
-        }
-
-        if ($username === null) {
-            Logger::debug("LDAP bind(): Anonymous bind succesful.");
-        } else {
-            Logger::debug(sprintf("LDAP bind(): Bind successful for DN '%s'.", $username));
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function whoami(): string
-    {
-        if (!method_exists($this->connection, 'whoami')) {
-            throw new Error\Error("SASL not implemented");
-        }
-
-        return $this->connection->whoami();
-    }
 
     /**
      * @inheritDoc
@@ -157,7 +117,7 @@ class Ldap implements ConnectorInterface
         array $searchBase,
         string $filter,
         array $options,
-        bool $allowMissing,
+        bool $allowMissing
     ): ?Entry {
         $entry = null;
 
@@ -166,30 +126,36 @@ class Ldap implements ConnectorInterface
             $result = $query->execute()->toArray();
 
             if (count($result) > 1) {
-                throw new Error\Exception(sprintf(
-                    "LDAP search(): Found %d entries searching base '%s' for '%s'",
-                    count($result),
-                    $base,
-                    $filter,
-                ));
+                throw new Error\Exception(
+                    sprintf(
+                        "LDAP search(): Found %d entries searching base '%s' for '%s'",
+                        count($result),
+                        $base,
+                        $filter,
+                    )
+                );
             } elseif (count($result) === 1) {
                 $entry = array_pop($result);
                 break;
             } else {
-                Logger::debug(sprintf(
-                    "LDAP search(): Found no entries searching base '%s' for '%s'",
-                    $base,
-                    $filter,
-                ));
+                Logger::debug(
+                    sprintf(
+                        "LDAP search(): Found no entries searching base '%s' for '%s'",
+                        $base,
+                        $filter,
+                    )
+                );
             }
         }
 
         if ($entry === null && $allowMissing === false) {
-            throw new Error\Exception(sprintf(
-                "Object not found using search base [%s] and filter '%s'",
-                implode(', ', $searchBase),
-                $filter,
-            ));
+            throw new Error\Exception(
+                sprintf(
+                    "Object not found using search base [%s] and filter '%s'",
+                    implode(', ', $searchBase),
+                    $filter
+                )
+            );
         }
 
         return $entry;
@@ -203,7 +169,7 @@ class Ldap implements ConnectorInterface
         array $searchBase,
         string $filter,
         array $options,
-        bool $allowMissing,
+        bool $allowMissing
     ): array {
         $results = [];
 
@@ -221,11 +187,13 @@ class Ldap implements ConnectorInterface
         }
 
         if (empty($results) && ($allowMissing === false)) {
-            throw new Error\Exception(sprintf(
-                "No Objects found using search base [%s] and filter '%s'",
-                implode(', ', $searchBase),
-                $filter,
-            ));
+            throw new Error\Exception(
+                sprintf(
+                    "No Objects found using search base [%s] and filter '%s'",
+                    implode(', ', $searchBase),
+                    $filter
+                )
+            );
         }
 
         return $results;
@@ -235,9 +203,10 @@ class Ldap implements ConnectorInterface
     /**
      * Resolve the message to a UI exception
      *
+     * @param InvalidCredentialsException $e
      * @return string
      */
-    protected function resolveBindException(): string
+    protected function resolveBindError(InvalidCredentialsException $e): string
     {
         return self::ERR_WRONG_PASS;
     }

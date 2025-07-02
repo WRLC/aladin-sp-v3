@@ -10,8 +10,6 @@ use SimpleSAML\Assert\Assert;
 use SimpleSAML\Error;
 use SimpleSAML\Utils;
 
-use function hash_equals;
-
 /**
  * The Session class holds information about a user session, and everything attached to it.
  *
@@ -327,7 +325,7 @@ class Session implements Utils\ClearableState
      * @return \SimpleSAML\Session|null The session that is stored in the session handler,
      *   or null if the session wasn't found.
      */
-    public static function getSession(?string $sessionId = null): ?Session
+    public static function getSession(string $sessionId = null): ?Session
     {
         $sh = SessionHandler::getSessionHandler();
 
@@ -362,7 +360,8 @@ class Session implements Utils\ClearableState
                     Logger::warning('Missing AuthToken cookie.');
                     return null;
                 }
-                if (!hash_equals($session->authToken, $_COOKIE[$authTokenCookieName])) {
+                $cryptoUtils = new Utils\Crypto();
+                if (!$cryptoUtils->secureCompare($session->authToken, $_COOKIE[$authTokenCookieName])) {
                     Logger::warning('Invalid AuthToken cookie.');
                     return null;
                 }
@@ -570,7 +569,7 @@ class Session implements Utils\ClearableState
      *
      * @param int $lifetime Number of seconds after when remember me session cookies expire.
      */
-    public function setRememberMeExpire(?int $lifetime = null): void
+    public function setRememberMeExpire(int $lifetime = null): void
     {
         if ($lifetime === null) {
             $lifetime = self::$config->getOptionalInteger('session.rememberme.lifetime', 14 * 86400);
@@ -800,7 +799,7 @@ class Session implements Utils\ClearableState
      * @param string $authority The authentication source we are setting expire time for.
      * @param int    $expire The number of seconds authentication source is valid.
      */
-    public function setAuthorityExpire(string $authority, ?int $expire = null): void
+    public function setAuthorityExpire(string $authority, int $expire = null): void
     {
         $this->markDirty();
 
@@ -947,11 +946,10 @@ class Session implements Utils\ClearableState
      *
      * @param string      $type The type of the data. This must match the type used when adding the data.
      * @param string|null $id The identifier of the data. Can be null, in which case null will be returned.
-     * @param bool        $allowExpired Whether to fetch or not an expired Session entry. Default's to everything.
      *
      * @return mixed The data of the given type with the given id or null if the data doesn't exist in the data store.
      */
-    public function getData(string $type, ?string $id, bool $allowExpired = true): mixed
+    public function getData(string $type, ?string $id): mixed
     {
         if ($id === null) {
             return null;
@@ -962,15 +960,6 @@ class Session implements Utils\ClearableState
         }
 
         if (!array_key_exists($id, $this->dataStore[$type])) {
-            return null;
-        }
-
-        if (
-            !$allowExpired
-            // If 'expire' is a string then it will last for the entire Session.
-            && !is_string($this->dataStore[$type][$id]['expires'])
-            && $this->dataStore[$type][$id]['expires'] < time()
-        ) {
             return null;
         }
 

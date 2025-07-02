@@ -222,8 +222,10 @@ There are a few steps that you should complete in the main configuration file, `
   **ignores** the `X-Forwarded-*` set of headers that your proxy might be setting, so **do not rely on those**.
 
 * Set an administrator password. This is needed to access some of the pages in your SimpleSAMLphp installation web
-  interface. Plain-text passwords are not allowed, but you can generate a safe password-hash using the `bin/pwgen.php`
-  script.
+  interface.
+
+  Hashed passwords can also be used here. See the [`authcrypt`](./authcrypt:authcrypt) documentation
+  for more information.
 
 ```php
 'auth.adminpassword' => 'setnewpasswordhere',

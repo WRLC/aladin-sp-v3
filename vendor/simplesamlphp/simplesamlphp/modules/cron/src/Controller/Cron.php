@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SimpleSAML\Module\cron\Controller;
 
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
-use SimpleSAML\Assert\Assert;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error;
 use SimpleSAML\Logger;
@@ -115,28 +114,16 @@ class Cron
      */
     public function run(string $tag, string $key, string $output = 'xhtml'): Response
     {
-        $configKey = $this->cronconfig->getString('key');
+        $configKey = $this->cronconfig->getOptionalString('key', 'secret');
 
-        Assert::notInArray(
-            $key,
-            ['secret', 'RANDOM_KEY'],
-            'Cron: Possible malicious attempt to run cron tasks with default secret',
-            Error\ConfigurationError::class,
-        );
-
-        Assert::notInArray(
-            $configKey,
-            ['secret', 'RANDOM_KEY'],
-            'Cron: no proper key has been configured.',
-            Error\ConfigurationError::class,
-        );
-
-        Assert::same(
-            $key,
-            $configKey,
-            'Cron: Wrong key %s provided. Cron will not run.',
-            Error\Exception::class,
-        );
+        if ($key === 'secret' || $key === 'RANDOM_KEY') {
+            // Possible malicious attempt to run cron tasks with default secret
+            Logger::warning("Cron: Possible malicious attempt to run cron tasks with default secret");
+        } elseif ($configKey === 'secret' || $configKey === 'RANDOM_KEY') {
+            Logger::warning("Cron: no proper key has been configured.");
+        } elseif ($key !== $configKey) {
+            throw new Error\Exception('Cron: Wrong key provided. Cron will not run.');
+        }
 
         $cron = new \SimpleSAML\Module\cron\Cron();
         if (!$cron->isValidTag($tag)) {

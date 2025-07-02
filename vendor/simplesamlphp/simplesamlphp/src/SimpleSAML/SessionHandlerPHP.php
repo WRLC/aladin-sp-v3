@@ -231,7 +231,7 @@ class SessionHandlerPHP extends SessionHandler
      * @throws \SimpleSAML\Error\Exception If it wasn't possible to disable session cookies or we are trying to load a
      * PHP session with a specific identifier and it doesn't match with the current session identifier.
      */
-    public function loadSession(?string $sessionId = null): ?Session
+    public function loadSession(string $sessionId = null): ?Session
     {
         if ($sessionId !== session_id()) {
             throw new Error\Exception('Cannot load PHP session with a specific ID.');
@@ -246,15 +246,8 @@ class SessionHandlerPHP extends SessionHandler
         $session = $_SESSION['SimpleSAMLphp_SESSION'];
         Assert::string($session);
 
-        try {
-            $session = unserialize($session);
-        } catch (\Throwable $e) {
-            Logger::warning('Session load failed using unserialize().'
-                         .  'If you have just upgraded this might be ok. '
-                          . 'If not there might be an issue with your storage. '
-                          . $e->getMessage());
-            $session = null;  # sometimes deserializing fails, so we throw it away
-        }
+        $session = unserialize($session);
+
         return ($session !== false) ? $session : null;
     }
 
@@ -315,7 +308,7 @@ class SessionHandlerPHP extends SessionHandler
      *
      * @throws \SimpleSAML\Error\CannotSetCookie If we can't set the cookie.
      */
-    public function setCookie(string $sessionName, ?string $sessionID, ?array $cookieParams = null): void
+    public function setCookie(string $sessionName, ?string $sessionID, array $cookieParams = null): void
     {
         if ($cookieParams === null) {
             $cookieParams = session_get_cookie_params();
@@ -339,15 +332,6 @@ class SessionHandlerPHP extends SessionHandler
         if (session_id() !== '') {
             // session already started, close it
             session_write_close();
-        }
-
-        if (array_key_exists('expire', $cookieParams)) {
-            // Similar to the Utils\HTTP::setCookie()
-            if (isset($cookieParams['expire'])) {
-                $expire = intval($cookieParams['expire']);
-                $cookieParams['lifetime'] = $expire;
-                unset($cookieParams['expire']);
-            }
         }
 
         /** @psalm-suppress InvalidArgument */

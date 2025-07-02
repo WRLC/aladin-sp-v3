@@ -21,52 +21,15 @@ interface ConnectorInterface
      *
      * @throws \SimpleSAML\Error\Exception if none of the LDAP-servers could be contacted
      */
-    public function bind(
-        ?string $username,
-        #[\SensitiveParameter]
-        ?string $password,
-    ): void;
-
-
-    /**
-     * Bind to an LDAP-server using SASL
-     *
-     * @param string|null $username
-     * @param string|null $password Null for passwordless logon
-     * @param string|null $mech
-     * @param string|null $realm
-     * @param string|null $authcId
-     * @param string|null $authzId
-     * @param string|null $props
-     * @return void
-     *
-     * @throws \SimpleSAML\Error\Exception if none of the LDAP-servers could be contacted
-     */
-    public function saslBind(
-        ?string $username,
-        ?string $password,
-        ?string $mech,
-        ?string $realm,
-        ?string $authcId,
-        ?string $authzId,
-        ?string $props,
-    ): void;
-
-
-    /**
-     * Return the authenticated DN
-     *
-     * @return string
-     */
-    public function whoami(): string;
+    public function bind(?string $username, ?string $password): void;
 
 
     /**
      * Search the LDAP-directory for a specific object
      *
-     * @param string[] $searchBase
+     * @param array $searchBase
      * @param string $filter
-     * @param array<mixed> $options
+     * @param array $options
      * @param boolean $allowMissing
      * @return \Symfony\Component\Ldap\Entry|null The result of the search or null if none found
      * @psalm-return ($allowMissing is true ? \Symfony\Component\Ldap\Entry|null : \Symfony\Component\Ldap\Entry)
@@ -78,16 +41,16 @@ interface ConnectorInterface
         array $searchBase,
         string $filter,
         array $options,
-        bool $allowMissing,
+        bool $allowMissing
     ): ?Entry;
 
 
     /**
      * Search the LDAP-directory for any object matching the search filter
      *
-     * @param string[] $searchBase
+     * @param array $searchBase
      * @param string $filter
-     * @param array<mixed> $options
+     * @param array $options
      * @param boolean $allowMissing
      * @return \Symfony\Component\Ldap\Entry[] The result of the search
      *
@@ -98,7 +61,7 @@ interface ConnectorInterface
         array $searchBase,
         string $filter,
         array $options,
-        bool $allowMissing,
+        bool $allowMissing
     ): array;
 
 

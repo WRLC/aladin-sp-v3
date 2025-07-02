@@ -6,9 +6,8 @@ namespace SimpleSAML\Module\core\Auth\Source;
 
 use SimpleSAML\Configuration;
 use SimpleSAML\Error;
-use SimpleSAML\Logger;
 use SimpleSAML\Module\core\Auth\UserPassBase;
-use Symfony\Component\PasswordHasher\Hasher\NativePasswordHasher;
+use SimpleSAML\Utils;
 
 /**
  * Authentication source which verifies the password against
@@ -60,22 +59,8 @@ class AdminPassword extends UserPassBase
             throw new Error\Error(Error\ErrorCodes::WRONGUSERPASS);
         }
 
-        $pwinfo = password_get_info($adminPassword);
-        if ($pwinfo['algo'] === null) {
-            // @deprecated: remove this in the future.
-            // Continue to allow admin login when the config contains
-            // a password that is not hashed
-            if ($adminPassword === $password) {
-                Logger::deprecated('Please consider hashing the admin password stored in auth.adminpassword'
-                                 . ' in config.php. Using a plain text password in that config setting'
-                                 . ' will be removed in the future.');
-                return ['user' => ['admin']];
-            }
-            throw new Error\Error(Error\ErrorCodes::ADMINNOTHASHED);
-        }
-
-        $hasher = new NativePasswordHasher();
-        if (!$hasher->verify($adminPassword, $password)) {
+        $cryptoUtils = new Utils\Crypto();
+        if (!$cryptoUtils->pwValid($adminPassword, $password)) {
             throw new Error\Error(Error\ErrorCodes::WRONGUSERPASS);
         }
         return ['user' => ['admin']];

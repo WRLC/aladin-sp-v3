@@ -8,21 +8,8 @@ use Exception;
 use PDO;
 use PDOException;
 use SimpleSAML\Assert\Assert;
-use SimpleSAML\{Configuration, Logger, Utils};
-
-use function array_keys;
-use function count;
-use function gmdate;
-use function implode;
-use function in_array;
-use function intval;
-use function rand;
-use function serialize;
-use function sha1;
-use function strlen;
-use function unserialize;
-use function urldecode;
-use function rawurlencode;
+use SimpleSAML\Configuration;
+use SimpleSAML\Logger;
 
 /**
  * A data store using a RDBMS to keep the data.
@@ -133,20 +120,9 @@ class SQLStore implements StoreInterface
                      *       schema.
                      */
                     $update = [
-                        // Use dynamic SQL to drop the existing unique constraint
-                        'DECLARE @constraintName NVARCHAR(128); ' .
-                        'SELECT @constraintName = CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS ' .
-                        'WHERE TABLE_NAME = \'' . $this->prefix . '_tableVersion\' AND CONSTRAINT_TYPE = \'UNIQUE\'; ' .
-                        'IF @constraintName IS NOT NULL ' .
-                        'BEGIN ' .
-                            'EXEC(\'ALTER TABLE ' . $this->prefix . '_tableVersion ' .
-                                  ' DROP CONSTRAINT \' + @constraintName); ' .
-                        'END;',
-
-                        // Add the new primary key constraint
-                        'ALTER TABLE ' . $this->prefix . '_tableVersion ' .
-                        '  ADD CONSTRAINT PK_' . $this->prefix . '_tableVersion ' .
-                        '      PRIMARY KEY CLUSTERED (_name);',
+                        'ALTER TABLE ' . $this->prefix . '_tableVersion DROP INDEX IF EXISTS SELECT CONSTRAINT_NAME ' .
+                          'FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME=' . $this->prefix . '_tableVersion',
+                        'ALTER TABLE ' . $this->prefix . '_tableVersion ADD CONSTRAINT _name PRIMARY KEY CLUSTERED (_name)',
                     ];
                     break;
                 case 'sqlite':
@@ -358,10 +334,6 @@ class SQLStore implements StoreInterface
      */
     public function get(string $type, string $key): mixed
     {
-        if ($type == 'session') {
-            $key = $this->hashData($key);
-        }
-
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -408,10 +380,6 @@ class SQLStore implements StoreInterface
             $this->cleanKVStore();
         }
 
-        if ($type == 'session') {
-            $key = $this->hashData($key);
-        }
-
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -442,10 +410,6 @@ class SQLStore implements StoreInterface
      */
     public function delete(string $type, string $key): void
     {
-        if ($type == 'session') {
-            $key = $this->hashData($key);
-        }
-
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -458,18 +422,5 @@ class SQLStore implements StoreInterface
         $query = 'DELETE FROM ' . $this->prefix . '_kvstore WHERE _type=:_type AND _key=:_key';
         $query = $this->pdo->prepare($query);
         $query->execute($data);
-    }
-
-
-    /**
-     * Calculates an URL-safe sha-256 hash.
-     *
-     * @param string $data
-     * @return string The hashed data.
-     */
-    private function hashData(string $data): string
-    {
-        $secretSalt = (new Utils\Config())->getSecretSalt();
-        return hash_hmac('sha256', $data, $secretSalt);
     }
 }

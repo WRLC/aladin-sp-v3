@@ -10,7 +10,6 @@ use SAML2\Constants;
 use SAML2\Exception\Protocol\NoAvailableIDPException;
 use SAML2\Exception\Protocol\NoPassiveException;
 use SAML2\Exception\Protocol\NoSupportedIDPException;
-use SAML2\Exception\Protocol\ProtocolViolationException;
 use SAML2\LogoutRequest;
 use SAML2\XML\saml\NameID;
 use SimpleSAML\Assert\Assert;
@@ -78,13 +77,6 @@ class SP extends \SimpleSAML\Auth\Source
      */
     private array $protocols = [Constants::NS_SAMLP];
 
-    /**
-     * Flag to indicate whether to disable sending the Scoping element.
-     *
-     * @var bool
-     */
-    private bool $requestInitiation;
-
 
     /**
      * Constructor for SAML SP authentication source.
@@ -106,12 +98,7 @@ class SP extends \SimpleSAML\Auth\Source
         );
 
         $entityId = $this->metadata->getString('entityID');
-        try {
-            Assert::validURI($entityId);
-        } catch (ProtocolViolationException $e) {
-            Logger::warning($e->getMessage());
-        }
-
+        Assert::validURI($entityId);
         Assert::maxLength(
             $entityId,
             Constants::SAML2INT_ENTITYID_MAX_LENGTH,
@@ -127,7 +114,6 @@ class SP extends \SimpleSAML\Auth\Source
         $this->idp = $this->metadata->getOptionalString('idp', null);
         $this->discoURL = $this->metadata->getOptionalString('discoURL', null);
         $this->disable_scoping = $this->metadata->getOptionalBoolean('disable_scoping', false);
-        $this->requestInitiation = $this->metadata->getOptionalBoolean('RequestInitiation', false);
         $this->passAuthnContextClassRef = $this->metadata->getOptionalBoolean(
             'proxymode.passAuthnContextClassRef',
             false,
@@ -170,7 +156,6 @@ class SP extends \SimpleSAML\Auth\Source
             'metadata-set' => 'saml20-sp-remote',
             'SingleLogoutService' => $this->getSLOEndpoints(),
             'AssertionConsumerService' => $this->getACSEndpoints(),
-            'DiscoveryResponse' => $this->getDiscoveryResponseEndpoints(),
         ];
 
         // add NameIDPolicy
@@ -448,29 +433,6 @@ class SP extends \SimpleSAML\Auth\Source
         return $endpoints;
     }
 
-    /**
-     * Get the DiscoveryResponse endpoint available for a given local SP.
-     */
-    private function getDiscoveryResponseEndpoints(): array
-    {
-        $location = Module::getModuleURL('saml/sp/discoResponse/' . $this->getAuthId());
-
-        return [ 0 => [
-                'Binding' => Constants::NS_IDPDISC,
-                'Location' => $location,
-        ] ];
-    }
-
-    /**
-     * Determine if the Request Initiator Protocol is enabled
-     *
-     * @return bool
-     */
-    public function isRequestInitiation(): bool
-    {
-        return $this->requestInitiation;
-    }
-
 
     /**
      * Send a SAML2 SSO request to an IdP
@@ -602,8 +564,6 @@ class SP extends \SimpleSAML\Auth\Source
         if ($this->disable_scoping !== true && $idpMetadata->getOptionalBoolean('disable_scoping', false) !== true) {
             if (isset($state['IDPList'])) {
                 $ar->setIDPList($state['IDPList']);
-            } elseif (isset($state['saml:IDPList'])) {
-                $ar->setIDPList($state['saml:IDPList']);
             } elseif (!empty($this->metadata->getOptionalArray('IDPList', []))) {
                 $ar->setIDPList($this->metadata->getArray('IDPList'));
             } elseif (!empty($idpMetadata->getOptionalArray('IDPList', []))) {

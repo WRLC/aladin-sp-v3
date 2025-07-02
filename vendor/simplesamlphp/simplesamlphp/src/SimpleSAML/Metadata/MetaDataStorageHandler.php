@@ -81,20 +81,16 @@ class MetaDataStorageHandler implements ClearableState
      *
      * @param string $property The metadata property which should be auto-generated.
      * @param string $set The set we the property comes from.
-     * @param string|null $overrideHost Hostname to use in the URLs
+     * @param string $overrideHost Hostname to use in the URLs
      *
      * @return string|array The auto-generated metadata property.
      * @throws \Exception If the metadata cannot be generated automatically.
      */
-    public function getGenerated(
-        string $property,
-        string $set,
-        ?string $overrideHost = null,
-        ?string $entityId = null,
-    ): string|array {
+    public function getGenerated(string $property, string $set, string $overrideHost = null): string|array
+    {
         // first we check if the user has overridden this property in the metadata
         try {
-            $metadataSet = $entityId ? $this->getMetaData($entityId, $set) : $this->getMetaDataCurrent($set);
+            $metadataSet = $this->getMetaDataCurrent($set);
             if (array_key_exists($property, $metadataSet)) {
                 return $metadataSet[$property];
             }
@@ -269,38 +265,30 @@ class MetaDataStorageHandler implements ClearableState
     public function getMetaDataForEntities(array $entityIds, string $set): array
     {
         $result = [];
-        // We are flipping the entityIds array in order to avoid constant iteration over it.
-        // Even if it becomes smaller over time.
-        // Still, after flipping all actions will be O(1)
-        $entityIdsFlipped = array_flip($entityIds);
         $timeUtils = new Utils\Time();
-
         foreach ($this->sources as $source) {
-            // entityIds may be reduced to being empty in this loop or already empty
-            if (empty($entityIds)) {
-                break;
-            }
-
             $srcList = $source->getMetaDataForEntities($entityIds, $set);
             foreach ($srcList as $key => $le) {
-                if (!empty($le['expire']) && $le['expire'] < time()) {
-                    unset($srcList[$key]);
-                    Logger::warning(
-                        'Dropping metadata entity ' . var_export($key, true) . ', expired ' .
-                        $timeUtils->generateTimestamp($le['expire']) . '.',
-                    );
-                    continue;
+                if (array_key_exists('expire', $le)) {
+                    if ($le['expire'] < time()) {
+                        unset($srcList[$key]);
+                        Logger::warning(
+                            "Dropping metadata entity " . var_export($key, true) . ", expired " .
+                            $timeUtils->generateTimestamp($le['expire']) . ".",
+                        );
+                        continue;
+                    }
                 }
                 // We found the entity id so remove it from the list that needs resolving
                 /** @psalm-suppress PossiblyInvalidArrayOffset */
-                unset($entityIds[$entityIdsFlipped[$key]]);
-                // Add the key to the result set
-                $result[$key] = $le;
+                unset($entityIds[array_search($key, $entityIds)]);
             }
+            $result = array_merge($srcList, $result);
         }
 
         return $result;
     }
+
 
     /**
      * This function looks up the metadata for the given entity id in the given set. It will throw an

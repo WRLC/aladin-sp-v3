@@ -12,13 +12,12 @@ namespace SimpleSAML\Locale;
 
 use Exception;
 use Gettext\Generator\ArrayGenerator;
+use Gettext\Loader\MoLoader;
 use Gettext\Loader\PoLoader;
 use Gettext\{Translations, Translator, TranslatorFunctions};
 use SimpleSAML\{Configuration, Logger};
-use SimpleSAML\Locale\Translate;
 use Symfony\Component\HttpFoundation\File\File;
-
-use function explode;
+use SimpleSAML\Locale\Translate;
 
 class Localization
 {
@@ -124,10 +123,10 @@ class Localization
      * (We're assuming that each domain only exists in one place)
      *
      * @param string $module Module name
-     * @param string|null $localeDir Absolute path if the module is housed elsewhere
-     * @param string|null $domain Translation domain within module; defaults to module name
+     * @param string $localeDir Absolute path if the module is housed elsewhere
+     * @param string $domain Translation domain within module; defaults to module name
      */
-    public function addModuleDomain(string $module, ?string $localeDir = null, ?string $domain = null): void
+    public function addModuleDomain(string $module, string $localeDir = null, string $domain = null): void
     {
         if (!$localeDir) {
             $localeDir = $this->getDomainLocaleDir($module);
@@ -169,16 +168,9 @@ class Localization
      */
     public function getLangPath(string $domain = self::DEFAULT_DOMAIN): string
     {
-        $localeDir = $this->localeDomainMap[$domain];
-        $langcode = $this->langcode;
-        $langPath = $localeDir . '/' . $langcode . '/LC_MESSAGES/';
-        Logger::debug("Trying langpath for '$langcode' as '$langPath'");
-        if (is_dir($langPath) && is_readable($langPath)) {
-            return $langPath;
-        }
-
         $langcode = explode('_', $this->langcode);
         $langcode = $langcode[0];
+        $localeDir = $this->localeDomainMap[$domain];
         $langPath = $localeDir . '/' . $langcode . '/LC_MESSAGES/';
         Logger::debug("Trying langpath for '$langcode' as '$langPath'");
         if (is_dir($langPath) && is_readable($langPath)) {
@@ -251,35 +243,29 @@ class Localization
             }
         }
 
-        $file = new File($langPath . $domain . '.po', false);
+        $file = new File($langPath . $domain . '.mo', false);
         if ($file->getRealPath() !== false && $file->isReadable()) {
-            $translations = (new PoLoader())->loadFile($file->getRealPath());
-            if (empty($translations->getDomain())) {
-                $translations->setDomain($domain);
-            }
-
-            $themeConfig = $this->configuration->getOptionalString('theme.use', null);
-            $theme = ($themeConfig === null) ? null : explode(':', $themeConfig, 2)[0];
-
-            if ($domain !== $translations->getDomain() && $domain !== $theme) {
-                Logger::warning(sprintf(
-                    "The translation file at %s has domain %s but is expected to have a domain %s",
-                    $file->getPath(),
-                    $translations->getDomain(),
-                    $domain,
-                ));
-            }
+            $translations = (new MoLoader())->loadFile($file->getRealPath());
             $arrayGenerator = new ArrayGenerator();
             $this->translator->addTranslations(
                 $arrayGenerator->generateArray($translations),
             );
         } else {
-            Logger::debug(sprintf(
-                "%s - Localization file '%s' not found or not readable in '%s', falling back to default",
-                $_SERVER['PHP_SELF'],
-                $file->getfileName(),
-                $langPath,
-            ));
+            $file = new File($langPath . $domain . '.po', false);
+            if ($file->getRealPath() !== false && $file->isReadable()) {
+                $translations = (new PoLoader())->loadFile($file->getRealPath());
+                $arrayGenerator = new ArrayGenerator();
+                $this->translator->addTranslations(
+                    $arrayGenerator->generateArray($translations),
+                );
+            } else {
+                Logger::debug(sprintf(
+                    "%s - Localization file '%s' not found or not readable in '%s', falling back to default",
+                    $_SERVER['PHP_SELF'],
+                    $file->getfileName(),
+                    $langPath,
+                ));
+            }
         }
     }
 

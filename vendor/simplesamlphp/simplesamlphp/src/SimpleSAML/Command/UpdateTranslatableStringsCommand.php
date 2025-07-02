@@ -26,7 +26,6 @@ use function array_intersect;
 use function array_key_exists;
 use function array_key_first;
 use function array_merge;
-use function basename;
 use function dirname;
 use function in_array;
 use function ksort;
@@ -62,19 +61,6 @@ class UpdateTranslatableStringsCommand extends Command
             null,
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Which modules to perform this action on',
-        );
-        $this->addOption(
-            'themes',
-            null,
-            InputOption::VALUE_NEGATABLE,
-            'Include/exclude templates from themes directories of modules (default --no-themes)',
-            false,
-        );
-        $this->addOption(
-            'theme-controller',
-            null,
-            InputOption::VALUE_REQUIRED,
-            'Specify a custom TemplateControllerInterface class (usually for use with themes)',
         );
     }
 
@@ -140,17 +126,6 @@ class UpdateTranslatableStringsCommand extends Command
         $phpScanner = new PhpScanner(...$translationDomains);
         $phpScanner->setFunctions(['trans' => 'gettext', 'noop' => 'gettext']);
 
-        if ($input->getOption('theme-controller') !== null) {
-            Configuration::setPreLoadedConfig(
-                Configuration::loadFromArray(
-                    array_merge(
-                        Configuration::getInstance()->toArray(),
-                        ['theme.controller' => $input->getOption('theme-controller'),],
-                    ),
-                ),
-            );
-        }
-
         $translationUtils = new Utils\Translate(Configuration::getInstance());
         $twigTranslations = [];
         // Scan files in base
@@ -162,10 +137,7 @@ class UpdateTranslatableStringsCommand extends Command
             $phpScanner = $translationUtils->getTranslationsFromPhp($module, $phpScanner);
 
             // Scan Twig-templates
-            $twigTranslations = array_merge(
-                $twigTranslations,
-                $translationUtils->getTranslationsFromTwig($module, $input->getOption('themes')),
-            );
+            $twigTranslations = array_merge($twigTranslations, $translationUtils->getTranslationsFromTwig($module));
         }
 
         // The catalogue returns an array with strings, while the php-scanner returns Translations-objects.
@@ -223,13 +195,6 @@ class UpdateTranslatableStringsCommand extends Command
                         $iter,
                     );
 
-                    $language = basename(dirname($poFile->getPath()));
-                    $merged->getHeaders()
-                        ->set('Project-Id-Version', 'SimpleSAMLphp')
-                        ->set('MIME-Version', '1.0')
-                        ->set('Content-Type', 'text/plain; charset=UTF-8')
-                        ->set('Content-Transfer-Encoding', '8bit')
-                        ->setLanguage($language);
                     $poGenerator->generateFile($merged, $poFile->getPathName());
                 }
             }

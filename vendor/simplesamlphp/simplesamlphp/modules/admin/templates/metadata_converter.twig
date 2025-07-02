@@ -59,7 +59,5 @@
     {% endif -%}
 {% endblock content -%}
 {% block postload %}
-{% if upload %}
     <script src="{{ asset('js/metadata-converter.js', 'admin') }}"></script>
-{% endif %}
 {% endblock postload %}
