@@ -50,7 +50,7 @@ class MetaLoader
      * @param string|null  $stateFile
      * @param object|null  $oldMetadataSrc
      */
-    public function __construct(int $expire = null, string $stateFile = null, object $oldMetadataSrc = null)
+    public function __construct(?int $expire = null, ?string $stateFile = null, ?object $oldMetadataSrc = null)
     {
         $this->expire = $expire;
         $this->oldMetadataSrc = $oldMetadataSrc;
@@ -214,7 +214,7 @@ class MetaLoader
     /**
      * @param \SimpleSAML\Metadata\SAMLParser $entity
      * @param array $source
-     * @bool
+     * @return bool
      */
     private function processCertificates(Metadata\SAMLParser $entity, array $source): bool
     {
@@ -234,7 +234,7 @@ class MetaLoader
     /**
      * @param \SimpleSAML\Metadata\SAMLParser $entity
      * @param array $source
-     * @bool
+     * @return bool
      */
     private function processBlacklist(Metadata\SAMLParser $entity, array $source): bool
     {
@@ -251,7 +251,7 @@ class MetaLoader
     /**
      * @param \SimpleSAML\Metadata\SAMLParser $entity
      * @param array $source
-     * @bool
+     * @return bool
      */
     private function processWhitelist(Metadata\SAMLParser $entity, array $source): bool
     {
@@ -268,7 +268,7 @@ class MetaLoader
     /**
      * @param \SimpleSAML\Metadata\SAMLParser $entity
      * @param array $source
-     * @bool
+     * @return bool
      */
     private function processAttributeWhitelist(Metadata\SAMLParser $entity, array $source): bool
     {
@@ -522,7 +522,7 @@ class MetaLoader
      * @param string $type The metadata type.
      * @param array|null $template The template.
      */
-    private function addMetadata(string $filename, ?array $metadata, string $type, array $template = null): void
+    private function addMetadata(string $filename, ?array $metadata, string $type, ?array $template = null): void
     {
         if ($metadata === null) {
             return;
@@ -672,7 +672,7 @@ class MetaLoader
      */
     public function writeMetadataPdo(Configuration $globalConfig, array $config = []): void
     {
-        $metaHandler = new Metadata\MetaDataStorageHandlerPdo($globalConfig->toArray(), $config);
+        $metaHandler = new Metadata\MetaDataStorageHandlerPdo($config);
 
         foreach ($this->metadata as $set => $elements) {
             foreach ($elements as $m) {
