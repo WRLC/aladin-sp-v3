@@ -70,7 +70,7 @@ final class FormTypeRenderer
 
         $this->generator->generateClass(
             $formClassDetails->getFullName(),
-            'form/Form.tpl.php',
+            'form/Type.tpl.php',
             [
                 'use_statements' => $useStatements,
                 'bounded_class_name' => $boundClassDetails ? $boundClassDetails->getShortName() : null,
