@@ -548,7 +548,7 @@ final class MakeRegistrationForm extends AbstractMaker
     private function generateFormClass(ClassNameDetails $userClassDetails, Generator $generator, string $usernameField): ClassNameDetails
     {
         $formClassDetails = $generator->createClassNameDetails(
-            'RegistrationForm',
+            'RegistrationFormType',
             'Form\\'
         );
 
