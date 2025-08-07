@@ -3318,16 +3318,16 @@
         },
         {
             "name": "simplesamlphp/simplesamlphp-assets-base",
-            "version": "v2.3.9",
+            "version": "v2.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/simplesamlphp-assets-base.git",
-                "reference": "75bd31897ed3634d97de2815b5fa668625f8134d"
+                "reference": "39ac268fb1c49333a188df6094b69e28e35150f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-assets-base/zipball/75bd31897ed3634d97de2815b5fa668625f8134d",
-                "reference": "75bd31897ed3634d97de2815b5fa668625f8134d",
+                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-assets-base/zipball/39ac268fb1c49333a188df6094b69e28e35150f6",
+                "reference": "39ac268fb1c49333a188df6094b69e28e35150f6",
                 "shasum": ""
             },
             "require": {
@@ -3348,9 +3348,9 @@
             "description": "Assets for the SimpleSAMLphp main repository",
             "support": {
                 "issues": "https://github.com/simplesamlphp/simplesamlphp-assets-base/issues",
-                "source": "https://github.com/simplesamlphp/simplesamlphp-assets-base/tree/v2.3.9"
+                "source": "https://github.com/simplesamlphp/simplesamlphp-assets-base/tree/v2.3.10"
             },
-            "time": "2025-03-02T17:54:55+00:00"
+            "time": "2025-07-20T01:44:13+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-authorize",
@@ -3455,16 +3455,16 @@
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-ldap",
-            "version": "v2.4.7",
+            "version": "v2.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/simplesamlphp-module-ldap.git",
-                "reference": "6dde70a2af046bc42f22338a34d24302c97eddd9"
+                "reference": "4a25a83850a1e5cd445c662bcc123642f703f806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-module-ldap/zipball/6dde70a2af046bc42f22338a34d24302c97eddd9",
-                "reference": "6dde70a2af046bc42f22338a34d24302c97eddd9",
+                "url": "https://api.github.com/repos/simplesamlphp/simplesamlphp-module-ldap/zipball/4a25a83850a1e5cd445c662bcc123642f703f806",
+                "reference": "4a25a83850a1e5cd445c662bcc123642f703f806",
                 "shasum": ""
             },
             "require": {
@@ -3507,7 +3507,7 @@
                 "issues": "https://github.com/simplesamlphp/simplesamlphp-module-ldap/issues",
                 "source": "https://github.com/simplesamlphp/simplesamlphp-module-ldap"
             },
-            "time": "2025-05-28T19:06:52+00:00"
+            "time": "2025-08-04T21:03:27+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-metarefresh",
