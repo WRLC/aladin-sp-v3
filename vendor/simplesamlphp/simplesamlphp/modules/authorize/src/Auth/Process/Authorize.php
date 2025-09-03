@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Module\authorize\Auth\Process;
 
-use Exception;
-use SimpleSAML\Assert\Assert;
 use SimpleSAML\Auth;
+use SimpleSAML\Error;
 use SimpleSAML\Module;
+use SimpleSAML\SAML2\Assert\Assert;
 use SimpleSAML\Utils;
 
 use function array_diff;
@@ -47,7 +47,7 @@ class Authorize extends Auth\ProcessingFilter
     /**
      * Array of localised rejection messages
      *
-     * @var array
+     * @var string[]
      */
     protected array $reject_msg = [];
 
@@ -60,9 +60,10 @@ class Authorize extends Auth\ProcessingFilter
 
     /**
      * Array of valid users. Each element is a regular expression. You should
-     * user \ to escape special chars, like '.' etc.
+     * use \ to escape special chars, like '.' etc.
+     * can also contain 'spEntityIDs' arrays to restrict rules to specific SPs.
      *
-     * @param array
+     * @var array<mixed>
      */
     protected array $valid_attribute_values = [];
 
@@ -82,7 +83,7 @@ class Authorize extends Auth\ProcessingFilter
      * Initialize this filter.
      * Validate configuration parameters.
      *
-     * @param array $config  Configuration information about this filter.
+     * @param array<mixed> $config  Configuration information about this filter.
      * @param mixed $reserved  For future use.
      */
     public function __construct(array $config, $reserved)
@@ -131,15 +132,32 @@ class Authorize extends Auth\ProcessingFilter
                 $arrayUtils = new Utils\Arrays();
                 $values = $arrayUtils->arrayize($values);
             } elseif (!is_array($values)) {
-                throw new Exception(sprintf(
+                throw new Error\Exception(sprintf(
                     'Filter Authorize: Attribute values is neither string nor array: %s',
                     var_export($attribute, true),
                 ));
             }
 
+            // Extract spEntityIDs if present
+            $spEntityIDs = null;
+            if (isset($values['spEntityIDs'])) {
+                Assert::isArray(
+                    $values['spEntityIDs'],
+                    sprintf(
+                        'Filter Authorize: spEntityIDs must be an array for attribute: %s',
+                        var_export($attribute, true),
+                    ),
+                    Error\Exception::class,
+                );
+                Assert::allValidEntityID($values['spEntityIDs']);
+
+                $spEntityIDs = $values['spEntityIDs'];
+                unset($values['spEntityIDs']);
+            }
+
             foreach ($values as $value) {
                 if (!is_string($value)) {
-                    throw new Exception(sprintf(
+                    throw new Error\Exception(sprintf(
                         'Filter Authorize: Each value should be a string for attribute: %s value: %s config: %s',
                         var_export($attribute, true),
                         var_export($value, true),
@@ -147,7 +165,11 @@ class Authorize extends Auth\ProcessingFilter
                     ));
                 }
             }
-            $this->valid_attribute_values[$attribute] = $values;
+
+            $this->valid_attribute_values[$attribute] = [
+                'values' => $values,
+                'spEntityIDs' => $spEntityIDs,
+            ];
         }
     }
 
@@ -155,7 +177,7 @@ class Authorize extends Auth\ProcessingFilter
     /**
      * Apply filter to validate attributes.
      *
-     * @param array &$state  The current request
+     * @param array<mixed> &$state  The current request
      */
     public function process(array &$state): void
     {
@@ -171,9 +193,27 @@ class Authorize extends Auth\ProcessingFilter
         }
         $state['authprocAuthorize_errorURL'] = $this->errorURL;
         $state['authprocAuthorize_allow_reauthentication'] = $this->allow_reauthentication;
+        // Get current SP EntityID from state
+        $currentSpEntityId = null;
+        if (isset($state['saml:sp:State']['core:SP'])) {
+            $currentSpEntityId = $state['saml:sp:State']['core:SP'];
+        } elseif (isset($state['Destination']['entityid'])) {
+            $currentSpEntityId = $state['Destination']['entityid'];
+        }
+
         $arrayUtils = new Utils\Arrays();
-        foreach ($this->valid_attribute_values as $name => $patterns) {
+        foreach ($this->valid_attribute_values as $name => $ruleConfig) {
             if (array_key_exists($name, $attributes)) {
+                $patterns = $ruleConfig['values'];
+                $spEntityIDs = $ruleConfig['spEntityIDs'];
+
+                // If spEntityIDs is specified, check if current SP is in the list
+                if ($spEntityIDs !== null) {
+                    if ($currentSpEntityId === null || !in_array($currentSpEntityId, $spEntityIDs, true)) {
+                        continue; // Skip this rule if SP is not specified or not in allowed list
+                    }
+                }
+
                 foreach ($patterns as $pattern) {
                     $values = $arrayUtils->arrayize($attributes[$name]);
                     foreach ($values as $value) {
@@ -225,7 +265,7 @@ class Authorize extends Auth\ProcessingFilter
      * thinking in case a "chained" ACL is needed, more complex
      * permission logic.
      *
-     * @param array $state
+     * @param array<mixed> $state
      */
     protected function unauthorized(array &$state): void
     {

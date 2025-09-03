@@ -28,8 +28,6 @@ class Authorize
      *
      * @param \SimpleSAML\Configuration              $config The configuration to use by the controllers.
      * @param \SimpleSAML\Session                    $session The session to use by the controllers.
-     *
-     * @throws \Exception
      */
     public function __construct(
         protected Configuration $config,
@@ -51,7 +49,7 @@ class Authorize
             throw new Error\BadRequest('Missing required StateId query parameter.');
         }
 
-        /** @var array $state */
+        /** @var array<mixed> $state */
         $state = Auth\State::loadState($stateId, 'authorize:Authorize');
 
         $t = new Template($this->config, 'authorize:authorize_403.twig');
@@ -108,7 +106,7 @@ class Authorize
         if (!is_string($stateId)) {
             throw new Error\BadRequest('Missing required StateId query parameter.');
         }
-        /** @var array $state */
+        /** @var array<mixed> $state */
         $state = Auth\State::loadState($stateId, 'authorize:Authorize');
 
         $authSource = $state['Source']['auth'];
